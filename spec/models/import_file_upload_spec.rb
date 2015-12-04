@@ -12,7 +12,7 @@ describe ImportFileUpload do
     end
 
     it "returns the imported policy array" do
-      import_file_upload.policy_import_data.should == "policy array"
+      expect(import_file_upload.policy_import_data).to eq "policy array"
     end
   end
 
@@ -39,7 +39,7 @@ describe ImportFileUpload do
           :status      => "This object already exists in the database with the same name"
         }].to_json
 
-        import_file_upload.service_dialog_json.should == expected_json
+        expect(import_file_upload.service_dialog_json).to eq expected_json
       end
     end
 
@@ -59,7 +59,7 @@ describe ImportFileUpload do
           :status      => "New object"
         }].to_json
 
-        import_file_upload.service_dialog_json.should == expected_json
+        expect(import_file_upload.service_dialog_json).to eq expected_json
       end
     end
   end
@@ -127,15 +127,15 @@ describe ImportFileUpload do
     end
 
     it "stores the binary blob binary data" do
-      import_file_upload.binary_blob.binary.should == "123"
+      expect(import_file_upload.binary_blob.binary).to eq "123"
     end
 
     it "stores the binary blob name" do
-      import_file_upload.binary_blob.name.should == "the name"
+      expect(import_file_upload.binary_blob.name).to eq "the name"
     end
 
     it "stores the binary blob data type" do
-      import_file_upload.binary_blob.data_type.should == "yml"
+      expect(import_file_upload.binary_blob.data_type).to eq "yml"
     end
   end
 
@@ -145,7 +145,7 @@ describe ImportFileUpload do
     end
 
     it "returns the binary_blob binary data" do
-      import_file_upload.uploaded_content.should == "binary data"
+      expect(import_file_upload.uploaded_content).to eq "binary data"
     end
   end
 
@@ -155,7 +155,7 @@ describe ImportFileUpload do
     end
 
     it "returns the binary_blob data parsed as yaml" do
-      import_file_upload.uploaded_yaml_content.should == [{:file => "contents"}]
+      expect(import_file_upload.uploaded_yaml_content).to eq [{:file => "contents"}]
     end
   end
 end

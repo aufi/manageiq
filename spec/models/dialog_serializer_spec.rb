@@ -37,7 +37,7 @@ describe DialogSerializer do
     end
 
     it "serializes the dialog" do
-      dialog_serializer.serialize(dialogs).should == expected_data
+      expect(dialog_serializer.serialize(dialogs)).to eq expected_data
     end
   end
 end

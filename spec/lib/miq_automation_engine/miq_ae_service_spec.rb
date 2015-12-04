@@ -26,8 +26,8 @@ module MiqAeServiceSpec
       it "obscures passwords" do
         original_attributes = @object.attributes.dup
         attributes = @service_object.attributes
-        attributes['password'].should == '********'
-        @object.attributes.should == original_attributes
+        expect(attributes['password']).to eq '********'
+        expect(@object.attributes).to eq original_attributes
       end
     end
 
@@ -36,7 +36,7 @@ module MiqAeServiceSpec
         @object.stub(:object_name).and_return('fred')
         regex = /#<MiqAeMethodService::MiqAeServiceObject:0x(\w+) name:.\"(?<name>\w+)\">/
         match = regex.match(@service_object.inspect)
-        match[:name].should eq('fred')
+        expect(match[:name]).to eq('fred')
       end
     end
   end

@@ -4,14 +4,14 @@ describe Picture do
   subject { FactoryGirl.build :picture }
 
   it "auto-creates needed directory" do
-    File.directory?(described_class.directory).should be_true
+    expect(File.directory?(described_class.directory)).to be_true
   end
 
   it "#content" do
     subject.content.should.nil?
     expected = "FOOBAR"
     subject.content         = expected.dup
-    subject.content.should == expected
+    expect(subject.content).to eq expected
   end
 
   context "#extension" do
@@ -19,15 +19,15 @@ describe Picture do
       subject.extension.should.nil?
       ext = "foo"
       subject.extension         = ext.dup
-      subject.extension.should == ext
+      expect(subject.extension).to eq ext
 
       subject.save
 
       p = described_class.first
-      p.extension.should == ext
+      expect(p.extension).to eq ext
 
       subject.reload
-      subject.extension.should == ext
+      expect(subject.extension).to eq ext
     end
 
     it "on existing record" do
@@ -37,23 +37,23 @@ describe Picture do
       subject.extension.should.nil?
       ext = "foo"
       subject.extension         = ext.dup
-      subject.extension.should == ext
+      expect(subject.extension).to eq ext
 
       subject.save
 
       p = described_class.first
-      p.extension.should == ext
+      expect(p.extension).to eq ext
 
       subject.reload
-      subject.extension.should == ext
+      expect(subject.extension).to eq ext
     end
   end
 
   it "#size" do
-    subject.size.should == 0
+    expect(subject.size).to eq 0
     expected = "FOOBAR"
     subject.content         = expected.dup
-    subject.size.should == expected.length
+    expect(subject.size).to eq expected.length
   end
 
   context "#basename" do
@@ -64,13 +64,13 @@ describe Picture do
     context "works when record is saved" do
       it "without extension" do
         subject.save
-        subject.basename.should == "#{subject.compressed_id}."
+        expect(subject.basename).to eq "#{subject.compressed_id}."
       end
 
       it "with extension" do
         subject.extension = "png"
         subject.save
-        subject.basename.should == "#{subject.compressed_id}.#{subject.extension}"
+        expect(subject.basename).to eq "#{subject.compressed_id}.#{subject.extension}"
       end
     end
   end
@@ -78,12 +78,12 @@ describe Picture do
   it "#filename" do
     basename = "foo.bar"
     subject.stub(:basename).and_return(basename)
-    subject.filename.should == File.join(Picture.directory, basename)
+    expect(subject.filename).to eq File.join(Picture.directory, basename)
   end
 
   it "#url_path" do
     basename = "foo.bar"
     subject.stub(:basename).and_return(basename)
-    subject.url_path.should == "/pictures/#{basename}"
+    expect(subject.url_path).to eq "/pictures/#{basename}"
   end
 end

@@ -19,7 +19,7 @@ describe "remove_from_provider Method Validation" do
     @vm_id = @vm.id
 
     ws
-    MiqQueue.exists?(:method_name => 'vm_destroy', :instance_id => @vm.id, :role => 'ems_operations').should be_true
+    expect(MiqQueue.exists?(:method_name => 'vm_destroy', :instance_id => @vm.id, :role => 'ems_operations')).to be_true
   end
 
   it "errors for a vm equal to nil" do

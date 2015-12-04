@@ -27,11 +27,11 @@ describe MiqVimBrokerWorker::Runner do
     described_class.any_instance.should_receive(:reset_broker_update_sleep_interval).once
     vim_broker_worker = described_class.new({:guid => @worker_guid})
 
-    vim_broker_worker.instance_variable_get(:@initial_emses_to_monitor).should match_array @zone.ext_management_systems
+    expect(vim_broker_worker.instance_variable_get(:@initial_emses_to_monitor)).to match_array @zone.ext_management_systems
 
     @worker_record.reload
-    @worker_record.uri.should == @drb_uri
-    @worker_record.status.should == 'starting'
+    expect(@worker_record.uri).to eq @drb_uri
+    expect(@worker_record.status).to eq 'starting'
   end
 
   context "with a worker created" do
@@ -142,14 +142,14 @@ describe MiqVimBrokerWorker::Runner do
         @vim_broker_worker.instance_variable_set(:@active_roles, ['ems_inventory'])
         MiqVimBroker.should_receive(:new).with(:server, 0).once
         @vim_broker_worker.create_miq_vim_broker_server
-        MiqVimBroker.cacheScope.should == :cache_scope_ems_refresh
+        expect(MiqVimBroker.cacheScope).to eq :cache_scope_ems_refresh
       end
 
       it "without ems_inventory role" do
         @vim_broker_worker.instance_variable_set(:@active_roles, ['ems_operations'])
         MiqVimBroker.should_receive(:new).with(:server, 0).once
         @vim_broker_worker.create_miq_vim_broker_server
-        MiqVimBroker.cacheScope.should == :cache_scope_core
+        expect(MiqVimBroker.cacheScope).to eq :cache_scope_core
       end
     end
 
@@ -219,11 +219,11 @@ describe MiqVimBrokerWorker::Runner do
           @vim_broker_worker.instance_variable_get(:@queue).enq(event.dup)
 
           @vim_broker_worker.drain_event
-          MiqQueue.count.should == 1
+          expect(MiqQueue.count).to eq 1
           q = MiqQueue.first
-          q.class_name.should == "EmsRefresh"
-          q.method_name.should == "vc_update"
-          q.args.should == [@ems.id, event]
+          expect(q.class_name).to eq "EmsRefresh"
+          expect(q.method_name).to eq "vc_update"
+          expect(q.args).to eq [@ems.id, event]
         end
 
         it "will handle queued Host updates properly" do
@@ -241,11 +241,11 @@ describe MiqVimBrokerWorker::Runner do
           @vim_broker_worker.instance_variable_get(:@queue).enq(event.dup)
 
           @vim_broker_worker.drain_event
-          MiqQueue.count.should == 1
+          expect(MiqQueue.count).to eq 1
           q = MiqQueue.first
-          q.class_name.should == "EmsRefresh"
-          q.method_name.should == "vc_update"
-          q.args.should == [@ems.id, event]
+          expect(q.class_name).to eq "EmsRefresh"
+          expect(q.method_name).to eq "vc_update"
+          expect(q.args).to eq [@ems.id, event]
         end
 
         it "will ignore updates to unknown properties" do
@@ -260,7 +260,7 @@ describe MiqVimBrokerWorker::Runner do
                                                                 :changeSet    => [{"name" => "test.property", "op" => "assign", "val" => "test"}])
 
           @vim_broker_worker.drain_event
-          MiqQueue.count.should == 0
+          expect(MiqQueue.count).to eq 0
         end
 
         it "will ignore updates to excluded properties" do
@@ -277,7 +277,7 @@ describe MiqVimBrokerWorker::Runner do
                                                                 :changeSet    => [{"name" => "summary.runtime.powerState", "op" => "assign", "val" => "poweredOn"}])
 
           @vim_broker_worker.drain_event
-          MiqQueue.count.should == 0
+          expect(MiqQueue.count).to eq 0
         end
 
         it "will ignore updates to unknown connections" do
@@ -292,7 +292,7 @@ describe MiqVimBrokerWorker::Runner do
                                                                 :changeSet    => [{"name" => "summary.runtime.powerState", "op" => "assign", "val" => "poweredOn"}])
 
           @vim_broker_worker.drain_event
-          MiqQueue.count.should == 0
+          expect(MiqQueue.count).to eq 0
         end
 
         it "will handle updates to valid connections that it previously did not know about" do
@@ -312,11 +312,11 @@ describe MiqVimBrokerWorker::Runner do
           @vim_broker_worker.instance_variable_get(:@queue).enq(event.dup)
 
           @vim_broker_worker.drain_event
-          MiqQueue.count.should == 1
+          expect(MiqQueue.count).to eq 1
           q = MiqQueue.first
-          q.class_name.should == "EmsRefresh"
-          q.method_name.should == "vc_update"
-          q.args.should == [ems2.id, event]
+          expect(q.class_name).to eq "EmsRefresh"
+          expect(q.method_name).to eq "vc_update"
+          expect(q.args).to eq [ems2.id, event]
         end
       end
     end

@@ -6,7 +6,7 @@ describe StorageController do
       controller.instance_variable_set(:@_params, :pressed => "vm_right_size")
       controller.should_receive(:vm_right_size)
       controller.button
-      controller.send(:flash_errors?).should_not be_true
+      expect(controller.send(:flash_errors?)).not_to be_true
     end
 
     it "when VM Migrate is pressed" do
@@ -15,42 +15,42 @@ describe StorageController do
       controller.should_receive(:prov_redirect).with("migrate")
       controller.should_receive(:render)
       controller.button
-      controller.send(:flash_errors?).should_not be_true
+      expect(controller.send(:flash_errors?)).not_to be_true
     end
 
     it "when VM Retire is pressed" do
       controller.instance_variable_set(:@_params, :pressed => "vm_retire")
       controller.should_receive(:retirevms).once
       controller.button
-      controller.send(:flash_errors?).should_not be_true
+      expect(controller.send(:flash_errors?)).not_to be_true
     end
 
     it "when VM Manage Policies is pressed" do
       controller.instance_variable_set(:@_params, :pressed => "vm_protect")
       controller.should_receive(:assign_policies).with(VmOrTemplate)
       controller.button
-      controller.send(:flash_errors?).should_not be_true
+      expect(controller.send(:flash_errors?)).not_to be_true
     end
 
     it "when MiqTemplate Manage Policies is pressed" do
       controller.instance_variable_set(:@_params, {:pressed => "miq_template_protect"})
       controller.should_receive(:assign_policies).with(VmOrTemplate)
       controller.button
-      controller.send(:flash_errors?).should_not be_true
+      expect(controller.send(:flash_errors?)).not_to be_true
     end
 
     it "when VM Tag is pressed" do
       controller.instance_variable_set(:@_params, :pressed => "vm_tag")
       controller.should_receive(:tag).with(VmOrTemplate)
       controller.button
-      controller.send(:flash_errors?).should_not be_true
+      expect(controller.send(:flash_errors?)).not_to be_true
     end
 
     it "when MiqTemplate Tag is pressed" do
       controller.instance_variable_set(:@_params, :pressed => "miq_template_tag")
       controller.should_receive(:tag).with(VmOrTemplate)
       controller.button
-      controller.send(:flash_errors?).should_not be_true
+      expect(controller.send(:flash_errors?)).not_to be_true
     end
 
     it "when Host Analyze then Check Compliance is pressed" do
@@ -59,7 +59,7 @@ describe StorageController do
       controller.should_receive(:analyze_check_compliance_hosts)
       controller.should_receive(:render)
       controller.button
-      controller.send(:flash_errors?).should_not be_true
+      expect(controller.send(:flash_errors?)).not_to be_true
     end
 
     {"host_standby"  => "Enter Standby Mode",
@@ -79,8 +79,8 @@ describe StorageController do
         controller.should_receive(:render)
         controller.button
         flash_messages = assigns(:flash_array)
-        flash_messages.first[:message].should include("successfully initiated")
-        flash_messages.first[:level].should == :success
+        expect(flash_messages.first[:message]).to include("successfully initiated")
+        expect(flash_messages.first[:level]).to eq :success
       end
     end
   end

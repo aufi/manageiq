@@ -12,7 +12,7 @@ describe "dialogs" do
     end
 
     it "depends on the environment" do
-      Rake::Task["dialogs:import"].prerequisites.should include("environment")
+      expect(Rake::Task["dialogs:import"].prerequisites).to include("environment")
     end
 
     it "delegates to a dialog import helper" do
@@ -29,7 +29,7 @@ describe "dialogs" do
     end
 
     it "depends on the environment" do
-      Rake::Task["dialogs:export"].prerequisites.should include("environment")
+      expect(Rake::Task["dialogs:export"].prerequisites).to include("environment")
     end
 
     context "with a given filename" do

@@ -17,17 +17,17 @@ describe ChartsLayoutService do
   describe "#layout" do
     it "returns layout for specific class if exists" do
       chart = ChartsLayoutService.layout(host_openstack_infra,  UiConstants::CHARTS_LAYOUTS_FOLDER, 'daily_perf_charts', 'Host')
-      chart.should == host_openstack_infra_chart
+      expect(chart).to eq host_openstack_infra_chart
     end
 
     it "returns layout for fname if specific class does not exist" do
       chart = ChartsLayoutService.layout(host_redhat,  UiConstants::CHARTS_LAYOUTS_FOLDER, 'daily_perf_charts', 'Host')
-      chart.should == host_chart
+      expect(chart).to eq host_chart
     end
 
     it "returns base layout if fname is missing" do
       chart = ChartsLayoutService.layout(host_openstack_infra,  UiConstants::CHARTS_LAYOUTS_FOLDER, 'daily_util_charts')
-      chart.should == layout_chart
+      expect(chart).to eq layout_chart
     end
   end
 

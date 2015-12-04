@@ -19,12 +19,12 @@ describe YAMLImportExportMixin do
 
     it "invalid class" do
       @list, @klass = [12345], "xxx"
-      subject.should == []
+      expect(subject).to eq []
     end
 
     it "invalid instance" do
       @list = [12345]
-      subject.should == []
+      expect(subject).to eq []
     end
 
     it "single valid instance" do
@@ -40,7 +40,7 @@ describe YAMLImportExportMixin do
       @report2 = FactoryGirl.create(:miq_report, :name => "test_report_2")
       @list = [@report1.id, @report2.id]
 
-      subject.size.should == 2
+      expect(subject.size).to eq 2
     end
   end
 

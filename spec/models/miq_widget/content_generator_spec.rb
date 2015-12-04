@@ -31,7 +31,7 @@ describe MiqWidget::ContentGenerator do
           end
 
           it "returns the result" do
-            content_generator.generate(widget, klass, group_description, nil, timezones).should == [4, 5]
+            expect(content_generator.generate(widget, klass, group_description, nil, timezones)).to eq [4, 5]
           end
         end
 
@@ -77,7 +77,7 @@ describe MiqWidget::ContentGenerator do
 
         it "returns the result" do
           widget.should_receive(:delete_legacy_contents_for_group)
-          content_generator.generate(widget, klass, group_description, userids).should == [4, 5]
+          expect(content_generator.generate(widget, klass, group_description, userids)).to eq [4, 5]
         end
       end
 

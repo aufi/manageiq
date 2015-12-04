@@ -37,11 +37,11 @@ describe MiqServer do
     end
 
     it "should have proper guid" do
-      @miq_server.guid.should == @guid
+      expect(@miq_server.guid).to eq @guid
     end
 
     it "should have default zone" do
-      @miq_server.zone.name.should == @zone.name
+      expect(@miq_server.zone.name).to eq @zone.name
     end
 
     it "shutdown will raise an event and quiesce" do
@@ -54,14 +54,14 @@ describe MiqServer do
       @miq_server.update_attributes(:status => 'stopped')
       @miq_server.should_receive(:wait_for_stopped).never
       @miq_server.stop(true)
-      MiqQueue.exists?(:method_name => 'shutdown_and_exit', :queue_name => :miq_server, :server_guid => @miq_server.guid).should_not be_true
+      expect(MiqQueue.exists?(:method_name => 'shutdown_and_exit', :queue_name => :miq_server, :server_guid => @miq_server.guid)).not_to be_true
     end
 
     it "async stop will do nothing if stopped" do
       @miq_server.update_attributes(:status => 'stopped')
       @miq_server.should_receive(:wait_for_stopped).never
       @miq_server.stop(false)
-      MiqQueue.exists?(:method_name => 'shutdown_and_exit', :queue_name => :miq_server, :server_guid => @miq_server.guid).should_not be_true
+      expect(MiqQueue.exists?(:method_name => 'shutdown_and_exit', :queue_name => :miq_server, :server_guid => @miq_server.guid)).not_to be_true
     end
 
     it "sync stop will do nothing if killed" do
@@ -69,21 +69,21 @@ describe MiqServer do
       @miq_server.reload
       @miq_server.should_receive(:wait_for_stopped).never
       @miq_server.stop(true)
-      MiqQueue.exists?(:method_name => 'shutdown_and_exit', :queue_name => :miq_server, :server_guid => @miq_server.guid).should_not be_true
+      expect(MiqQueue.exists?(:method_name => 'shutdown_and_exit', :queue_name => :miq_server, :server_guid => @miq_server.guid)).not_to be_true
     end
 
     it "sync stop will queue shutdown_and_exit and wait_for_stopped" do
       @miq_server.update_attributes(:status => 'started')
       @miq_server.should_receive(:wait_for_stopped)
       @miq_server.stop(true)
-      MiqQueue.exists?(:method_name => 'shutdown_and_exit', :queue_name => :miq_server, :server_guid => @miq_server.guid).should be_true
+      expect(MiqQueue.exists?(:method_name => 'shutdown_and_exit', :queue_name => :miq_server, :server_guid => @miq_server.guid)).to be_true
     end
 
     it "async stop will queue shutdown_and_exit and return" do
       @miq_server.update_attributes(:status => 'started')
       @miq_server.should_receive(:wait_for_stopped).never
       @miq_server.stop(false)
-      MiqQueue.exists?(:method_name => 'shutdown_and_exit', :queue_name => :miq_server, :server_guid => @miq_server.guid).should be_true
+      expect(MiqQueue.exists?(:method_name => 'shutdown_and_exit', :queue_name => :miq_server, :server_guid => @miq_server.guid)).to be_true
     end
 
     it "async stop will not update existing exit message and return" do
@@ -95,17 +95,17 @@ describe MiqServer do
     context "#is_recently_active?" do
       it "should return false when last_heartbeat is nil" do
         @miq_server.last_heartbeat = nil
-        @miq_server.is_recently_active?.should be_false
+        expect(@miq_server.is_recently_active?).to be_false
       end
 
       it "should return false when last_heartbeat is at least 10.minutes ago" do
         @miq_server.last_heartbeat = 10.minutes.ago.utc
-        @miq_server.is_recently_active?.should be_false
+        expect(@miq_server.is_recently_active?).to be_false
       end
 
       it "should return true when last_heartbeat is less than 10.minutes ago" do
         @miq_server.last_heartbeat = 500.seconds.ago.utc
-        @miq_server.is_recently_active?.should be_true
+        expect(@miq_server.is_recently_active?).to be_true
       end
     end
 
@@ -118,17 +118,17 @@ describe MiqServer do
       end
 
       it "will queue up a message" do
-        @message.should_not be_nil
+        expect(@message).not_to be_nil
       end
 
       it "message will be high priority" do
-        @message.priority.should == MiqQueue::HIGH_PRIORITY
+        expect(@message.priority).to eq MiqQueue::HIGH_PRIORITY
       end
 
       it "will not requeue if one exists" do
-        MiqQueue.where(@cond).count.should == 1
+        expect(MiqQueue.where(@cond).count).to eq 1
         @miq_server.ntp_reload_queue
-        MiqQueue.where(@cond).count.should == 1
+        expect(MiqQueue.where(@cond).count).to eq 1
       end
     end
 
@@ -174,7 +174,7 @@ describe MiqServer do
 
       it "will queue only one restart_apache" do
         @miq_server.queue_restart_apache
-        MiqQueue.where(@cond).count.should == 1
+        expect(MiqQueue.where(@cond).count).to eq 1
       end
 
       it "delivering will restart apache" do
@@ -218,10 +218,10 @@ describe MiqServer do
       it "quiesce_workers_loop_timeout? will return true if timeout reached" do
         @miq_server.instance_variable_set(:@quiesce_started_on, Time.now.utc)
         @miq_server.instance_variable_set(:@quiesce_loop_timeout, 10.minutes)
-        @miq_server.quiesce_workers_loop_timeout?.should_not be_true
+        expect(@miq_server.quiesce_workers_loop_timeout?).not_to be_true
 
         Timecop.travel 10.minutes do
-          @miq_server.quiesce_workers_loop_timeout?.should be_true
+          expect(@miq_server.quiesce_workers_loop_timeout?).to be_true
         end
       end
 
@@ -229,7 +229,7 @@ describe MiqServer do
         @miq_server.instance_variable_set(:@quiesce_started_on, Time.now.utc)
         @miq_server.instance_variable_set(:@quiesce_loop_timeout, 10.minutes)
         MiqWorker.any_instance.should_receive(:kill).never
-        @miq_server.quiesce_workers_loop_timeout?.should_not be_true
+        expect(@miq_server.quiesce_workers_loop_timeout?).not_to be_true
       end
 
       it "will not kill workers if their quiesce timeout is not reached" do
@@ -328,7 +328,7 @@ describe MiqServer do
       end
 
       it "should have all server roles" do
-        @miq_server.server_roles.should match_array(@server_roles)
+        expect(@miq_server.server_roles).to match_array(@server_roles)
       end
 
       context "activating All roles" do
@@ -337,7 +337,7 @@ describe MiqServer do
         end
 
         it "should have activated All roles" do
-          @miq_server.active_roles.should match_array(@server_roles)
+          expect(@miq_server.active_roles).to match_array(@server_roles)
         end
       end
 
@@ -347,7 +347,7 @@ describe MiqServer do
         end
 
         it "should have activated Event role" do
-          @miq_server.active_role_names.include?("event").should be_true
+          expect(@miq_server.active_role_names.include?("event")).to be_true
         end
       end
     end

@@ -14,16 +14,16 @@ describe "Orchestration provision Method Validation" do
 
   it "catches the error at stack provisioning" do
     ServiceOrchestration.any_instance.stub(:deploy_orchestration_stack) { raise "test failure" }
-    ws.root['ae_result'].should == "error"
-    ws.root['ae_reason'].should == "test failure"
-    request.reload.message.should == "test failure"
+    expect(ws.root['ae_result']).to eq "error"
+    expect(ws.root['ae_reason']).to eq "test failure"
+    expect(request.reload.message).to eq "test failure"
   end
 
   it "truncates the error message exceeding 255 character limits" do
     long_error = 't' * 300
     ServiceOrchestration.any_instance.stub(:deploy_orchestration_stack) { raise long_error }
-    ws.root['ae_result'].should == "error"
-    ws.root['ae_reason'].should == long_error
-    request.reload.message.should == 't' * 252 + '...'
+    expect(ws.root['ae_result']).to eq "error"
+    expect(ws.root['ae_reason']).to eq long_error
+    expect(request.reload.message).to eq 't' * 252 + '...'
   end
 end

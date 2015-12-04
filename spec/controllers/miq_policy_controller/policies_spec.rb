@@ -32,8 +32,8 @@ describe MiqPolicyController do
         controller.instance_variable_set(:@_params, :button => "add")
         controller.policy_edit
         sb = assigns(:sb)
-        sb[:trees][sb[:active_tree]][:active_node].should include("#{active_node}_p-")
-        assigns(:flash_array).first[:message].should include("added")
+        expect(sb[:trees][sb[:active_tree]][:active_node]).to include("#{active_node}_p-")
+        expect(assigns(:flash_array).first[:message]).to include("added")
       end
     end
   end

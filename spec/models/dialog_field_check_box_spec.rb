@@ -136,7 +136,7 @@ describe DialogFieldCheckBox do
 
     shared_examples_for "DialogFieldCheckBox#validate that returns nil" do
       it "returns nil" do
-        dialog_field_check_box.validate(dialog_tab, dialog_group).should be_nil
+        expect(dialog_field_check_box.validate(dialog_tab, dialog_group)).to be_nil
       end
     end
 
@@ -153,9 +153,9 @@ describe DialogFieldCheckBox do
         let(:value) { "f" }
 
         it "returns error message" do
-          dialog_field_check_box.validate(dialog_tab, dialog_group).should eq(
-            "tab/group/dialog_field_check_box is required"
-          )
+          expect(dialog_field_check_box.validate(dialog_tab, dialog_group)).to eq(
+                      "tab/group/dialog_field_check_box is required"
+                    )
         end
       end
     end

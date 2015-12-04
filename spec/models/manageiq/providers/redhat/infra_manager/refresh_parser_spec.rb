@@ -31,28 +31,28 @@ describe ManageIQ::Providers::Redhat::InfraManager::RefreshParser do
       ]}
 
       result = ManageIQ::Providers::Redhat::InfraManager::RefreshParser.vm_inv_to_disk_hashes(disk_inv, {})
-      result.collect { |d| {:interface => d[:controller_type], :location => d[:location], :device_name => d[:device_name]} }.should == [
-        {
-          :interface   => 'virtio',
-          :location    => '0',
-          :device_name => 'abc'
-        },
-        {
-          :interface   => 'virtio',
-          :location    => '1',
-          :device_name => 'other disk 1'
-        },
-        {
-          :interface   => 'virtio',
-          :location    => '2',
-          :device_name => 'my disk 2'
-        },
-        {
-          :interface   => 'ide',
-          :location    => '0',
-          :device_name => 'abc'
-        }
-      ]
+      expect(result.collect { |d| {:interface => d[:controller_type], :location => d[:location], :device_name => d[:device_name]} }).to eq [
+              {
+                :interface   => 'virtio',
+                :location    => '0',
+                :device_name => 'abc'
+              },
+              {
+                :interface   => 'virtio',
+                :location    => '1',
+                :device_name => 'other disk 1'
+              },
+              {
+                :interface   => 'virtio',
+                :location    => '2',
+                :device_name => 'my disk 2'
+              },
+              {
+                :interface   => 'ide',
+                :location    => '0',
+                :device_name => 'abc'
+              }
+            ]
     end
   end
 
@@ -65,14 +65,14 @@ describe ManageIQ::Providers::Redhat::InfraManager::RefreshParser do
         ]
       }
       result = ManageIQ::Providers::Redhat::InfraManager::RefreshParser.vm_inv_to_custom_attribute_hashes(inv)
-      result.should == [
-        {
-          :section => "custom_field",
-          :name    => "custom_attribute",
-          :value   => "#{"0" * 252}...",
-          :source  => "VC"
-        }
-      ]
+      expect(result).to eq [
+              {
+                :section => "custom_field",
+                :name    => "custom_attribute",
+                :value   => "#{"0" * 252}...",
+                :source  => "VC"
+              }
+            ]
     end
   end
 end

@@ -19,8 +19,8 @@ describe ApplicationController  do
 
       it "populates the assigned filters in the session" do
         controller.send(:get_tagdata, record)
-        session[:assigned_filters]['Department'].should == ["Automotive", "Financial Services"]
-        session[:mytags].should == "my tags"
+        expect(session[:assigned_filters]['Department']).to eq ["Automotive", "Financial Services"]
+        expect(session[:mytags]).to eq "my tags"
       end
     end
 
@@ -29,8 +29,8 @@ describe ApplicationController  do
 
       it "sets the assigned filters to an empty hash in the session" do
         controller.send(:get_tagdata, record)
-        session[:assigned_filters].should == {}
-        session[:mytags].should == "my tags"
+        expect(session[:assigned_filters]).to eq {}
+        expect(session[:mytags]).to eq "my tags"
       end
     end
   end
@@ -83,7 +83,7 @@ describe ApplicationController  do
       session[:assigned_filters] = {:Test => %w("Entry1 Entry2)}
 
       controller.send(:tag_edit_build_screen)
-      convert_to_region_id(assigns(:categories)['Clergy']).should eq(convert_to_region_id(assigns(:entries)['Bishop']))
+      expect(convert_to_region_id(assigns(:categories)['Clergy'])).to eq(convert_to_region_id(assigns(:entries)['Bishop']))
     end
   end
 end

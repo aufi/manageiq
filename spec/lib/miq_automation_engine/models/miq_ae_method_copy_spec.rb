@@ -96,13 +96,13 @@ describe MiqAeMethodCopy do
       miq_ae_method.should_receive(:fqname).with(no_args).exactly(ids.length).times { fqname }
       MiqAeMethod.should_receive(:find).with(an_instance_of(Fixnum)).exactly(ids.length).times { miq_ae_method }
       MiqAeMethodCopy.should_receive(:new).with(fqname).exactly(ids.length).times { miq_ae_method_copy }
-      MiqAeMethodCopy.copy_multiple(ids, domain).should match_array(new_ids)
+      expect(MiqAeMethodCopy.copy_multiple(ids, domain)).to match_array(new_ids)
     end
   end
 
   def validate_method(meth1, meth2, status)
     obj = MiqAeMethodCompare.new(meth1, meth2)
     obj.compare
-    obj.status.should eq(status)
+    expect(obj.status).to eq(status)
   end
 end

@@ -59,8 +59,8 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Provision do
 
       it "with default options" do
         clone_options = vm_prov.prepare_for_clone_task
-        clone_options[:name].should == @target_vm_name
-        clone_options[:host].should == @host
+        expect(clone_options[:name]).to eq @target_vm_name
+        expect(clone_options[:host]).to eq @host
       end
     end
 
@@ -72,7 +72,7 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Provision do
       end
 
       it "valid drive" do
-        vm_prov.dest_mount_point.should == "C:\\ClusterStorage\\CLUSP04 Prod Volume 3-1"
+        expect(vm_prov.dest_mount_point).to eq "C:\\ClusterStorage\\CLUSP04 Prod Volume 3-1"
       end
     end
 
@@ -100,7 +100,7 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Provision do
       end
 
       it "set vm" do
-        vm_prov.cpu_ps_script.should == "-CPUCount 2 "
+        expect(vm_prov.cpu_ps_script).to eq "-CPUCount 2 "
       end
     end
 
@@ -112,7 +112,7 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Provision do
       end
 
       it "set vm" do
-        vm_prov.cpu_ps_script.should == "-CPUCount 2 -CPUMaximumPercent 40 "
+        expect(vm_prov.cpu_ps_script).to eq "-CPUCount 2 -CPUMaximumPercent 40 "
       end
     end
 
@@ -124,7 +124,7 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Provision do
       end
 
       it "set vm" do
-        vm_prov.cpu_ps_script.should == "-CPUCount 2 -CPUReserve 15 "
+        expect(vm_prov.cpu_ps_script).to eq "-CPUCount 2 -CPUReserve 15 "
       end
     end
   end

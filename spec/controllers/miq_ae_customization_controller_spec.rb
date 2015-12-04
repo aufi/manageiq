@@ -155,17 +155,17 @@ describe MiqAeCustomizationController do
 
     it "assigns the sandbox active tree" do
       get :explorer
-      assigns(:sb)[:active_tree].should == :old_dialogs_tree
+      expect(assigns(:sb)[:active_tree]).to eq :old_dialogs_tree
     end
 
     it "assigns the sandbox active accord" do
       get :explorer
-      assigns(:sb)[:active_accord].should == :old_dialogs
+      expect(assigns(:sb)[:active_accord]).to eq :old_dialogs
     end
 
     it "assigns the sandbox active node on old dialogs tree to root" do
       get :explorer
-      assigns(:sb)[:active_node][:old_dialogs_tree].should == "root"
+      expect(assigns(:sb)[:active_node][:old_dialogs_tree]).to eq "root"
     end
 
     it "builds the old dialogs tree" do
@@ -175,32 +175,32 @@ describe MiqAeCustomizationController do
 
     it "assigns the sandbox active node on dialogs tree to root" do
       get :explorer
-      assigns(:sb)[:active_node][:dialogs_tree].should == "root"
+      expect(assigns(:sb)[:active_node][:dialogs_tree]).to eq "root"
     end
 
     it "builds the dialog tree" do
       get :explorer
-      assigns(:trees)[1].name.should == :dialogs_tree
+      expect(assigns(:trees)[1].name).to eq :dialogs_tree
     end
 
     it "assigns the sandbox active node on ab tree to root" do
       get :explorer
-      assigns(:sb)[:active_node][:ab_tree].should == "root"
+      expect(assigns(:sb)[:active_node][:ab_tree]).to eq "root"
     end
 
     it "builds the ab tree" do
       get :explorer
-      assigns(:trees)[2].name.should == :ab_tree
+      expect(assigns(:trees)[2].name).to eq :ab_tree
     end
 
     it "assigns the sandbox active node on import/export tree to root" do
       get :explorer
-      assigns(:sb)[:active_node][:dialog_import_export_tree].should == "root"
+      expect(assigns(:sb)[:active_node][:dialog_import_export_tree]).to eq "root"
     end
 
     it "builds the import/export tree" do
       get :explorer
-      assigns(:trees)[3].name.should == :dialog_import_export_tree
+      expect(assigns(:trees)[3].name).to eq :dialog_import_export_tree
     end
 
     context "when the sandbox has flash messages" do
@@ -212,14 +212,14 @@ describe MiqAeCustomizationController do
 
       it "includes the flash messages from the sandbox" do
         get :explorer
-        assigns(:flash_array).should include("the flash messages")
+        expect(assigns(:flash_array)).to include("the flash messages")
       end
     end
 
     context "when the sandbox does not have flash messages" do
       it "does not include the flash message from the sandbox" do
         get :explorer
-        assigns(:flash_array).should_not include("the flash messages")
+        expect(assigns(:flash_array)).not_to include("the flash messages")
       end
     end
   end
@@ -236,10 +236,10 @@ describe MiqAeCustomizationController do
     shared_examples_for "MiqAeCustomizationController#upload_import_file that does not upload a file" do
       it "redirects with a warning message" do
         xhr :post, :upload_import_file, params
-        response.should redirect_to(
-          :action  => :review_import,
-          :message => {:message => "Use the browse button to locate an import file", :level => :warning}.to_json
-        )
+        expect(response).to redirect_to(
+                  :action  => :review_import,
+                  :message => {:message => "Use the browse button to locate an import file", :level => :warning}.to_json
+                )
       end
     end
 
@@ -260,11 +260,11 @@ describe MiqAeCustomizationController do
 
         it "redirects to review_import with an import file upload id" do
           xhr :post, :upload_import_file, params
-          response.should redirect_to(
-            :action                => :review_import,
-            :import_file_upload_id => 123,
-            :message               => {:message => "Import file was uploaded successfully", :level => :info}.to_json
-          )
+          expect(response).to redirect_to(
+                      :action                => :review_import,
+                      :import_file_upload_id => 123,
+                      :message               => {:message => "Import file was uploaded successfully", :level => :info}.to_json
+                    )
         end
 
         it "imports the dialogs" do
@@ -280,13 +280,13 @@ describe MiqAeCustomizationController do
 
         it "redirects with an error message" do
           xhr :post, :upload_import_file, params
-          response.should redirect_to(
-            :action  => :review_import,
-            :message => {
-              :message => "Error: the file uploaded is not of the supported format",
-              :level   => :error
-            }.to_json
-          )
+          expect(response).to redirect_to(
+                      :action  => :review_import,
+                      :message => {
+                        :message => "Error: the file uploaded is not of the supported format",
+                        :level   => :error
+                      }.to_json
+                    )
         end
       end
 
@@ -297,13 +297,13 @@ describe MiqAeCustomizationController do
 
         it "redirects with an error message" do
           xhr :post, :upload_import_file, params
-          response.should redirect_to(
-            :action  => :review_import,
-            :message => {
-              :message => "Error during upload: incorrect Dialog format, only service dialogs can be imported",
-              :level   => :error
-            }.to_json
-          )
+          expect(response).to redirect_to(
+                      :action  => :review_import,
+                      :message => {
+                        :message => "Error during upload: incorrect Dialog format, only service dialogs can be imported",
+                        :level   => :error
+                      }.to_json
+                    )
         end
       end
 
@@ -314,13 +314,13 @@ describe MiqAeCustomizationController do
 
         it "redirects with an error message" do
           xhr :post, :upload_import_file, params
-          response.should redirect_to(
-            :action  => :review_import,
-            :message => {
-              :message => "Error during upload: one of the DialogField types is not supported",
-              :level   => :error
-            }.to_json
-          )
+          expect(response).to redirect_to(
+                      :action  => :review_import,
+                      :message => {
+                        :message => "Error during upload: one of the DialogField types is not supported",
+                        :level   => :error
+                      }.to_json
+                    )
         end
       end
     end
@@ -353,7 +353,7 @@ describe MiqAeCustomizationController do
     shared_examples_for "MiqAeCustomizationController#import_service_dialogs" do
       it "returns a status of 200" do
         xhr :post, :import_service_dialogs, params
-        response.status.should == 200
+        expect(response.status).to eq 200
       end
     end
 
@@ -373,7 +373,7 @@ describe MiqAeCustomizationController do
 
       it "returns the flash message" do
         xhr :post, :import_service_dialogs, params
-        response.body.should == [{:message => "Service dialogs imported successfully", :level => :info}].to_json
+        expect(response.body).to eq [{:message => "Service dialogs imported successfully", :level => :info}].to_json
       end
     end
 
@@ -384,7 +384,7 @@ describe MiqAeCustomizationController do
 
       it "returns the flash message" do
         xhr :post, :import_service_dialogs, params
-        response.body.should == [{:message => "Error: ImportFileUpload expired", :level => :error}].to_json
+        expect(response.body).to eq [{:message => "Error: ImportFileUpload expired", :level => :error}].to_json
       end
     end
   end
@@ -400,12 +400,12 @@ describe MiqAeCustomizationController do
 
     it "assigns the import file upload id" do
       get :review_import, params
-      assigns(:import_file_upload_id).should == "123"
+      expect(assigns(:import_file_upload_id)).to eq "123"
     end
 
     it "assigns the message" do
       get :review_import, params
-      assigns(:message).should == "the message"
+      expect(assigns(:message)).to eq "the message"
     end
   end
 
@@ -428,12 +428,12 @@ describe MiqAeCustomizationController do
 
     it "returns a 200" do
       xhr :post, :cancel_import, params
-      response.status.should == 200
+      expect(response.status).to eq 200
     end
 
     it "returns the flash messages" do
       xhr :post, :cancel_import, params
-      response.body.should == [{:message => "Service dialog import cancelled", :level => :info}].to_json
+      expect(response.body).to eq [{:message => "Service dialog import cancelled", :level => :info}].to_json
     end
   end
 
@@ -451,7 +451,7 @@ describe MiqAeCustomizationController do
 
     it "returns the json" do
       xhr :get, :service_dialog_json, params
-      response.body.should == "the service dialog json"
+      expect(response.body).to eq "the service dialog json"
     end
   end
 
@@ -482,13 +482,13 @@ describe MiqAeCustomizationController do
 
       it "sends the data" do
         get :export_service_dialogs, params
-        response.body.should == "the dialog yml"
+        expect(response.body).to eq "the dialog yml"
       end
 
       it "sets the filename to the current date" do
         Timecop.freeze(2013, 1, 2) do
           get :export_service_dialogs, params
-          response.header['Content-Disposition'].should include("dialog_export_20130102_000000.yml")
+          expect(response.header['Content-Disposition']).to include("dialog_export_20130102_000000.yml")
         end
       end
     end
@@ -498,23 +498,23 @@ describe MiqAeCustomizationController do
 
       it "sets a flash message" do
         get :export_service_dialogs, params
-        assigns(:flash_array).should == [{
-          :message => "At least 1 item must be selected for export",
-          :level   => :error
-        }]
+        expect(assigns(:flash_array)).to eq [{
+                  :message => "At least 1 item must be selected for export",
+                  :level   => :error
+                }]
       end
 
       it "sets the flash array on the sandbox" do
         get :export_service_dialogs, params
-        assigns(:sb)[:flash_msg].should == [{
-          :message => "At least 1 item must be selected for export",
-          :level   => :error
-        }]
+        expect(assigns(:sb)[:flash_msg]).to eq [{
+                  :message => "At least 1 item must be selected for export",
+                  :level   => :error
+                }]
       end
 
       it "redirects to the explorer" do
         get :export_service_dialogs, params
-        response.should redirect_to(:action => :explorer)
+        expect(response).to redirect_to(:action => :explorer)
       end
     end
   end

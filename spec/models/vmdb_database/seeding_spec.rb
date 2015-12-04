@@ -22,19 +22,19 @@ describe VmdbDatabase do
         table_names = ['flintstones']
         described_class.connection.stub(:tables).and_return(table_names)
         @db.seed
-        @db.evm_tables.collect(&:name).should == table_names
+        expect(@db.evm_tables.collect(&:name)).to eq table_names
       end
 
       it "removes deleted tables" do
         table_names = ['flintstones']
         table_names.each { |t| FactoryGirl.create(:vmdb_table_evm, :vmdb_database => @db, :name => t) }
         @db.reload
-        @db.evm_tables.collect(&:name).should == table_names
+        expect(@db.evm_tables.collect(&:name)).to eq table_names
 
         described_class.connection.stub(:tables).and_return([])
         @db.seed
         @db.reload
-        @db.evm_tables.collect(&:name).should == []
+        expect(@db.evm_tables.collect(&:name)).to eq []
       end
 
       it "finds existing tables" do
@@ -43,18 +43,18 @@ describe VmdbDatabase do
         described_class.connection.stub(:tables).and_return(table_names)
         VmdbTableEvm.should_receive(:create).never
         @db.seed
-        @db.evm_tables.collect(&:name).should == table_names
+        expect(@db.evm_tables.collect(&:name)).to eq table_names
       end
     end
 
     context ".seed_self" do
       it "should have empty table before seeding" do
-        described_class.in_my_region.count.should == 0
+        expect(described_class.in_my_region.count).to eq 0
       end
 
       it "should have only one record" do
         described_class.seed_self
-        described_class.in_my_region.count.should == 1
+        expect(described_class.in_my_region.count).to eq 1
       end
 
       it "should have populated columns" do
@@ -69,7 +69,7 @@ describe VmdbDatabase do
         db.update_attributes(:data_directory => "stubbed")
 
         columns.each do |column|
-          db.send(column).should_not be_nil
+          expect(db.send(column)).not_to be_nil
         end
       end
 
@@ -82,7 +82,7 @@ describe VmdbDatabase do
         described_class.seed_self
 
         db = described_class.my_database
-        db.ipaddress.should == stubbed_ip_address
+        expect(db.ipaddress).to eq stubbed_ip_address
       end
 
       it "should update table values" do
@@ -94,7 +94,7 @@ describe VmdbDatabase do
         described_class.seed_self
 
         db = described_class.my_database
-        db.ipaddress.should == stubbed_ip_address
+        expect(db.ipaddress).to eq stubbed_ip_address
       end
     end
   end

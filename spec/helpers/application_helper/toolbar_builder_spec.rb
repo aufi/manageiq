@@ -1397,7 +1397,7 @@ describe ApplicationHelper do
 
         it "and @record.has_proxy? and is archived" do
           @record.stub(:archived? => true)
-          subject.should == true
+          expect(subject).to eq true
         end
       end
 
@@ -1698,7 +1698,7 @@ describe ApplicationHelper do
     ['list', 'tile', 'grid'].each do |g|
       it "when with view_#{g}" do
         @gtl_type = g
-        build_toolbar_disable_button("view_#{g}").should be_true
+        expect(build_toolbar_disable_button("view_#{g}")).to be_true
       end
     end
 
@@ -1706,13 +1706,13 @@ describe ApplicationHelper do
       # setup for x_tree_history
       @sb = {:history     => {:testing => %w(something)},
              :active_tree => :testing}
-      build_toolbar_disable_button('history_1').should be_true
+      expect(build_toolbar_disable_button('history_1')).to be_true
     end
 
     ['button_add', 'button_save', 'button_reset'].each do |b|
       it "when with #{b} and not changed" do
         @changed = false
-        build_toolbar_disable_button(b).should be_true
+        expect(build_toolbar_disable_button(b)).to be_true
       end
     end
 
@@ -2273,7 +2273,7 @@ describe ApplicationHelper do
         end
 
         it "should be available for vmware storages" do
-          subject.should be(false)
+          expect(subject).to be(false)
         end
       end
 
@@ -2284,7 +2284,7 @@ describe ApplicationHelper do
         end
 
         it "should be not be available for non-vmware storages" do
-          subject.should include('cannot be performed on selected')
+          expect(subject).to include('cannot be performed on selected')
         end
       end
 
@@ -2386,8 +2386,8 @@ describe ApplicationHelper do
       ['vm_snapshot_add', 'vm_snapshot_delete', 'vm_snapshot_delete_all', 'vm_snapshot_revert'].each do |b|
         it "button #{b}" do
           res = build_toolbar_disable_button(b)
-          res.should be_true
-          res.should include("not supported")
+          expect(res).to be_true
+          expect(res).to include("not supported")
         end
       end
     end
@@ -2396,15 +2396,15 @@ describe ApplicationHelper do
       it "button vm_retire_now" do
         @record = FactoryGirl.create(:vm_redhat, :retired => true)
         res = build_toolbar_disable_button("vm_retire_now")
-        res.should be_true
-        res.should include("already retired")
+        expect(res).to be_true
+        expect(res).to include("already retired")
       end
 
       it "button instance_retire_now" do
         @record = FactoryGirl.create(:vm_amazon, :retired => true)
         res = build_toolbar_disable_button("instance_retire_now")
-        res.should be_true
-        res.should include("already retired")
+        expect(res).to be_true
+        expect(res).to include("already retired")
       end
     end
 
@@ -2482,7 +2482,7 @@ describe ApplicationHelper do
       context "when with #{id} button should be visible" do
         before { @id = id }
         it "and record_id" do
-          subject.should be_false
+          expect(subject).to be_false
         end
       end
     end
@@ -2501,7 +2501,7 @@ describe ApplicationHelper do
       context "when with #{id} button should not be visible as user does not have access to these features" do
         before { @id = id }
         it "and record_id" do
-          subject.should be_true
+          expect(subject).to be_true
         end
       end
     end
@@ -2819,13 +2819,13 @@ describe ApplicationHelper do
     it "Hides PDF button when PdfGenerator is not available" do
       PdfGenerator.stub(:available? => false)
       buttons = helper.build_toolbar('gtl_view_tb').collect { |button| button[:items] if button['id'] == "download_choice" }.compact.flatten
-      buttons.should_not include(@pdf_button)
+      expect(buttons).not_to include(@pdf_button)
     end
 
     it "Displays PDF button when PdfGenerator is available" do
       PdfGenerator.stub(:available? => true)
       buttons = helper.build_toolbar('gtl_view_tb').collect { |button| button[:items] if button['id'] == "download_choice" }.compact.flatten
-      buttons.should include(@pdf_button)
+      expect(buttons).to include(@pdf_button)
     end
 
     it "Enables edit and remove buttons for read-write orchestration templates" do

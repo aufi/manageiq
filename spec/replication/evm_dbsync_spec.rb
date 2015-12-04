@@ -87,9 +87,9 @@ describe "evm:dbsync" do
   end
 
   def assert_replication_enabled
-    @slave_connection.tables.should include "#{@rr_prefix}_pending_changes"
-    @slave_connection.tables.should include "#{@rr_prefix}_sync_state"
-    @slave_connection.tables.should include "#{@rr_prefix}_logged_events"
+    expect(@slave_connection.tables).to include "#{@rr_prefix}_pending_changes"
+    expect(@slave_connection.tables).to include "#{@rr_prefix}_sync_state"
+    expect(@slave_connection.tables).to include "#{@rr_prefix}_logged_events"
 
     # TODO: assert sync_state content
   end
@@ -107,7 +107,7 @@ describe "evm:dbsync" do
 
       expected = (t =~ excluded_tables_regex ? 0 : row_count(@slave_connection, t))
       got      = row_count(@master_connection, t)
-      got.should eq(expected), "on table: #{t}\nexpected: #{expected}\n     got: #{got} (using ==)"
+      expect(got).to eq(expected), "on table: #{t}\nexpected: #{expected}\n     got: #{got} (using ==)"
     end
   end
 

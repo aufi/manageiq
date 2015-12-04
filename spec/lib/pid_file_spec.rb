@@ -9,7 +9,7 @@ describe PidFile do
   context "#pid" do
     it "returns nil when file does not exist" do
       File.stub(:file?).with(@fname).and_return(false)
-      @pid_file.pid.should be_nil
+      expect(@pid_file.pid).to be_nil
     end
 
     context "file does exist" do
@@ -19,18 +19,18 @@ describe PidFile do
 
       it "returns nil when file contents blank" do
         IO.stub(:read).with(@fname).and_return("  ")
-        @pid_file.pid.should be_nil
+        expect(@pid_file.pid).to be_nil
       end
 
       it "returns nil when file contents are non numeric" do
         IO.stub(:read).with(@fname).and_return("text")
-        @pid_file.pid.should be_nil
+        expect(@pid_file.pid).to be_nil
       end
 
       it "returns pid when file contents have pid" do
         pid = 42
         IO.stub(:read).with(@fname).and_return("#{pid} ")
-        @pid_file.pid.should == pid
+        expect(@pid_file.pid).to eq pid
       end
     end
   end
@@ -66,7 +66,7 @@ describe PidFile do
   context "#running?" do
     it "returns false if #pid returns nil" do
       @pid_file.stub(:pid).and_return(nil)
-      @pid_file.running?.should be_false
+      expect(@pid_file.running?).to be_false
     end
 
     context "#pid returns valid value" do
@@ -77,7 +77,7 @@ describe PidFile do
 
       it "returns false if MiqProcess.command_line returns nil" do
         MiqProcess.stub(:command_line).and_return(nil)
-        @pid_file.running?.should be_false
+        expect(@pid_file.running?).to be_false
       end
 
       context "MiqProcess.command_line returns valid value" do
@@ -87,23 +87,23 @@ describe PidFile do
         end
 
         it "returns true with no parms" do
-          @pid_file.running?.should be_true
+          expect(@pid_file.running?).to be_true
         end
 
         it "returns true with valid Regexp" do
-          @pid_file.running?(/program/).should be_true
+          expect(@pid_file.running?(/program/)).to be_true
         end
 
         it "returns true with valid Regexp as String" do
-          @pid_file.running?('program').should be_true
+          expect(@pid_file.running?('program')).to be_true
         end
 
         it "returns false with invalid Regexp" do
-          @pid_file.running?(/programme/).should be_false
+          expect(@pid_file.running?(/programme/)).to be_false
         end
 
         it "returns false with invalid Regexp as String" do
-          @pid_file.running?('programme').should be_false
+          expect(@pid_file.running?('programme')).to be_false
         end
       end
     end

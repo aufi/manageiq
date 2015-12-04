@@ -6,7 +6,7 @@ describe MiqAction do
       @vm   = FactoryGirl.create(:vm_vmware)
       FactoryGirl.create(:miq_action, :name => "custom_automation")
       @action = MiqAction.find_by_name("custom_automation")
-      @action.should_not be_nil
+      expect(@action).not_to be_nil
       @action.options = {:ae_request => "test_custom_automation"}
       @args = {
         :object_type      => @vm.class.base_class.name,
@@ -46,9 +46,9 @@ describe MiqAction do
     EmsEvent.any_instance.should_receive(:handle_event).never
     res = action.action_evm_event(action, vm, :policy => MiqPolicy.new)
 
-    res.should be_kind_of EmsEvent
-    res.host_id.should == host.id
-    res.ems_id.should == ems.id
+    expect(res).to be_kind_of EmsEvent
+    expect(res.host_id).to eq host.id
+    expect(res.ems_id).to eq ems.id
   end
 
   context "#raise_automation_event" do
@@ -58,9 +58,9 @@ describe MiqAction do
       FactoryGirl.create(:miq_event_definition, :name => "vm_start")
       FactoryGirl.create(:miq_action, :name => "raise_automation_event")
       @action = MiqAction.find_by_name("raise_automation_event")
-      @action.should_not be_nil
+      expect(@action).not_to be_nil
       @event = MiqEventDefinition.find_by_name("vm_start")
-      @event.should_not be_nil
+      expect(@event).not_to be_nil
       @aevent = {
         :vm     => @vm,
         :host   => nil,
@@ -102,7 +102,7 @@ describe MiqAction do
     before(:each) do
       FactoryGirl.create(:miq_action, :name => "ems_refresh")
       @action = MiqAction.find_by_name("ems_refresh")
-      @action.should_not be_nil
+      expect(@action).not_to be_nil
       @zone1 = FactoryGirl.create(:small_environment)
       @vm = @zone1.vms.first
     end
@@ -134,8 +134,8 @@ describe MiqAction do
         date   = Time.now.utc - 1.day
 
         VmOrTemplate.should_receive(:retire) do |vms, options|
-          vms.should == [@vm]
-          options[:date].should be_same_time_as date
+          expect(vms).to eq [@vm]
+          expect(options[:date]).to be_same_time_as date
         end
         @action.action_vm_retire(@action, @vm, input)
       end
@@ -150,12 +150,12 @@ describe MiqAction do
         date   = Time.now.utc - 1.day
 
         @action.action_vm_retire(@action, @vm, input)
-        MiqQueue.count.should == 1
+        expect(MiqQueue.count).to eq 1
         msg = MiqQueue.first
-        msg.class_name.should == @vm.class.name
-        msg.method_name.should == 'retire'
-        msg.args.should == [[@vm], :date => date]
-        msg.zone.should == zone
+        expect(msg.class_name).to eq @vm.class.name
+        expect(msg.method_name).to eq 'retire'
+        expect(msg.args).to eq [[@vm], :date => date]
+        expect(msg.zone).to eq zone
       end
     end
   end

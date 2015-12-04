@@ -23,7 +23,7 @@ describe OpsController do
 
       it "responds with a filtered vm list" do
         json = JSON.parse(response.body)
-        json["filtered_item_list"].should == ["vmtest"]
+        expect(json["filtered_item_list"]).to eq ["vmtest"]
       end
     end
 
@@ -38,7 +38,7 @@ describe OpsController do
 
       it "responds with a filtered ext management system list" do
         json = JSON.parse(response.body)
-        json["filtered_item_list"].should == ["emstest"]
+        expect(json["filtered_item_list"]).to eq ["emstest"]
       end
     end
 
@@ -61,7 +61,7 @@ describe OpsController do
 
       it "responds with a filtered cluster list" do
         json = JSON.parse(response.body)
-        json["filtered_item_list"].should == [%w(clustertest__datacenter desc)]
+        expect(json["filtered_item_list"]).to eq [%w(clustertest__datacenter desc)]
       end
     end
 
@@ -76,7 +76,7 @@ describe OpsController do
 
       it "responds with a filtered host list" do
         json = JSON.parse(response.body)
-        json["filtered_item_list"].should == ["hosttest"]
+        expect(json["filtered_item_list"]).to eq ["hosttest"]
       end
     end
   end

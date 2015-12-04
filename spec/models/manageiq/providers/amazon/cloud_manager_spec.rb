@@ -2,11 +2,11 @@ require "spec_helper"
 
 describe ManageIQ::Providers::Amazon::CloudManager do
   it ".ems_type" do
-    described_class.ems_type.should == 'ec2'
+    expect(described_class.ems_type).to eq 'ec2'
   end
 
   it ".description" do
-    described_class.description.should == 'Amazon EC2'
+    expect(described_class.description).to eq 'Amazon EC2'
   end
 
   describe ".metrics_collector_queue_name" do
@@ -33,33 +33,33 @@ describe ManageIQ::Providers::Amazon::CloudManager do
     end
 
     def assert_region(ems, name)
-      ems.name.should == name
-      ems.provider_region.should == name.split(" ").first
-      ems.auth_user_pwd.should == [@ec2_user, @ec2_pass]
+      expect(ems.name).to eq name
+      expect(ems.provider_region).to eq name.split(" ").first
+      expect(ems.auth_user_pwd).to eq [@ec2_user, @ec2_pass]
     end
 
     def assert_region_on_another_account(ems, name)
-      ems.name.should == name
-      ems.provider_region.should == name.split(" ").first
-      ems.auth_user_pwd.should == [@ec2_user2, @ec2_pass2]
+      expect(ems.name).to eq name
+      expect(ems.provider_region).to eq name.split(" ").first
+      expect(ems.auth_user_pwd).to eq [@ec2_user2, @ec2_pass2]
     end
 
     it "with no existing records" do
       found = recorded_discover(example)
-      found.count.should == 2
+      expect(found.count).to eq 2
 
       emses = ManageIQ::Providers::Amazon::CloudManager.order(:name)
-      emses.count.should == 2
+      expect(emses.count).to eq 2
       assert_region(emses[0], "us-east-1")
       assert_region(emses[1], "us-west-1")
     end
 
     it "with no existing records and greenfield Amazon" do
       found = recorded_discover(example)
-      found.count.should == 1
+      expect(found.count).to eq 1
 
       emses = ManageIQ::Providers::Amazon::CloudManager.order(:name)
-      emses.count.should == 1
+      expect(emses.count).to eq 1
       assert_region(emses[0], "us-east-1")
     end
 
@@ -67,10 +67,10 @@ describe ManageIQ::Providers::Amazon::CloudManager do
       FactoryGirl.create(:ems_amazon_with_authentication, :name => "us-west-1", :provider_region => "us-west-1")
 
       found = recorded_discover(example)
-      found.count.should == 1
+      expect(found.count).to eq 1
 
       emses = ManageIQ::Providers::Amazon::CloudManager.order(:name)
-      emses.count.should == 2
+      expect(emses.count).to eq 2
       assert_region(emses[0], "us-east-1")
       assert_region(emses[1], "us-west-1")
     end
@@ -80,10 +80,10 @@ describe ManageIQ::Providers::Amazon::CloudManager do
       FactoryGirl.create(:ems_amazon_with_authentication, :name => "us-west-1", :provider_region => "us-west-1")
 
       found = recorded_discover(example)
-      found.count.should == 0
+      expect(found.count).to eq 0
 
       emses = ManageIQ::Providers::Amazon::CloudManager.order(:name)
-      emses.count.should == 2
+      expect(emses.count).to eq 2
       assert_region(emses[0], "us-east-1")
       assert_region(emses[1], "us-west-1")
     end
@@ -93,10 +93,10 @@ describe ManageIQ::Providers::Amazon::CloudManager do
         FactoryGirl.create(:ems_amazon_with_authentication_on_other_account, :name => "us-west-1", :provider_region => "us-west-1")
 
         found = recorded_discover(example)
-        found.count.should == 2
+        expect(found.count).to eq 2
 
         emses = ManageIQ::Providers::Amazon::CloudManager.order(:name).includes(:authentications)
-        emses.count.should == 3
+        expect(emses.count).to eq 3
         assert_region(emses[0], "us-east-1")
         assert_region_on_another_account(emses[1], "us-west-1")
         assert_region(emses[2], "us-west-1 #{@ec2_user}")
@@ -107,10 +107,10 @@ describe ManageIQ::Providers::Amazon::CloudManager do
         FactoryGirl.create(:ems_amazon_with_authentication_on_other_account, :name => "us-west-1 #{@ec2_user}", :provider_region => "us-west-1")
 
         found = recorded_discover(example)
-        found.count.should == 2
+        expect(found.count).to eq 2
 
         emses = ManageIQ::Providers::Amazon::CloudManager.order(:name).includes(:authentications)
-        emses.count.should == 4
+        expect(emses.count).to eq 4
         assert_region(emses[0], "us-east-1")
         assert_region_on_another_account(emses[1], "us-west-1")
         assert_region_on_another_account(emses[2], "us-west-1 #{@ec2_user}")
@@ -123,10 +123,10 @@ describe ManageIQ::Providers::Amazon::CloudManager do
         FactoryGirl.create(:ems_amazon_with_authentication_on_other_account, :name => "us-west-1 1", :provider_region => "us-west-1")
 
         found = recorded_discover(example)
-        found.count.should == 2
+        expect(found.count).to eq 2
 
         emses = ManageIQ::Providers::Amazon::CloudManager.order(:name).includes(:authentications)
-        emses.count.should == 5
+        expect(emses.count).to eq 5
         assert_region(emses[0], "us-east-1")
         assert_region_on_another_account(emses[1], "us-west-1")
         assert_region_on_another_account(emses[2], "us-west-1 #{@ec2_user}")
@@ -138,10 +138,10 @@ describe ManageIQ::Providers::Amazon::CloudManager do
 
   it "#description" do
     ems = FactoryGirl.build(:ems_amazon, :provider_region => "us-east-1")
-    ems.description.should == "US East (Northern Virginia)"
+    expect(ems.description).to eq "US East (Northern Virginia)"
 
     ems = FactoryGirl.build(:ems_amazon, :provider_region => "us-west-1")
-    ems.description.should == "US West (Northern California)"
+    expect(ems.description).to eq "US West (Northern California)"
   end
 
   context "validates_uniqueness_of" do

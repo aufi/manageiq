@@ -69,10 +69,10 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
   end
 
   def assert_ems
-    @ems.should have_attributes(
-      :api_version => nil,
-      :uid_ems     => nil
-    )
+    expect(@ems).to have_attributes(
+          :api_version => nil,
+          :uid_ems     => nil
+        )
 
     expect(@ems.ems_clusters.size).to                be > 0
     expect(@ems.hosts.size).to                       be > 0
@@ -90,64 +90,64 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
   def assert_specific_host
     @host = ManageIQ::Providers::Openstack::InfraManager::Host.all.detect { |x| x.name.include?('(Controller)') }
 
-    @host.ems_ref.should_not be nil
-    @host.ems_ref_obj.should_not be nil
-    @host.mac_address.should_not be nil
-    @host.ipaddress.should_not be nil
-    @host.ems_cluster.should_not be nil
+    expect(@host.ems_ref).not_to be nil
+    expect(@host.ems_ref_obj).not_to be nil
+    expect(@host.mac_address).not_to be nil
+    expect(@host.ipaddress).not_to be nil
+    expect(@host.ems_cluster).not_to be nil
 
-    @host.should have_attributes(
-      :ipmi_address     => nil,
-      :vmm_vendor       => "RedHat",
-      :vmm_version      => nil,
-      :vmm_product      => "rhel (No hypervisor, Host Type is Controller)",
-      :power_state      => "on",
-      :connection_state => "connected",
-      :service_tag      => nil,
-    )
+    expect(@host).to have_attributes(
+          :ipmi_address     => nil,
+          :vmm_vendor       => "RedHat",
+          :vmm_version      => nil,
+          :vmm_product      => "rhel (No hypervisor, Host Type is Controller)",
+          :power_state      => "on",
+          :connection_state => "connected",
+          :service_tag      => nil,
+        )
 
     expect(@host.private_networks.count).to be > 0
     expect(@host.private_networks.first).to be_kind_of(ManageIQ::Providers::Openstack::InfraManager::CloudNetwork::Private)
     expect(@host.network_ports.count).to    be > 0
     expect(@host.network_ports.first).to    be_kind_of(ManageIQ::Providers::Openstack::InfraManager::NetworkPort)
 
-    @host.operating_system.should have_attributes(
-      :product_name     => "linux"
-    )
+    expect(@host.operating_system).to have_attributes(
+          :product_name     => "linux"
+        )
 
-    @host.hardware.should have_attributes(
-      :cpu_speed            => 2000,
-      :cpu_type             => "RHEL 7.1.0 PC (i440FX + PIIX, 1996)",
-      :manufacturer         => "Red Hat",
-      :model                => "KVM",
-      :memory_mb            => 8192,
-      :memory_console       => nil,
-      :disk_capacity        => 40,
-      :cpu_sockets          => 4,
-      :cpu_total_cores      => 4,
-      :cpu_cores_per_socket => 1,
-      :guest_os             => nil,
-      :guest_os_full_name   => nil,
-      :cpu_usage            => nil,
-      :memory_usage         => nil,
-      :number_of_nics       => 1,
-      :bios                 => "seabios-1.7.5-8.el7"
-    )
+    expect(@host.hardware).to have_attributes(
+          :cpu_speed            => 2000,
+          :cpu_type             => "RHEL 7.1.0 PC (i440FX + PIIX, 1996)",
+          :manufacturer         => "Red Hat",
+          :model                => "KVM",
+          :memory_mb            => 8192,
+          :memory_console       => nil,
+          :disk_capacity        => 40,
+          :cpu_sockets          => 4,
+          :cpu_total_cores      => 4,
+          :cpu_cores_per_socket => 1,
+          :guest_os             => nil,
+          :guest_os_full_name   => nil,
+          :cpu_usage            => nil,
+          :memory_usage         => nil,
+          :number_of_nics       => 1,
+          :bios                 => "seabios-1.7.5-8.el7"
+        )
 
     assert_specific_disk(@host.hardware.disks.first)
   end
 
   def assert_specific_disk(disk)
-    disk.should have_attributes(
-      :device_name     => 'sda',
-      :device_type     => 'disk',
-      :controller_type => 'scsi',
-      :present         => true,
-      :filename        => 'ata-QEMU_HARDDISK_QM00005',
-      :location        => nil,
-      :size            => 47_244_640_256,
-      :disk_type       => nil,
-      :mode            => 'persistent')
+    expect(disk).to have_attributes(
+          :device_name     => 'sda',
+          :device_type     => 'disk',
+          :controller_type => 'scsi',
+          :present         => true,
+          :filename        => 'ata-QEMU_HARDDISK_QM00005',
+          :location        => nil,
+          :size            => 47_244_640_256,
+          :disk_type       => nil,
+          :mode            => 'persistent')
   end
 
   def assert_specific_public_template
@@ -156,37 +156,37 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
 
   def assert_specific_template(name, is_public = false)
     template = ManageIQ::Providers::Openstack::InfraManager::Template.where(:name => name).first
-    template.should have_attributes(
-      :template              => true,
-      :publicly_available    => is_public,
-      :ems_ref_obj           => nil,
-      :vendor                => "OpenStack",
-      :power_state           => "never",
-      :location              => "unknown",
-      :tools_status          => nil,
-      :boot_time             => nil,
-      :standby_action        => nil,
-      :connection_state      => nil,
-      :cpu_affinity          => nil,
-      :memory_reserve        => nil,
-      :memory_reserve_expand => nil,
-      :memory_limit          => nil,
-      :memory_shares         => nil,
-      :memory_shares_level   => nil,
-      :cpu_reserve           => nil,
-      :cpu_reserve_expand    => nil,
-      :cpu_limit             => nil,
-      :cpu_shares            => nil,
-      :cpu_shares_level      => nil
-    )
-    template.ems_ref.should be_guid
+    expect(template).to have_attributes(
+          :template              => true,
+          :publicly_available    => is_public,
+          :ems_ref_obj           => nil,
+          :vendor                => "OpenStack",
+          :power_state           => "never",
+          :location              => "unknown",
+          :tools_status          => nil,
+          :boot_time             => nil,
+          :standby_action        => nil,
+          :connection_state      => nil,
+          :cpu_affinity          => nil,
+          :memory_reserve        => nil,
+          :memory_reserve_expand => nil,
+          :memory_limit          => nil,
+          :memory_shares         => nil,
+          :memory_shares_level   => nil,
+          :cpu_reserve           => nil,
+          :cpu_reserve_expand    => nil,
+          :cpu_limit             => nil,
+          :cpu_shares            => nil,
+          :cpu_shares_level      => nil
+        )
+    expect(template.ems_ref).to be_guid
 
     expect(template.ext_management_system).to  eq @ems
-    template.operating_system.should           be_nil # TODO: This should probably not be nil
+    expect(template.operating_system).to be_nil # TODO: This should probably not be nil
     expect(template.custom_attributes.size).to eq 0
     expect(template.snapshots.size).to         eq 0
-    template.hardware.should                   be_nil
-    template.parent.should                     be_nil
+    expect(template.hardware).to be_nil
+    expect(template.parent).to be_nil
     template
   end
 end

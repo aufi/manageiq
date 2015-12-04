@@ -45,9 +45,9 @@ describe DialogFieldSerializer do
     end
 
     it "serializes the dialog_field" do
-      dialog_field_serializer.serialize(dialog_field).should == expected_serialized_values.merge(
-        "resource_action" => "serialized resource action"
-      )
+      expect(dialog_field_serializer.serialize(dialog_field)).to eq expected_serialized_values.merge(
+              "resource_action" => "serialized resource action"
+            )
     end
   end
 end

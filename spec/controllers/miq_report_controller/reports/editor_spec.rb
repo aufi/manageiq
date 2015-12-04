@@ -17,8 +17,8 @@ describe ReportController do
         controller.instance_variable_set(:@rpt, rep)
         controller.send(:set_form_vars)
         new_hash = assigns(:edit)[:new]
-        new_hash.should have_key(:cb_owner_id)
-        new_hash[:cb_owner_id].should == user.userid
+        expect(new_hash).to have_key(:cb_owner_id)
+        expect(new_hash[:cb_owner_id]).to eq user.userid
       end
 
       it "should save the selected time zone with a chargeback report" do
@@ -67,7 +67,7 @@ describe ReportController do
 
         rep.reload
 
-        rep.tz.should == "Eastern Time (US & Canada)"
+        expect(rep.tz).to eq "Eastern Time (US & Canada)"
       end
     end
   end

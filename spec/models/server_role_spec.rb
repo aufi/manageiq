@@ -16,15 +16,15 @@ describe ServerRole do
     end
 
     it "should return all names" do
-      @server_roles.collect(&:name).sort.should == ServerRole.all_names.sort
+      expect(@server_roles.collect(&:name).sort).to eq ServerRole.all_names.sort
     end
 
     it "should respond to master_supported? properly" do
-      @server_roles.each { |s| (s.max_concurrent == 1).should == s.master_supported? }
+      @server_roles.each { |s| expect((s.max_concurrent == 1)).to eq s.master_supported? }
     end
 
     it "should respond to unlimited? properly" do
-      @server_roles.each { |s| (s.max_concurrent == 0).should == s.unlimited? }
+      @server_roles.each { |s| expect((s.max_concurrent == 0)).to eq s.unlimited? }
     end
   end
 
@@ -58,7 +58,7 @@ describe ServerRole do
     end
 
     it "should create proper number of rows" do
-      (@csv.split("\n").length - 1).should == ServerRole.count
+      expect((@csv.split("\n").length - 1)).to eq ServerRole.count
     end
 
     it "should import rows properly" do
@@ -71,16 +71,16 @@ describe ServerRole do
         external_failover = true  if external_failover == 'true'
         external_failover = false if external_failover == 'false'
         sr = ServerRole.find_by_name(name)
-        sr.description.should == description
-        sr.max_concurrent.should == max_concurrent
-        sr.external_failover.should == external_failover
-        sr.role_scope.should == role_scope
+        expect(sr.description).to eq description
+        expect(sr.max_concurrent).to eq max_concurrent
+        expect(sr.external_failover).to eq external_failover
+        expect(sr.role_scope).to eq role_scope
 
         case max_concurrent
         when 0
-          sr.unlimited?.should be_true
+          expect(sr.unlimited?).to be_true
         when 1
-          sr.master_supported?.should be_true
+          expect(sr.master_supported?).to be_true
         end
       end
     end

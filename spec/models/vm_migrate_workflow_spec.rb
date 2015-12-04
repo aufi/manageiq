@@ -13,7 +13,7 @@ describe VmMigrateWorkflow do
       context "#allowed_hosts" do
         it "with no hosts" do
           stub_dialog
-          workflow.allowed_hosts.should == []
+          expect(workflow.allowed_hosts).to eq []
         end
 
         it "with a host" do
@@ -22,7 +22,7 @@ describe VmMigrateWorkflow do
           host.set_parent(ems)
           workflow.stub(:process_filter).and_return([host])
 
-          workflow.allowed_hosts.should == [workflow.ci_to_hash_struct(host)]
+          expect(workflow.allowed_hosts).to eq [workflow.ci_to_hash_struct(host)]
         end
       end
     end

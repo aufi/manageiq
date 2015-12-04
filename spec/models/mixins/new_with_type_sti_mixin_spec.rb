@@ -3,24 +3,24 @@ require "spec_helper"
 describe NewWithTypeStiMixin do
   context ".new" do
     it "without type" do
-      Host.new.class.should == Host
-      ManageIQ::Providers::Redhat::InfraManager::Host.new.class.should == ManageIQ::Providers::Redhat::InfraManager::Host
-      ManageIQ::Providers::Vmware::InfraManager::Host.new.class.should == ManageIQ::Providers::Vmware::InfraManager::Host
-      ManageIQ::Providers::Vmware::InfraManager::HostEsx.new.class.should == ManageIQ::Providers::Vmware::InfraManager::HostEsx
+      expect(Host.new.class).to eq Host
+      expect(ManageIQ::Providers::Redhat::InfraManager::Host.new.class).to eq ManageIQ::Providers::Redhat::InfraManager::Host
+      expect(ManageIQ::Providers::Vmware::InfraManager::Host.new.class).to eq ManageIQ::Providers::Vmware::InfraManager::Host
+      expect(ManageIQ::Providers::Vmware::InfraManager::HostEsx.new.class).to eq ManageIQ::Providers::Vmware::InfraManager::HostEsx
     end
 
     it "with type" do
-      Host.new(:type => "Host").class.should == Host
-      Host.new(:type => "ManageIQ::Providers::Redhat::InfraManager::Host").class.should == ManageIQ::Providers::Redhat::InfraManager::Host
-      Host.new(:type => "ManageIQ::Providers::Vmware::InfraManager::Host").class.should == ManageIQ::Providers::Vmware::InfraManager::Host
-      Host.new(:type => "ManageIQ::Providers::Vmware::InfraManager::HostEsx").class.should == ManageIQ::Providers::Vmware::InfraManager::HostEsx
-      ManageIQ::Providers::Vmware::InfraManager::Host.new(:type  => "ManageIQ::Providers::Vmware::InfraManager::HostEsx").class.should == ManageIQ::Providers::Vmware::InfraManager::HostEsx
+      expect(Host.new(:type => "Host").class).to eq Host
+      expect(Host.new(:type => "ManageIQ::Providers::Redhat::InfraManager::Host").class).to eq ManageIQ::Providers::Redhat::InfraManager::Host
+      expect(Host.new(:type => "ManageIQ::Providers::Vmware::InfraManager::Host").class).to eq ManageIQ::Providers::Vmware::InfraManager::Host
+      expect(Host.new(:type => "ManageIQ::Providers::Vmware::InfraManager::HostEsx").class).to eq ManageIQ::Providers::Vmware::InfraManager::HostEsx
+      expect(ManageIQ::Providers::Vmware::InfraManager::Host.new(:type  => "ManageIQ::Providers::Vmware::InfraManager::HostEsx").class).to eq ManageIQ::Providers::Vmware::InfraManager::HostEsx
 
-      Host.new("type" => "Host").class.should == Host
-      Host.new("type" => "ManageIQ::Providers::Redhat::InfraManager::Host").class.should == ManageIQ::Providers::Redhat::InfraManager::Host
-      Host.new("type" => "ManageIQ::Providers::Vmware::InfraManager::Host").class.should == ManageIQ::Providers::Vmware::InfraManager::Host
-      Host.new("type" => "ManageIQ::Providers::Vmware::InfraManager::HostEsx").class.should == ManageIQ::Providers::Vmware::InfraManager::HostEsx
-      ManageIQ::Providers::Vmware::InfraManager::Host.new("type" => "ManageIQ::Providers::Vmware::InfraManager::HostEsx").class.should == ManageIQ::Providers::Vmware::InfraManager::HostEsx
+      expect(Host.new("type" => "Host").class).to eq Host
+      expect(Host.new("type" => "ManageIQ::Providers::Redhat::InfraManager::Host").class).to eq ManageIQ::Providers::Redhat::InfraManager::Host
+      expect(Host.new("type" => "ManageIQ::Providers::Vmware::InfraManager::Host").class).to eq ManageIQ::Providers::Vmware::InfraManager::Host
+      expect(Host.new("type" => "ManageIQ::Providers::Vmware::InfraManager::HostEsx").class).to eq ManageIQ::Providers::Vmware::InfraManager::HostEsx
+      expect(ManageIQ::Providers::Vmware::InfraManager::Host.new("type" => "ManageIQ::Providers::Vmware::InfraManager::HostEsx").class).to eq ManageIQ::Providers::Vmware::InfraManager::HostEsx
     end
 
     context "with invalid type" do

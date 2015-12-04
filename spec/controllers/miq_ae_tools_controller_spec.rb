@@ -15,8 +15,8 @@ describe MiqAeToolsController do
       controller.should_receive(:render)
       controller.instance_variable_set(:@_params, :target_class => '', :id => 'new')
       controller.send(:form_field_changed)
-      assigns(:resolve)[:new][:target_class].should eq('')
-      assigns(:resolve)[:new][:target_id].should eq(nil)
+      expect(assigns(:resolve)[:new][:target_class]).to eq('')
+      expect(assigns(:resolve)[:new][:target_id]).to eq(nil)
     end
   end
 
@@ -215,12 +215,12 @@ Methods updated/added: 10
 
     it "assigns the import file upload id" do
       get :review_import, params
-      assigns(:import_file_upload_id).should == "123"
+      expect(assigns(:import_file_upload_id)).to eq "123"
     end
 
     it "assigns the message" do
       get :review_import, params
-      assigns(:message).should == "the message"
+      expect(assigns(:message)).to eq "the message"
     end
   end
 
@@ -234,10 +234,10 @@ Methods updated/added: 10
     shared_examples_for "MiqAeToolsController#upload_import_file that does not upload a file" do
       it "redirects with a warning message" do
         xhr :post, :upload_import_file, params
-        response.should redirect_to(
-          :action  => :review_import,
-          :message => {:message => "Use the browse button to locate an import file", :level => :warning}.to_json
-        )
+        expect(response).to redirect_to(
+                  :action  => :review_import,
+                  :message => {:message => "Use the browse button to locate an import file", :level => :warning}.to_json
+                )
       end
     end
 
@@ -259,11 +259,11 @@ Methods updated/added: 10
 
       it "redirects to review_import" do
         xhr :post, :upload_import_file, params
-        response.should redirect_to(
-          :action                => :review_import,
-          :import_file_upload_id => 123,
-          :message               => {:message => "Import file was uploaded successfully", :level => :info}.to_json
-        )
+        expect(response).to redirect_to(
+                  :action                => :review_import,
+                  :import_file_upload_id => 123,
+                  :message               => {:message => "Import file was uploaded successfully", :level => :info}.to_json
+                )
       end
     end
 

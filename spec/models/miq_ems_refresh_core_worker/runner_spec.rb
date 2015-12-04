@@ -86,7 +86,7 @@ describe MiqEmsRefreshCoreWorker::Runner do
         it "and no networks persisted" do
           props = {"guest.net" => [{"ipAddress" => ["1.2.3.4", "::1:2:3:4"], 'macAddress' => "00:00:00:00:00:00"}]}
           @worker.process_update([@vm.ems_ref_obj, props])
-          @vm.ipaddresses.should be_empty
+          expect(@vm.ipaddresses).to be_empty
         end
 
         context "and networks already persisted" do
@@ -137,11 +137,11 @@ describe MiqEmsRefreshCoreWorker::Runner do
         end
 
         def should_not_have_network_changes
-          @hw.nics(true).sort_by(&:address).collect { |n| [n.network.try(:ipaddress), n.network.try(:ipv6address)] }.should == @expected_addresses
+          expect(@hw.nics(true).sort_by(&:address).collect { |n| [n.network.try(:ipaddress), n.network.try(:ipv6address)] }).to eq @expected_addresses
         end
 
         def should_have_network_changes(expected)
-          @hw.nics(true).sort_by(&:address).collect { |n| [n.network.try(:ipaddress), n.network.try(:ipv6address)] }.should == expected
+          expect(@hw.nics(true).sort_by(&:address).collect { |n| [n.network.try(:ipaddress), n.network.try(:ipv6address)] }).to eq expected
         end
       end
     end
@@ -194,9 +194,9 @@ describe MiqEmsRefreshCoreWorker::Runner do
           obj.reload
         end
       end.should_not raise_error
-      obj.template.should == expected_template
-      obj.state.should == expected_state
-      obj.state_changed_on.should be_same_time_as expected_time
+      expect(obj.template).to eq expected_template
+      expect(obj.state).to eq expected_state
+      expect(obj.state_changed_on).to be_same_time_as expected_time
     end
 
     def should_not_have_changed(obj, props)
@@ -205,9 +205,9 @@ describe MiqEmsRefreshCoreWorker::Runner do
       expected_time     = obj.state_changed_on
       @worker.process_update([obj.ems_ref_obj, props])
       -> { obj.reload }.should_not raise_error
-      obj.template.should == expected_template
-      obj.state.should == expected_state
-      obj.state_changed_on.should be_same_time_as expected_time
+      expect(obj.template).to eq expected_template
+      expect(obj.state).to eq expected_state
+      expect(obj.state_changed_on).to be_same_time_as expected_time
     end
   end
 end

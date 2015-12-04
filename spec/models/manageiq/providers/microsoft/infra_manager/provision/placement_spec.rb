@@ -48,8 +48,8 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Provision do
 
     def check
       host, storage = @task.send(:placement)
-      host.should eql(@host)
-      storage.should eql(@storage)
+      expect(host).to eql(@host)
+      expect(storage).to eql(@storage)
     end
   end
 end

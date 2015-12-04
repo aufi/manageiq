@@ -29,8 +29,8 @@ describe FixReplicationOnUpgradeFromVersionFour do
       migrate
 
       settings = configuration_stub.first.settings
-      settings.key_path?("workers", "worker_base", :replication_worker, :replication, :include_tables).should be_false
-      settings.fetch_path("workers", "worker_base", :replication_worker, :replication, :exclude_tables).should eq(described_class::V5_DEFAULT_EXCLUDE_TABLES)
+      expect(settings.key_path?("workers", "worker_base", :replication_worker, :replication, :include_tables)).to be_false
+      expect(settings.fetch_path("workers", "worker_base", :replication_worker, :replication, :exclude_tables)).to eq(described_class::V5_DEFAULT_EXCLUDE_TABLES)
     end
 
     context "handles replication" do
@@ -62,14 +62,14 @@ describe FixReplicationOnUpgradeFromVersionFour do
 
         migrate
 
-        changed.collect { |c| c.reload.change_table }.should == %w(
-          drift_states
-          miq_cim_derived_metrics
-          miq_request_tasks
-          miq_storage_metrics
-          storages_vms_and_templates
-        )
-        ignored.reload.change_table.should == "accounts"
+        expect(changed.collect { |c| c.reload.change_table }).to eq %w(
+                  drift_states
+                  miq_cim_derived_metrics
+                  miq_request_tasks
+                  miq_storage_metrics
+                  storages_vms_and_templates
+                )
+        expect(ignored.reload.change_table).to eq "accounts"
       end
 
       it "for renamed tables in rr_sync_states" do
@@ -86,14 +86,14 @@ describe FixReplicationOnUpgradeFromVersionFour do
 
         migrate
 
-        changed.collect { |c| c.reload.table_name }.should == %w(
-          drift_states
-          miq_cim_derived_metrics
-          miq_request_tasks
-          miq_storage_metrics
-          storages_vms_and_templates
-        )
-        ignored.reload.table_name.should == "accounts"
+        expect(changed.collect { |c| c.reload.table_name }).to eq %w(
+                  drift_states
+                  miq_cim_derived_metrics
+                  miq_request_tasks
+                  miq_storage_metrics
+                  storages_vms_and_templates
+                )
+        expect(ignored.reload.table_name).to eq "accounts"
       end
 
       it "for removed tables in rr_sync_states" do
@@ -110,7 +110,7 @@ describe FixReplicationOnUpgradeFromVersionFour do
         migrate
 
         deleted.each { |c| expect { c.reload }.to raise_error(ActiveRecord::RecordNotFound) }
-        ignored.reload.table_name.should == "accounts"
+        expect(ignored.reload.table_name).to eq "accounts"
       end
     end
   end

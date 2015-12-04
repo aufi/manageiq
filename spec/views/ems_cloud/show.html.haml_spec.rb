@@ -20,12 +20,12 @@ describe "ems_cloud/show.html.haml" do
     let(:showtype) { "main" }
     it "should not show '<Unknown> Credentials'" do
       render
-      rendered.should_not include('&lt;Unknown&gt; Credentials')
+      expect(rendered).not_to include('&lt;Unknown&gt; Credentials')
     end
 
     it "should show 'AMQP Credentials'" do
       render
-      rendered.should include('AMQP Credentials')
+      expect(rendered).to include('AMQP Credentials')
     end
   end
 end

@@ -2,11 +2,11 @@ require "spec_helper"
 
 describe ManageIQ::Providers::Redhat::InfraManager do
   it ".ems_type" do
-    described_class.ems_type.should == 'rhevm'
+    expect(described_class.ems_type).to eq 'rhevm'
   end
 
   it ".description" do
-    described_class.description.should == 'Red Hat Enterprise Virtualization Manager'
+    expect(described_class.description).to eq 'Red Hat Enterprise Virtualization Manager'
   end
 
   describe ".metrics_collector_queue_name" do
@@ -18,12 +18,12 @@ describe ManageIQ::Providers::Redhat::InfraManager do
 
   it "rhevm_metrics_connect_options" do
     h = FactoryGirl.create(:ems_redhat, :hostname => "h")
-    h.rhevm_metrics_connect_options[:host].should == "h"
+    expect(h.rhevm_metrics_connect_options[:host]).to eq "h"
   end
 
   it "rhevm_metrics_connect_options overrides" do
     h = FactoryGirl.create(:ems_redhat, :hostname => "h")
-    h.rhevm_metrics_connect_options(:hostname => "i")[:host].should == "i"
+    expect(h.rhevm_metrics_connect_options(:hostname => "i")[:host]).to eq "i"
   end
 
   context "#vm_reconfigure" do

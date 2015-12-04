@@ -22,7 +22,7 @@ describe MiqAeMethodService::MiqAeServiceEmsEvent do
     it "when with multiple targets" do
       @vm.update_attributes(:ext_management_system => @ems)
       EmsRefresh.should_receive(:queue_refresh).once do |args|
-        args.should match_array([@ems, @vm])
+        expect(args).to match_array([@ems, @vm])
       end
 
       @service_event.refresh("src_vm", "dest_vm")
@@ -117,10 +117,10 @@ describe MiqAeMethodService::MiqAeServiceEmsEvent do
 
     it "when uses default policy source" do
       MiqEvent.should_receive(:raise_evm_event) do |vm, event, inputs|
-        vm.should eq(@vm)
-        event.should eq(@event)
-        inputs.should have_key(:ext_management_systems)
-        inputs[:ext_management_systems].should eq(@ems)
+        expect(vm).to eq(@vm)
+        expect(event).to eq(@event)
+        expect(inputs).to have_key(:ext_management_systems)
+        expect(inputs[:ext_management_systems]).to eq(@ems)
       end
       @service_event.policy("src_vm", @event, nil)
     end

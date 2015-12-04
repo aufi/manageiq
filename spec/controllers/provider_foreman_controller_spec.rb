@@ -40,7 +40,7 @@ describe ProviderForemanController do
     set_user_privileges
     get :index
     expect(response.status).to eq(302)
-    response.should redirect_to(:action => 'explorer')
+    expect(response).to redirect_to(:action => 'explorer')
   end
 
   it "renders explorer" do

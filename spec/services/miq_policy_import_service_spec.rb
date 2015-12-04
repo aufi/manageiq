@@ -80,7 +80,7 @@ describe MiqPolicyImportService do
       end
 
       it "returns the import file upload" do
-        miq_policy_import_service.store_for_import(file_contents).should == import_file_upload
+        expect(miq_policy_import_service.store_for_import(file_contents)).to eq import_file_upload
       end
 
       it "queues deletion of the object" do

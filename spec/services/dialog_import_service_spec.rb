@@ -76,7 +76,7 @@ describe DialogImportService do
 
         it "does not create a third dialog" do
           dialog_import_service.import_from_file(filename)
-          Dialog.count.should == 2
+          expect(Dialog.count).to eq 2
         end
 
         it "yields the given block" do
@@ -85,26 +85,26 @@ describe DialogImportService do
             block_called = true
           end
 
-          block_called.should be_true
+          expect(block_called).to be_true
         end
       end
 
       context "when there is not an existing dialog" do
         it "builds a new dialog" do
           dialog_import_service.import_from_file(filename)
-          Dialog.first.should_not be_nil
+          expect(Dialog.first).not_to be_nil
         end
 
         it "builds a dialog tab associated to the dialog" do
           dialog_import_service.import_from_file(filename)
           dialog = Dialog.first
-          DialogTab.first.dialog.should == dialog
+          expect(DialogTab.first.dialog).to eq dialog
         end
 
         it "builds a dialog group associated to the dialog tab" do
           dialog_import_service.import_from_file(filename)
           dialog_tab = DialogTab.first
-          DialogGroup.first.dialog_tab.should == dialog_tab
+          expect(DialogGroup.first.dialog_tab).to eq dialog_tab
         end
 
         it "imports the dialog fields" do
@@ -156,26 +156,26 @@ describe DialogImportService do
 
       it "overwrites the existing dialog" do
         dialog_import_service.import_all_service_dialogs_from_yaml_file("filename")
-        Dialog.where(:label => "Test2").first.description.should == "potato"
+        expect(Dialog.where(:label => "Test2").first.description).to eq "potato"
       end
     end
 
     context "when there are no existing dialogs" do
       it "builds a new dialog" do
         dialog_import_service.import_all_service_dialogs_from_yaml_file("filename")
-        Dialog.first.should_not be_nil
+        expect(Dialog.first).not_to be_nil
       end
 
       it "builds a dialog tab associated to the dialog" do
         dialog_import_service.import_all_service_dialogs_from_yaml_file("filename")
         dialog = Dialog.first
-        DialogTab.first.dialog.should == dialog
+        expect(DialogTab.first.dialog).to eq dialog
       end
 
       it "builds a dialog group associated to the dialog tab" do
         dialog_import_service.import_all_service_dialogs_from_yaml_file("filename")
         dialog_tab = DialogTab.first
-        DialogGroup.first.dialog_tab.should == dialog_tab
+        expect(DialogGroup.first.dialog_tab).to eq dialog_tab
       end
 
       it "imports the dialog fields" do
@@ -230,7 +230,7 @@ describe DialogImportService do
 
         it "overwrites the existing dialog" do
           dialog_import_service.import_service_dialogs(import_file_upload, dialogs_to_import)
-          Dialog.where(:label => "Test2").first.description.should == "potato"
+          expect(Dialog.where(:label => "Test2").first.description).to eq "potato"
         end
       end
 
@@ -239,19 +239,19 @@ describe DialogImportService do
 
         it "builds a new dialog" do
           dialog_import_service.import_service_dialogs(import_file_upload, dialogs_to_import)
-          Dialog.first.should_not be_nil
+          expect(Dialog.first).not_to be_nil
         end
 
         it "builds a dialog tab associated to the dialog" do
           dialog_import_service.import_service_dialogs(import_file_upload, dialogs_to_import)
           dialog = Dialog.first
-          DialogTab.first.dialog.should == dialog
+          expect(DialogTab.first.dialog).to eq dialog
         end
 
         it "builds a dialog group associated to the dialog tab" do
           dialog_import_service.import_service_dialogs(import_file_upload, dialogs_to_import)
           dialog_tab = DialogTab.first
-          DialogGroup.first.dialog_tab.should == dialog_tab
+          expect(DialogGroup.first.dialog_tab).to eq dialog_tab
         end
 
         it "imports the dialog fields" do
@@ -306,7 +306,7 @@ describe DialogImportService do
       end
 
       it "returns the imported file upload" do
-        dialog_import_service.store_for_import("the data").should == import_file_upload
+        expect(dialog_import_service.store_for_import("the data")).to eq import_file_upload
       end
 
       it "queues a deletion" do

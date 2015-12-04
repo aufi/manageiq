@@ -12,11 +12,11 @@ describe LdapUser do
 
       lm.direct_reports << lu
 
-      lm.direct_reports.should have(1).thing
-      lm.managers.should have(0).thing
+      expect(lm.direct_reports).to have(1).thing
+      expect(lm.managers).to have(0).thing
 
-      lu.managers.should have(1).thing
-      lu.direct_reports.should have(0).thing
+      expect(lu.managers).to have(1).thing
+      expect(lu.direct_reports).to have(0).thing
     end
   end
 end

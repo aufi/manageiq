@@ -20,7 +20,7 @@ module MiqAeServiceServiceSpec
     end
 
     it "#remove_from_vmdb" do
-      Service.count.should == 1
+      expect(Service.count).to eq 1
       method = "$evm.root['#{@ae_result_key}'] = $evm.root['service'].remove_from_vmdb"
       @ae_method.update_attributes(:data => method)
       ae_object = invoke_ae.root(@ae_result_key)
@@ -70,7 +70,7 @@ module MiqAeServiceServiceSpec
         invoke_ae
 
         @parent.reload
-        @parent.direct_service_children.collect(&:id).should == [@service.id]
+        expect(@parent.direct_service_children.collect(&:id)).to eq [@service.id]
       end
 
       it "clears the parent service" do

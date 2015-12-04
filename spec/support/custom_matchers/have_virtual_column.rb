@@ -1,9 +1,9 @@
 RSpec::Matchers.define :have_virtual_column do |name, type|
   match do |klass|
     vcol = klass.virtual_columns_hash[name.to_s]
-    vcol.should_not  be_nil
-    vcol.type.should == type
-    klass.instance_methods.include?(name.to_sym).should be_true
+    expect(vcol).not_to be_nil
+    expect(vcol.type).to eq type
+    expect(klass.instance_methods.include?(name.to_sym)).to be_true
   end
 
   failure_message_for_should do |klass|

@@ -29,12 +29,12 @@ describe MiqReportResult do
 
       report_result.reload
 
-      report_result.should_not be_nil
-      report_result.report.kind_of?(MiqReport).should be_true
-      report_result.binary_blob.should_not be_nil
-      report_result.report_results.kind_of?(MiqReport).should be_true
-      report_result.report_results.table.should_not be_nil
-      report_result.report_results.table.data.should_not be_nil
+      expect(report_result).not_to be_nil
+      expect(report_result.report.kind_of?(MiqReport)).to be_true
+      expect(report_result.binary_blob).not_to be_nil
+      expect(report_result.report_results.kind_of?(MiqReport)).to be_true
+      expect(report_result.report_results.table).not_to be_nil
+      expect(report_result.report_results.table.data).not_to be_nil
     end
   end
 

@@ -90,8 +90,8 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
       it "tests '#{ex[:image_name]}'" do
         result_image, result_registry = parser.send(:parse_image_name, ex[:image_name], example_ref)
 
-        result_image.should == ex[:image]
-        result_registry.should == ex[:registry]
+        expect(result_image).to eq ex[:image]
+        expect(result_registry).to eq ex[:registry]
       end
     end
   end
@@ -247,18 +247,18 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
       parsed_volumes = parser.send(:parse_volumes, example_volumes.collect { |ex| ex[:volume] })
 
       example_volumes.zip(parsed_volumes).each do |example, parsed|
-        parsed.should have_attributes(
-          :name                  => example[:name],
-          :git_repository        => example[:git_repository],
-          :empty_dir_medium_type => example[:empty_dir_medium_type],
-          :gce_pd_name           => example[:gce_pd_name],
-          :common_fs_type        => example[:common_fs_type],
-          :common_path           => example[:common_path],
-          :common_read_only      => example[:common_read_only],
-          :common_secret         => example[:common_secret],
-          :common_volume_id      => example[:common_volume_id],
-          :common_partition      => example[:common_partition]
-        )
+        expect(parsed).to have_attributes(
+                  :name                  => example[:name],
+                  :git_repository        => example[:git_repository],
+                  :empty_dir_medium_type => example[:empty_dir_medium_type],
+                  :gce_pd_name           => example[:gce_pd_name],
+                  :common_fs_type        => example[:common_fs_type],
+                  :common_path           => example[:common_path],
+                  :common_read_only      => example[:common_read_only],
+                  :common_secret         => example[:common_secret],
+                  :common_volume_id      => example[:common_volume_id],
+                  :common_partition      => example[:common_partition]
+                )
       end
     end
   end
@@ -303,13 +303,13 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
       it "tests '#{ex[:name]}'" do
         parsed_component_status = parser.send(:parse_component_status, ex[:component_status])
 
-        parsed_component_status.should have_attributes(
-          :name      => ex[:name],
-          :condition => ex[:condition],
-          :status    => ex[:status],
-          :message   => ex[:message],
-          :error     => ex[:error]
-        )
+        expect(parsed_component_status).to have_attributes(
+                  :name      => ex[:name],
+                  :condition => ex[:condition],
+                  :status    => ex[:status],
+                  :message   => ex[:message],
+                  :error     => ex[:error]
+                )
       end
     end
   end
@@ -336,104 +336,104 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
 
   describe "quota parsing" do
     it "handles simple data" do
-      parser.send(
-        :parse_quota,
-        RecursiveOpenStruct.new(
-          :metadata => {
-            :name              => 'test-quota',
-            :namespace         => 'test-namespace',
-            :uid               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
-            :resourceVersion   => '165339',
-            :creationTimestamp => '2015-08-17T09:16:46Z',
-          },
-          :spec     => {
-            :hard => {
-              :cpu => '30'
+      expect(parser.send(
+              :parse_quota,
+              RecursiveOpenStruct.new(
+                :metadata => {
+                  :name              => 'test-quota',
+                  :namespace         => 'test-namespace',
+                  :uid               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
+                  :resourceVersion   => '165339',
+                  :creationTimestamp => '2015-08-17T09:16:46Z',
+                },
+                :spec     => {
+                  :hard => {
+                    :cpu => '30'
+                  }
+                },
+                :status   => {
+                  :hard => {
+                    :cpu => '30'
+                  },
+                  :used => {
+                    :cpu => '100m'
+                  }
+                }
+              )
+            )).to eq {
+              :name                  => 'test-quota',
+              :ems_ref               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
+              :creation_timestamp    => '2015-08-17T09:16:46Z',
+              :resource_version      => '165339',
+              :project               => nil,
+              :container_quota_items => [
+                {
+                  :resource       => "cpu",
+                  :quota_desired  => "30",
+                  :quota_enforced => "30",
+                  :quota_observed => "100m"
+                }
+              ]
             }
-          },
-          :status   => {
-            :hard => {
-              :cpu => '30'
-            },
-            :used => {
-              :cpu => '100m'
-            }
-          }
-        )
-      ).should == {
-        :name                  => 'test-quota',
-        :ems_ref               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
-        :creation_timestamp    => '2015-08-17T09:16:46Z',
-        :resource_version      => '165339',
-        :project               => nil,
-        :container_quota_items => [
-          {
-            :resource       => "cpu",
-            :quota_desired  => "30",
-            :quota_enforced => "30",
-            :quota_observed => "100m"
-          }
-        ]
-      }
     end
 
     it "handles quotas with no specification" do
-      parser.send(
-        :parse_quota,
-        RecursiveOpenStruct.new(
-          :metadata => {
-            :name              => 'test-quota',
-            :namespace         => 'test-namespace',
-            :uid               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
-            :resourceVersion   => '165339',
-            :creationTimestamp => '2015-08-17T09:16:46Z',
-          },
-          :spec     => {},
-          :status   => {}
-        )
-      ).should == {
-        :name                  => 'test-quota',
-        :ems_ref               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
-        :creation_timestamp    => '2015-08-17T09:16:46Z',
-        :resource_version      => '165339',
-        :project               => nil,
-        :container_quota_items => []
-      }
+      expect(parser.send(
+              :parse_quota,
+              RecursiveOpenStruct.new(
+                :metadata => {
+                  :name              => 'test-quota',
+                  :namespace         => 'test-namespace',
+                  :uid               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
+                  :resourceVersion   => '165339',
+                  :creationTimestamp => '2015-08-17T09:16:46Z',
+                },
+                :spec     => {},
+                :status   => {}
+              )
+            )).to eq {
+              :name                  => 'test-quota',
+              :ems_ref               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
+              :creation_timestamp    => '2015-08-17T09:16:46Z',
+              :resource_version      => '165339',
+              :project               => nil,
+              :container_quota_items => []
+            }
     end
 
     it "handles quotas with no status" do
-      parser.send(
-        :parse_quota,
-        RecursiveOpenStruct.new(
-          :metadata => {
-            :name              => 'test-quota',
-            :namespace         => 'test-namespace',
-            :uid               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
-            :resourceVersion   => '165339',
-            :creationTimestamp => '2015-08-17T09:16:46Z',
-          },
-          :spec     => {
-            :hard => {
-              :cpu => '30'
+      expect(parser.send(
+              :parse_quota,
+              RecursiveOpenStruct.new(
+                :metadata => {
+                  :name              => 'test-quota',
+                  :namespace         => 'test-namespace',
+                  :uid               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
+                  :resourceVersion   => '165339',
+                  :creationTimestamp => '2015-08-17T09:16:46Z',
+                },
+                :spec     => {
+                  :hard => {
+                    :cpu => '30'
+                  }
+                },
+                :status   => {}
+              )
+            )).to eq {
+              :name                  => 'test-quota',
+              :ems_ref               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
+              :creation_timestamp    => '2015-08-17T09:16:46Z',
+              :resource_version      => '165339',
+              :project               => nil,
+              :container_quota_items => [
+                {
+                  :resource       => "cpu",
+                  :quota_desired  => "30",
+                  :quota_enforced => nil,
+                  :quota_observed => nil
+                }
+              ]
             }
-          },
-          :status   => {}
-        )
-      ).should == {
-        :name                  => 'test-quota',
-        :ems_ref               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
-        :creation_timestamp    => '2015-08-17T09:16:46Z',
-        :resource_version      => '165339',
-        :project               => nil,
-        :container_quota_items => [
-          {
-            :resource       => "cpu",
-            :quota_desired  => "30",
-            :quota_enforced => nil,
-            :quota_observed => nil
-          }
-        ]
-      }
     end
   end
 
@@ -477,36 +477,36 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
         from_k8s[:spec][:limits][0][k8s_name.to_sym] = {:cpu => '512Mi'}
         parsed[:container_limit_items][0][k8s_name.underscore.to_sym] = '512Mi'
         # note each iteration ADDS ANOTHER limit type to data & result
-        parser.send(:parse_range, RecursiveOpenStruct.new(from_k8s)).should == parsed
+        expect(parser.send(:parse_range, RecursiveOpenStruct.new(from_k8s))).to eq parsed
       end
     end
 
     it "handles limits without specification" do
-      parser.send(
-        :parse_range,
-        RecursiveOpenStruct.new(
-          :metadata => {
-            :name              => 'test-range',
-            :namespace         => 'test-namespace',
-            :uid               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
-            :resourceVersion   => '2',
-            :creationTimestamp => '2015-08-17T09:16:46Z',
-          },
-          :spec     => {
-            :limits => []
-          },
-        )
-      ).should == {
-        :name                  => 'test-range',
-        :ems_ref               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
-        :creation_timestamp    => '2015-08-17T09:16:46Z',
-        :resource_version      => '2',
-        :project               => nil,
-        :container_limit_items => []
-      }
+      expect(parser.send(
+              :parse_range,
+              RecursiveOpenStruct.new(
+                :metadata => {
+                  :name              => 'test-range',
+                  :namespace         => 'test-namespace',
+                  :uid               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
+                  :resourceVersion   => '2',
+                  :creationTimestamp => '2015-08-17T09:16:46Z',
+                },
+                :spec     => {
+                  :limits => []
+                },
+              )
+            )).to eq {
+              :name                  => 'test-range',
+              :ems_ref               => 'af3d1a10-44c0-11e5-b186-0aaeec44370e',
+              :creation_timestamp    => '2015-08-17T09:16:46Z',
+              :resource_version      => '2',
+              :project               => nil,
+              :container_limit_items => []
+            }
     end
   end
-  
+
   describe "parse_container_image" do
     shared_image_without_host = "shared/image"
     shared_image_with_host = "host:1234/shared/image"
@@ -518,7 +518,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
         first_obj  = parser.parse_container_image(shared_image, shared_ref)
         second_obj = parser.parse_container_image(shared_image, unique_ref)
 
-        first_obj.should_not be(second_obj)
+        expect(first_obj).not_to be(second_obj)
       end
     end
 
@@ -527,7 +527,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
         first_obj  = parser.parse_container_image(shared_image, shared_ref)
         second_obj = parser.parse_container_image(shared_image, unique_ref)
 
-        first_obj.should_not == second_obj
+        expect(first_obj).not_to eq second_obj
       end
     end
 
@@ -536,7 +536,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
         first_obj  = parser.parse_container_image(shared_image, shared_ref)
         second_obj = parser.parse_container_image(shared_image, shared_ref)
 
-        first_obj.should be(second_obj)
+        expect(first_obj).to be(second_obj)
       end
     end
   end

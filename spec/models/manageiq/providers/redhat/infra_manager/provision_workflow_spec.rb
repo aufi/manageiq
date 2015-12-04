@@ -33,9 +33,9 @@ describe ManageIQ::Providers::Redhat::InfraManager::ProvisionWorkflow do
 
     it "for ISO and PXE provisioning" do
       result = workflow.allowed_storages
-      result.length.should == 2
-      result.each { |storage| storage.should be_kind_of(MiqHashStruct) }
-      result.each { |storage| storage.storage_domain_type.should == "data" }
+      expect(result.length).to eq 2
+      result.each { |storage| expect(storage).to be_kind_of(MiqHashStruct) }
+      result.each { |storage| expect(storage.storage_domain_type).to eq "data" }
     end
 
     it "for linked-clone provisioning" do
@@ -44,9 +44,9 @@ describe ManageIQ::Providers::Redhat::InfraManager::ProvisionWorkflow do
       template.save
 
       result = workflow.allowed_storages
-      result.length.should == 1
-      result.each { |storage| storage.should be_kind_of(MiqHashStruct) }
-      result.each { |storage| storage.storage_domain_type.should == "data" }
+      expect(result.length).to eq 1
+      result.each { |storage| expect(storage).to be_kind_of(MiqHashStruct) }
+      result.each { |storage| expect(storage.storage_domain_type).to eq "data" }
     end
   end
 
@@ -55,12 +55,12 @@ describe ManageIQ::Providers::Redhat::InfraManager::ProvisionWorkflow do
 
     it "when supports_native_clone? is true" do
       workflow.stub(:supports_native_clone?).and_return(true)
-      workflow.supports_linked_clone?.should be_true
+      expect(workflow.supports_linked_clone?).to be_true
     end
 
     it "when supports_native_clone? is false " do
       workflow.stub(:supports_native_clone?).and_return(false)
-      workflow.supports_linked_clone?.should be_false
+      expect(workflow.supports_linked_clone?).to be_false
     end
   end
 
@@ -68,7 +68,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::ProvisionWorkflow do
     let(:workflow) { described_class.new({:src_vm_id => template.id}, admin) }
 
     it "should support cloud-init" do
-      workflow.supports_cloud_init?.should == true
+      expect(workflow.supports_cloud_init?).to eq true
     end
   end
 

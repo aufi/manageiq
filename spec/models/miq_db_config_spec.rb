@@ -42,7 +42,7 @@ describe MiqDbConfig do
     it "exception" do
       VmdbDatabaseConnection.stub(:all).and_raise("FAILURE")
       MiqDbConfig.log_activity_statistics(@buffer)
-      @buffer.string.lines.first.should == "MIQ(DbConfig.log_activity_statistics) Unable to log stats, 'FAILURE'"
+      expect(@buffer.string.lines.first).to eq "MIQ(DbConfig.log_activity_statistics) Unable to log stats, 'FAILURE'"
     end
   end
 
@@ -53,7 +53,7 @@ describe MiqDbConfig do
       "postgresql"   => "External Postgres Database"
     }
 
-    MiqDbConfig.get_db_types.should == expected
+    expect(MiqDbConfig.get_db_types).to eq expected
   end
 
   context ".raw_config" do
@@ -76,14 +76,14 @@ EOF
       ERB.should_not_receive(:new)
 
       expected = {"host" => "localhost", "username" => "root", "password" => "<%= MiqPassword.decrypt(\"#{enc_pass}\")%>"}
-      MiqDbConfig.raw_config["production"].should == expected
+      expect(MiqDbConfig.raw_config["production"]).to eq expected
     end
 
     it "non-production" do
       ERB.should_receive(:new).and_call_original
 
       expected = {"host" => "localhost", "username" => "root", "password" => password}
-      MiqDbConfig.raw_config["production"].should == expected
+      expect(MiqDbConfig.raw_config["production"]).to eq expected
     end
   end
 
@@ -241,11 +241,11 @@ EOF
     end
 
     it "returns saved VMDB::Config" do
-      @vmdb_config.config.fetch_path(:production, :host).should == "abc"
+      expect(@vmdb_config.config.fetch_path(:production, :host)).to eq "abc"
     end
 
     it "resets cache" do
-      described_class.raw_config.fetch_path('production', 'host').should == "abc"
+      expect(described_class.raw_config.fetch_path('production', 'host')).to eq "abc"
     end
   end
 

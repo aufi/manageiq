@@ -10,7 +10,7 @@ describe MiqWorker do
       all_workers.each do |worker|
         # If this isn't true, we're probably accidentally inheriting the
         # runner from a superclass
-        worker::Runner.name.should eq("#{worker.name}::Runner")
+        expect(worker::Runner.name).to eq("#{worker.name}::Runner")
       end
     end
   end
@@ -20,14 +20,14 @@ describe MiqWorker do
       described_class.any_instance.should_receive(:stop)
       worker = FactoryGirl.create(:miq_worker, :status => "started")
       worker.class.workers = 0
-      worker.class.sync_workers.should == {:adds => [], :deletes => [worker.pid]}
+      expect(worker.class.sync_workers).to eq {:adds => [], :deletes => [worker.pid]}
     end
   end
 
   context ".has_required_role?" do
     def check_has_required_role(worker_role_names, expected_result)
       described_class.stub(:required_roles).and_return(worker_role_names)
-      described_class.has_required_role?.should == expected_result
+      expect(described_class.has_required_role?).to eq expected_result
     end
 
     before(:each) do
@@ -43,9 +43,9 @@ describe MiqWorker do
       end
 
       it "normal" do
-        @worker.active_messages.length.should == 1
+        expect(@worker.active_messages.length).to eq 1
         @worker.clean_active_messages
-        @worker.reload.active_messages.length.should == 0
+        expect(@worker.reload.active_messages.length).to eq 0
       end
 
       it "invokes a message callback" do
@@ -101,22 +101,22 @@ describe MiqWorker do
     end
 
     it "when maximum_workers_count is nil" do
-      described_class.workers_configured_count.should == @configured_count
+      expect(described_class.workers_configured_count).to eq @configured_count
     end
 
     it "when maximum_workers_count is less than configured_count" do
       described_class.maximum_workers_count = 1
-      described_class.workers_configured_count.should == 1
+      expect(described_class.workers_configured_count).to eq 1
     end
 
     it "when maximum_workers_count is equal to the configured_count" do
       described_class.maximum_workers_count = 2
-      described_class.workers_configured_count.should == @configured_count
+      expect(described_class.workers_configured_count).to eq @configured_count
     end
 
     it "when maximum_workers_count is greater than configured_count" do
       described_class.maximum_workers_count = 2
-      described_class.workers_configured_count.should == @configured_count
+      expect(described_class.workers_configured_count).to eq @configured_count
     end
   end
 
@@ -134,17 +134,17 @@ describe MiqWorker do
     end
 
     it ".server_scope" do
-      described_class.server_scope.should == [@worker]
+      expect(described_class.server_scope).to eq [@worker]
     end
 
     it ".server_scope with a different server" do
-      described_class.server_scope(@server2.id).should == [@worker2]
+      expect(described_class.server_scope(@server2.id)).to eq [@worker2]
     end
 
     it ".server_scope after already scoping on a different server" do
       described_class.where(:miq_server_id => @server2.id).scoping do
-        described_class.server_scope.should == [@worker2]
-        described_class.server_scope(@server.id).should == [@worker2]
+        expect(described_class.server_scope).to eq [@worker2]
+        expect(described_class.server_scope(@server.id)).to eq [@worker2]
       end
     end
 
@@ -179,28 +179,28 @@ describe MiqWorker do
 
       context "#worker_settings" do
         it "uses the worker's server" do
-          @worker.worker_settings[:count].should == 5
-          @worker2.worker_settings[:count].should == 6
+          expect(@worker.worker_settings[:count]).to eq 5
+          expect(@worker2.worker_settings[:count]).to eq 6
         end
 
         it "uses passed in config" do
-          @worker.worker_settings(:config => @config2)[:count].should == 6
-          @worker2.worker_settings(:config => @config1)[:count].should == 5
+          expect(@worker.worker_settings(:config => @config2)[:count]).to eq 6
+          expect(@worker2.worker_settings(:config => @config1)[:count]).to eq 5
         end
 
         it "uses closest parent's defaults" do
           @config1[:workers][:worker_base][:queue_worker_base][:ems_refresh_worker].delete(:count)
-          @worker.worker_settings[:count].should == 3
+          expect(@worker.worker_settings[:count]).to eq 3
         end
       end
 
       context ".worker_settings" do
         it "uses MiqServer.my_server" do
-          MiqEmsRefreshWorker.worker_settings[:count].should == 5
+          expect(MiqEmsRefreshWorker.worker_settings[:count]).to eq 5
         end
 
         it "uses passed in config" do
-          MiqEmsRefreshWorker.worker_settings(:config => @config2)[:count].should == 6
+          expect(MiqEmsRefreshWorker.worker_settings(:config => @config2)[:count]).to eq 6
         end
       end
     end
@@ -214,17 +214,17 @@ describe MiqWorker do
 
     it "is_current? false when starting" do
       @worker.update_attribute(:status, described_class::STATUS_STARTING)
-      @worker.is_current?.should_not be_true
+      expect(@worker.is_current?).not_to be_true
     end
 
     it "is_current? true when started" do
       @worker.update_attribute(:status, described_class::STATUS_STARTED)
-      @worker.is_current?.should be_true
+      expect(@worker.is_current?).to be_true
     end
 
     it "is_current? true when working" do
       @worker.update_attribute(:status, described_class::STATUS_WORKING)
-      @worker.is_current?.should be_true
+      expect(@worker.is_current?).to be_true
     end
   end
 end

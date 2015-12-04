@@ -21,13 +21,13 @@ describe OpsController do
       it "#schedule_enable" do
         controller.schedule_enable
         flash_messages = controller.instance_variable_get(:@flash_array)
-        flash_messages.first.should == {:message => "No Schedules were selected to be enabled", :level => :error}
+        expect(flash_messages.first).to eq {:message => "No Schedules were selected to be enabled", :level => :error}
       end
 
       it "#schedule_disable" do
         controller.schedule_disable
         flash_messages = controller.instance_variable_get(:@flash_array)
-        flash_messages.first.should == {:message => "No Schedules were selected to be disabled", :level => :error}
+        expect(flash_messages.first).to eq {:message => "No Schedules were selected to be disabled", :level => :error}
       end
     end
 
@@ -53,12 +53,12 @@ describe OpsController do
 
         # enable the schedule and save it
         controller.schedule_disable
-        controller.send(:flash_errors?).should_not be_true
+        expect(controller.send(:flash_errors?)).not_to be_true
 
         @sch.reload
 
         # assert that it's disabled
-        @sch.should_not be_enabled
+        expect(@sch).not_to be_enabled
       end
 
       it "#schedule_enable" do
@@ -67,12 +67,12 @@ describe OpsController do
 
         # enable the schedule and save it
         controller.schedule_enable
-        controller.send(:flash_errors?).should_not be_true
+        expect(controller.send(:flash_errors?)).not_to be_true
 
         @sch.reload
 
         # assert that it's enabled
-        @sch.should be_enabled
+        expect(@sch).to be_enabled
       end
 
       it "#schedule_disable" do
@@ -81,12 +81,12 @@ describe OpsController do
 
         # disable the schedule and save it
         controller.schedule_disable
-        controller.send(:flash_errors?).should_not be_true
+        expect(controller.send(:flash_errors?)).not_to be_true
 
         @sch.reload
 
         # assert that it's disabled
-        @sch.should_not be_enabled
+        expect(@sch).not_to be_enabled
       end
     end
 
@@ -120,8 +120,8 @@ describe OpsController do
         @params[:name] = @schedule.name
         controller.instance_variable_set(:@_params, @params)
         controller.send(:schedule_edit)
-        controller.send(:flash_errors?).should be_true
-        assigns(:flash_array).first[:message].should include("Name has already been taken")
+        expect(controller.send(:flash_errors?)).to be_true
+        expect(assigns(:flash_array).first[:message]).to include("Name has already been taken")
       end
 
       it "#does not allow duplicate names when editing" do
@@ -130,8 +130,8 @@ describe OpsController do
         controller.instance_variable_set(:@_params, @params)
         FactoryGirl.create(:miq_schedule, :name => @params[:name], :userid => user.userid, :towhat => "Vm")
         controller.send(:schedule_edit)
-        controller.send(:flash_errors?).should be_true
-        assigns(:flash_array).first[:message].should include("Name has already been taken")
+        expect(controller.send(:flash_errors?)).to be_true
+        expect(assigns(:flash_array).first[:message]).to include("Name has already been taken")
       end
     end
   end

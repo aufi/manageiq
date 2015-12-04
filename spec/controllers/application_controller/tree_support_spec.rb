@@ -17,12 +17,12 @@ describe ApplicationController do
         edit = {:current => "test", :new => "test2"}
         session[:edit] = edit
         controller.tree_autoload_dynatree
-        assigns(:edit).should == edit
+        expect(assigns(:edit)).to eq edit
       end
 
       it "stays nil" do
         controller.tree_autoload_dynatree
-        assigns(:edit).should be_nil
+        expect(assigns(:edit)).to be_nil
       end
     end
   end

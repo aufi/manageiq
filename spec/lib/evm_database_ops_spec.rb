@@ -16,13 +16,13 @@ describe EvmDatabaseOps do
     it "locally" do
       local_backup = "/tmp/backup_1"
       @db_opts[:local_file] = local_backup
-      EvmDatabaseOps.backup(@db_opts, @connect_opts).should == local_backup
+      expect(EvmDatabaseOps.backup(@db_opts, @connect_opts)).to eq local_backup
     end
 
     it "defaults" do
       local_backup = "/tmp/backup_1"
       @db_opts[:local_file] = local_backup
-      EvmDatabaseOps.backup(@db_opts, {}).should == local_backup
+      expect(EvmDatabaseOps.backup(@db_opts, {})).to eq local_backup
     end
 
     it "without enough free space" do
@@ -36,13 +36,13 @@ describe EvmDatabaseOps do
     it "remotely" do
       @db_opts[:local_file] = nil
       @connect_opts[:remote_file_name] = "custom_backup"
-      EvmDatabaseOps.backup(@db_opts, @connect_opts).should == "smb://myserver.com/share/db_backup/custom_backup"
+      expect(EvmDatabaseOps.backup(@db_opts, @connect_opts)).to eq "smb://myserver.com/share/db_backup/custom_backup"
     end
 
     it "remotely without a remote file name" do
       @db_opts[:local_file] = nil
       @connect_opts[:remote_file_name] = nil
-      EvmDatabaseOps.backup(@db_opts, @connect_opts).should =~ /smb:\/\/myserver.com\/share\/db_backup\/miq_backup_.*/
+      expect(EvmDatabaseOps.backup(@db_opts, @connect_opts)).to match /smb:\/\/myserver.com\/share\/db_backup\/miq_backup_.*/
     end
   end
 
@@ -59,14 +59,14 @@ describe EvmDatabaseOps do
     it "from local backup" do
       local_backup = "/tmp/backup_1"
       @db_opts[:local_file] = local_backup
-      EvmDatabaseOps.restore(@db_opts, @connect_opts).should == local_backup
+      expect(EvmDatabaseOps.restore(@db_opts, @connect_opts)).to eq local_backup
     end
 
     it "from smb backup" do
       @db_opts[:local_file] = nil
       remote_backup = "smb://myserver.com/share/pg_backup1.backup"
       @connect_opts[:uri] = remote_backup
-      EvmDatabaseOps.restore(@db_opts, @connect_opts).should == remote_backup
+      expect(EvmDatabaseOps.restore(@db_opts, @connect_opts)).to eq remote_backup
     end
   end
 end

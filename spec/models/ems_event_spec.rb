@@ -18,25 +18,25 @@ describe EmsEvent do
 
       EmsEvent.add_vc(@ems.id, raw_event)
 
-      EmsEvent.count.should == 1
+      expect(EmsEvent.count).to eq 1
       event = EmsEvent.first
 
-      event.should have_attributes(
-        :event_type        => "GeneralUserEvent",
-        :chain_id          => 5361104,
-        :is_task           => false,
-        :source            => "VC",
-        :message           => "User logged event: EVM SmartState Analysis completed for VM [tch-UBUNTU-904-LTS-DESKTOP]",
-        :timestamp         => Time.parse("2010-08-24T01:08:10.396636Z"),
-        :username          => "MANAGEIQ\\thennessy",
+      expect(event).to have_attributes(
+              :event_type        => "GeneralUserEvent",
+              :chain_id          => 5361104,
+              :is_task           => false,
+              :source            => "VC",
+              :message           => "User logged event: EVM SmartState Analysis completed for VM [tch-UBUNTU-904-LTS-DESKTOP]",
+              :timestamp         => Time.parse("2010-08-24T01:08:10.396636Z"),
+              :username          => "MANAGEIQ\\thennessy",
 
-        :ems_id            => @ems.id,
-        :vm_or_template_id => @vm1.id,
-        :vm_name           => @vm1.name,
-        :vm_location       => @vm1.location,
-        :host_id           => @host.id,
-        :host_name         => @host.hostname,
-      )
+              :ems_id            => @ems.id,
+              :vm_or_template_id => @vm1.id,
+              :vm_name           => @vm1.name,
+              :vm_location       => @vm1.location,
+              :host_id           => @host.id,
+              :host_name         => @host.hostname,
+            )
     end
 
     context "with an EventEx event" do
@@ -46,14 +46,14 @@ describe EmsEvent do
 
         EmsEvent.add_vc(@ems.id, raw_event)
 
-        EmsEvent.count.should == 1
+        expect(EmsEvent.count).to eq 1
         event = EmsEvent.first
 
         assert_result_fields(event)
-        event.should have_attributes(
-          :event_type => "vprob.vmfs.resource.corruptondisk",
-          :message    => "event.vprob.vmfs.resource.corruptondisk.fullFormat (vprob.vmfs.resource.corruptondisk)",
-        )
+        expect(event).to have_attributes(
+                  :event_type => "vprob.vmfs.resource.corruptondisk",
+                  :message    => "event.vprob.vmfs.resource.corruptondisk.fullFormat (vprob.vmfs.resource.corruptondisk)",
+                )
       end
 
       it "without an eventTypeId" do
@@ -62,31 +62,31 @@ describe EmsEvent do
 
         EmsEvent.add_vc(@ems.id, raw_event)
 
-        EmsEvent.count.should == 1
+        expect(EmsEvent.count).to eq 1
         event = EmsEvent.first
 
         assert_result_fields(event)
-        event.should have_attributes(
-          :event_type => "EventEx",
-          :message    => "",
-        )
+        expect(event).to have_attributes(
+                  :event_type => "EventEx",
+                  :message    => "",
+                )
       end
 
       def assert_result_fields(event)
-        event.should have_attributes(
-          :chain_id          => 297179,
-          :is_task           => false,
-          :source            => "VC",
-          :timestamp         => Time.parse("2010-11-12T17:15:42.661128Z"),
-          :username          => nil,
+        expect(event).to have_attributes(
+                  :chain_id          => 297179,
+                  :is_task           => false,
+                  :source            => "VC",
+                  :timestamp         => Time.parse("2010-11-12T17:15:42.661128Z"),
+                  :username          => nil,
 
-          :ems_id            => @ems.id,
-          :vm_or_template_id => nil,
-          :vm_name           => nil,
-          :vm_location       => nil,
-          :host_id           => @host.id,
-          :host_name         => @host.hostname,
-        )
+                  :ems_id            => @ems.id,
+                  :vm_or_template_id => nil,
+                  :vm_name           => nil,
+                  :vm_location       => nil,
+                  :host_id           => @host.id,
+                  :host_name         => @host.hostname,
+                )
       end
     end
 
@@ -124,7 +124,7 @@ describe EmsEvent do
 
         it "should use the availability zone from the event" do
           EmsEvent.process_availability_zone_in_event!(@event_hash)
-          @event_hash[:availability_zone_id].should eq @availability_zone.id
+          expect(@event_hash[:availability_zone_id]).to eq @availability_zone.id
         end
       end
 
@@ -137,14 +137,14 @@ describe EmsEvent do
 
           it "should use the VM's availability zone" do
             EmsEvent.process_availability_zone_in_event!(@event_hash)
-            @event_hash[:availability_zone_id].should eq @availability_zone.id
+            expect(@event_hash[:availability_zone_id]).to eq @availability_zone.id
           end
         end
 
         context "and the VM does not have an availability zone" do
           it "should not put an availability zone in the event hash" do
             EmsEvent.process_availability_zone_in_event!(@event_hash)
-            @event_hash[:availability_zone_id].should be_nil
+            expect(@event_hash[:availability_zone_id]).to be_nil
           end
         end
       end
@@ -166,7 +166,7 @@ describe EmsEvent do
           @vm.save
 
           new_event = EmsEvent.add(@vm.ems_id, @event_hash)
-          new_event.availability_zone_id.should eq @availability_zone.id
+          expect(new_event.availability_zone_id).to eq @availability_zone.id
         end
       end
 
@@ -177,7 +177,7 @@ describe EmsEvent do
           @vm.save
 
           new_event = EmsEvent.add(@vm.ems_id, @event_hash)
-          new_event.availability_zone_id.should eq @availability_zone.id
+          expect(new_event.availability_zone_id).to eq @availability_zone.id
         end
       end
     end
@@ -187,12 +187,12 @@ describe EmsEvent do
         described_class.stub(:keep_ems_events => "3.months")
 
         # Exposes 3.months.seconds.ago.utc != 3.months.ago.utc
-        described_class.purge_date.should be_within(2.days).of(3.months.ago.utc)
+        expect(described_class.purge_date).to be_within(2.days).of(3.months.ago.utc)
       end
 
       it "defaults to 6 months" do
         described_class.stub(:keep_ems_events => nil)
-        described_class.purge_date.should be_within(1.day).of(6.months.ago.utc)
+        expect(described_class.purge_date).to be_within(1.day).of(6.months.ago.utc)
       end
     end
 
@@ -206,12 +206,12 @@ describe EmsEvent do
 
       it "with nothing in the queue" do
         q = MiqQueue.all
-        q.length.should == 1
-        q.first.should have_attributes(
-          :class_name  => described_class.name,
-          :method_name => "purge",
-          :args        => [purge_time]
-        )
+        expect(q.length).to eq 1
+        expect(q.first).to have_attributes(
+                  :class_name  => described_class.name,
+                  :method_name => "purge",
+                  :args        => [purge_time]
+                )
       end
 
       it "with item already in the queue" do
@@ -219,12 +219,12 @@ describe EmsEvent do
         described_class.purge_queue(new_purge_time)
 
         q = MiqQueue.all
-        q.length.should == 1
-        q.first.should have_attributes(
-          :class_name  => described_class.name,
-          :method_name => "purge",
-          :args        => [new_purge_time]
-        )
+        expect(q.length).to eq 1
+        expect(q.first).to have_attributes(
+                  :class_name  => described_class.name,
+                  :method_name => "purge",
+                  :args        => [new_purge_time]
+                )
       end
     end
 
@@ -240,7 +240,7 @@ describe EmsEvent do
       def assert_delete_calls_and_unpurged_ids(options)
         described_class.should_receive(:delete_all).public_send(options[:delete_calls]).and_call_original
         described_class.purge(purge_date, options[:window], options[:limit])
-        described_class.order(:id).pluck(:id).should == Array(options[:unpurged_ids]).sort
+        expect(described_class.order(:id).pluck(:id)).to eq Array(options[:unpurged_ids]).sort
       end
 
       it "purge_date and older" do

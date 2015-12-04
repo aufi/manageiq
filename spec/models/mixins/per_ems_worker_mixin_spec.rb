@@ -13,8 +13,8 @@ describe PerEmsWorkerMixin do
 
   it ".queue_name_for_ems" do
     @worker_class.queue_name_for_ems(nil).should.nil?
-    @worker_class.queue_name_for_ems("foo").should == "foo"
-    @worker_class.queue_name_for_ems(@ems).should == @ems_queue_name
+    expect(@worker_class.queue_name_for_ems("foo")).to eq "foo"
+    expect(@worker_class.queue_name_for_ems(@ems)).to eq @ems_queue_name
   end
 
   context ".start_worker_for_ems" do

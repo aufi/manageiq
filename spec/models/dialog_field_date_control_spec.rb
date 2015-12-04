@@ -177,19 +177,19 @@ describe DialogFieldDateControl do
 
   context "#show_past_dates" do
     it "default" do
-      subject.show_past_dates.should == false
+      expect(subject.show_past_dates).to eq false
     end
 
     it "when true" do
       subject.show_past_dates = true
-      subject.options[:show_past_dates].should be_true
-      subject.show_past_dates.should be_true
+      expect(subject.options[:show_past_dates]).to be_true
+      expect(subject.show_past_dates).to be_true
     end
 
     it "when false" do
       subject.show_past_dates = false
-      subject.options[:show_past_dates].should be_false
-      subject.show_past_dates.should be_false
+      expect(subject.options[:show_past_dates]).to be_false
+      expect(subject.show_past_dates).to be_false
     end
   end
 end

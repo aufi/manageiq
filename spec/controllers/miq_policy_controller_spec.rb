@@ -18,7 +18,7 @@ describe MiqPolicyController do
     shared_examples_for "MiqPolicyController#import" do
       it "assigns the import file upload id" do
         post :import, params
-        assigns(:import_file_upload_id).should == "123"
+        expect(assigns(:import_file_upload_id)).to eq "123"
       end
     end
 
@@ -59,12 +59,12 @@ describe MiqPolicyController do
     shared_examples_for "MiqPolicyController#upload that cannot locate an import file" do
       it "redirects with a cannot locate import file error message" do
         post :upload, params
-        response.should redirect_to(
-          :action      => "export",
-          :dbtype      => "dbtype",
-          :flash_msg   => "Use the Browse button to locate an Import file",
-          :flash_error => true
-        )
+        expect(response).to redirect_to(
+                  :action      => "export",
+                  :dbtype      => "dbtype",
+                  :flash_msg   => "Use the Browse button to locate an Import file",
+                  :flash_error => true
+                )
       end
     end
 
@@ -95,7 +95,7 @@ describe MiqPolicyController do
 
             it "sets the sandbox hide variable to true" do
               post :upload, params
-              assigns(:sb)[:hide].should be_true
+              expect(assigns(:sb)[:hide]).to be_true
             end
 
             it "imports a policy" do
@@ -105,7 +105,7 @@ describe MiqPolicyController do
 
             it "redirects to import with the import_file_upload_id" do
               post :upload, params
-              response.should redirect_to(:action => "import", :dbtype => "dbtype", :import_file_upload_id => 123)
+              expect(response).to redirect_to(:action => "import", :dbtype => "dbtype", :import_file_upload_id => 123)
             end
           end
 
@@ -117,12 +117,12 @@ describe MiqPolicyController do
 
             it "redirects to export with an error message" do
               post :upload, params
-              response.should redirect_to(
-                :action      => "export",
-                :dbtype      => "dbtype",
-                :flash_msg   => "Error during 'Policy Import': message",
-                :flash_error => true
-              )
+              expect(response).to redirect_to(
+                              :action      => "export",
+                              :dbtype      => "dbtype",
+                              :flash_msg   => "Error during 'Policy Import': message",
+                              :flash_error => true
+                            )
             end
           end
         end
@@ -152,7 +152,7 @@ describe MiqPolicyController do
     context 'when profile param present, but non-existent' do
       it 'renders explorer with flash message' do
         post :explorer, :profile => 42
-        response.should render_template('explorer')
+        expect(response).to render_template('explorer')
         flash_messages = controller.instance_variable_get(:@flash_array)
         flash_messages.find { |m| m[:message] == 'Policy Profile no longer exists' }.should_not be_nil
       end
@@ -161,9 +161,9 @@ describe MiqPolicyController do
     context 'when profile param not present' do
       it 'renders explorer w/o flash message' do
         post :explorer
-        response.should render_template('explorer')
+        expect(response).to render_template('explorer')
         flash_messages = controller.instance_variable_get(:@flash_array)
-        flash_messages.should be_nil
+        expect(flash_messages).to be_nil
       end
     end
 
@@ -172,10 +172,10 @@ describe MiqPolicyController do
         profile = FactoryGirl.create(:miq_policy_set)
         controller.stub(:get_node_info).and_return(true)
         post :explorer, :profile => profile.id
-        response.should render_template('explorer')
+        expect(response).to render_template('explorer')
         flash_messages = controller.instance_variable_get(:@flash_array)
-        flash_messages.should be_nil
-        controller.x_node.should == "pp_#{profile.id}"
+        expect(flash_messages).to be_nil
+        expect(controller.x_node).to eq "pp_#{profile.id}"
       end
     end
   end
@@ -196,7 +196,7 @@ describe MiqPolicyController do
         session[:settings] ||= {}
 
         post :tree_select, :id => node, :format => :js
-        response.should render_template(partial_name)
+        expect(response).to render_template(partial_name)
         expect(response.status).to eq(200)
       end
     end
@@ -221,7 +221,7 @@ describe MiqPolicyController do
       presenter = ExplorerPresenter.new(:active_tree => :action_tree)
 
       controller.send(:replace_right_cell, 'root', [:action], presenter)
-      presenter[:set_visible_elements][:toolbar].should be_true
+      expect(presenter[:set_visible_elements][:toolbar]).to be_true
     end
   end
 

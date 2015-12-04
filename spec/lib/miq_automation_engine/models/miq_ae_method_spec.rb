@@ -10,7 +10,7 @@ describe MiqAeMethod do
                             :scope    => "instance",
                             :language => "ruby",
                             :location => "inline")
-    f1.should_not be_editable
+    expect(f1).not_to be_editable
   end
 
   it "should return editable as true if the parent namespace/class is editable" do
@@ -22,7 +22,7 @@ describe MiqAeMethod do
                             :scope    => "instance",
                             :language => "ruby",
                             :location => "inline")
-    f1.should be_editable
+    expect(f1).to be_editable
   end
 
   context "#copy" do
@@ -57,7 +57,7 @@ describe MiqAeMethod do
       }
 
       res = MiqAeMethod.copy(options)
-      res.count.should eq(2)
+      expect(res.count).to eq(2)
     end
 
     it "copy instances under same namespace raise error when class exists" do
@@ -79,7 +79,7 @@ describe MiqAeMethod do
       }
 
       res = MiqAeMethod.copy(options)
-      res.count.should eq(2)
+      expect(res.count).to eq(2)
     end
   end
 
@@ -124,6 +124,6 @@ describe MiqAeMethod do
                             :scope    => "instance",
                             :language => "ruby",
                             :location => "inline")
-    m1.domain.name.should eql('dom1')
+    expect(m1.domain.name).to eql('dom1')
   end
 end

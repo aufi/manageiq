@@ -13,17 +13,17 @@ describe DialogFieldDateTimeControl do
 
       it "#automate_output_value with UTC timezone" do
         subject.value = "07/20/2013 16:26"
-        subject.automate_output_value.should == "2013-07-20T16:26:00Z"
+        expect(subject.automate_output_value).to eq "2013-07-20T16:26:00Z"
       end
 
       it "#automate_output_value in ISO format" do
         subject.value = "2013-07-20T16:26:00-05:00"
-        subject.automate_output_value.should == "2013-07-20T21:26:00Z"
+        expect(subject.automate_output_value).to eq "2013-07-20T21:26:00Z"
       end
 
       it "#automate_output_value in ISO format and UTC timezone" do
         subject.value = "2013-07-20T21:26:00Z"
-        subject.automate_output_value.should == "2013-07-20T21:26:00Z"
+        expect(subject.automate_output_value).to eq "2013-07-20T21:26:00Z"
       end
     end
 
@@ -34,17 +34,17 @@ describe DialogFieldDateTimeControl do
 
       it "#automate_output_value" do
         subject.value = "07/20/2013 16:26"
-        subject.automate_output_value.should == "2013-07-21T02:26:00Z"
+        expect(subject.automate_output_value).to eq "2013-07-21T02:26:00Z"
       end
 
       it "#automate_output_value in ISO format" do
         subject.value = "2013-07-20T16:26:00-10:00"
-        subject.automate_output_value.should == "2013-07-21T02:26:00Z"
+        expect(subject.automate_output_value).to eq "2013-07-21T02:26:00Z"
       end
 
       it "#automate_output_value in ISO format and UTC timezone" do
         subject.value = "2013-07-20T21:26:00Z"
-        subject.automate_output_value.should == "2013-07-20T21:26:00Z"
+        expect(subject.automate_output_value).to eq "2013-07-20T21:26:00Z"
       end
     end
   end

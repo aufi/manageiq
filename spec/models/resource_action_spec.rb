@@ -64,22 +64,22 @@ describe ResourceAction do
     end
 
     it "#ae_path" do
-      ra.ae_path.should eq("/NAMESPACE/CLASS/INSTANCE")
+      expect(ra.ae_path).to eq("/NAMESPACE/CLASS/INSTANCE")
     end
 
     it "#ae_uri" do
-      ra.ae_uri.should eq(ra.ae_path)
+      expect(ra.ae_uri).to eq(ra.ae_path)
     end
 
     it "uri with message" do
       ra.ae_message = "CREATE"
-      ra.ae_uri.should eq("#{ra.ae_path}#CREATE")
+      expect(ra.ae_uri).to eq("#{ra.ae_path}#CREATE")
     end
 
     it "uri with message and attributes" do
       ra.ae_message = "CREATE"
       ra.ae_attributes = {"FOO1" => "BAR1", "FOO2" => "BAR2"}
-      ra.ae_uri.should eq("#{ra.ae_path}?FOO1=BAR1&FOO2=BAR2#CREATE")
+      expect(ra.ae_uri).to eq("#{ra.ae_path}?FOO1=BAR1&FOO2=BAR2#CREATE")
     end
   end
 end

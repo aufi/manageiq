@@ -8,7 +8,7 @@ describe MiqReport do
     before = MiqReport.new
     before.table = fake_ruport_data_table
     after = YAML.load(YAML.dump(before))
-    after.table.should == fake_ruport_data_table
+    expect(after.table).to eq fake_ruport_data_table
   end
 
   it '.get_expressions_by_model' do

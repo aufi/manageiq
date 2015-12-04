@@ -21,8 +21,8 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
   end
 
   def assert_failed_refresh(error)
-    @ems.last_refresh_status.should == "error"
-    @ems.last_refresh_error.should == error
+    expect(@ems.last_refresh_status).to eq "error"
+    expect(@ems.last_refresh_error).to eq error
   end
 
   def refresh_ems(ems, error)

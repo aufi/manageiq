@@ -12,7 +12,7 @@ describe ApplicationController do
       controller.stub(:drop_breadcrumb)
       controller.should_receive(:render)
       controller.send(:drift_history)
-      assigns(:display).should eq("main")
+      expect(assigns(:display)).to eq("main")
     end
   end
 end

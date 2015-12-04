@@ -125,7 +125,7 @@ describe DashboardController do
                          :name     => "#{user.userid}|#{group.id}|#{ws.name}",
                          :set_data => {:last_group_db_updated => Time.now.utc, :col1 => [1], :col2 => [], :col3 => []})
       controller.show
-      controller.send(:flash_errors?).should_not be_true
+      expect(controller.send(:flash_errors?)).not_to be_true
     end
   end
 
@@ -146,7 +146,7 @@ describe DashboardController do
         session[:tab_url] = {}
         post :maintab, :tab => tab
         url_controller = Menu::Manager.tab_features_by_id(tab).find { |f| f.ends_with?("_explorer") }
-        response.body.should include("#{DashboardController::EXPLORER_FEATURE_LINKS[url_controller]}/explorer")
+        expect(response.body).to include("#{DashboardController::EXPLORER_FEATURE_LINKS[url_controller]}/explorer")
       end
     end
   end
@@ -164,7 +164,7 @@ describe DashboardController do
       session[:tab_url] = {}
       post :maintab, :tab => "set"
       url_controller = Menu::Manager.tab_features_by_id(:set).find { |f| f.ends_with?("_explorer") }
-      response.body.should include("#{DashboardController::EXPLORER_FEATURE_LINKS[url_controller]}/explorer")
+      expect(response.body).to include("#{DashboardController::EXPLORER_FEATURE_LINKS[url_controller]}/explorer")
     end
   end
 
@@ -180,14 +180,14 @@ describe DashboardController do
 
       controller.stub(:role_allows).and_return(true)
       url = controller.send(:start_url_for_user, nil)
-      url.should eq("/dashboard/show")
+      expect(url).to eq("/dashboard/show")
     end
 
     it "returns first url that user has access to as start page when user doesn't have access to startpage set in settings" do
       login_as FactoryGirl.create(:user, :features => "vm_cloud_explorer")
       controller.instance_variable_set(:@settings, :display => {:startpage => "/dashboard/show"})
       url = controller.send(:start_url_for_user, nil)
-      url.should eq("/vm_cloud/explorer?accordion=instances")
+      expect(url).to eq("/vm_cloud/explorer?accordion=instances")
     end
   end
 
@@ -196,12 +196,12 @@ describe DashboardController do
       request.parameters["action"] = "window_sizes"
       session[:layout] = "host"
       layout = controller.send(:get_layout)
-      layout.should eq(session[:layout])
+      expect(layout).to eq(session[:layout])
     end
 
     it "defaults layout to login on Login screen" do
       layout = controller.send(:get_layout)
-      layout.should eq("login")
+      expect(layout).to eq("login")
     end
   end
 

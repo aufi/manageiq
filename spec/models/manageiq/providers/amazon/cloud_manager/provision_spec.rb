@@ -11,12 +11,12 @@ describe ManageIQ::Providers::Amazon::CloudManager::Provision do
   context "#find_destination_in_vmdb" do
     it "VM in same sub-class" do
       vm = FactoryGirl.create(:vm_amazon, :ext_management_system => provider, :ems_ref => "vm_1")
-      subject.find_destination_in_vmdb("vm_1").should == vm
+      expect(subject.find_destination_in_vmdb("vm_1")).to eq vm
     end
 
     it "VM in different sub-class" do
       vm = FactoryGirl.create(:vm_openstack, :ext_management_system => provider, :ems_ref => "vm_1")
-      subject.find_destination_in_vmdb("vm_1").should be_nil
+      expect(subject.find_destination_in_vmdb("vm_1")).to be_nil
     end
   end
 
@@ -56,39 +56,39 @@ describe ManageIQ::Providers::Amazon::CloudManager::Provision do
 
     context "security_groups" do
       it "with no security groups" do
-        subject.prepare_for_clone_task[:security_group_ids].should == []
+        expect(subject.prepare_for_clone_task[:security_group_ids]).to eq []
       end
 
       it "with one security group" do
         security_group = FactoryGirl.create(:security_group_amazon, :name => "group_1")
         subject.options[:security_groups] = [security_group.id]
-        subject.prepare_for_clone_task[:security_group_ids].should == [security_group.ems_ref]
+        expect(subject.prepare_for_clone_task[:security_group_ids]).to eq [security_group.ems_ref]
       end
 
       it "with two security group" do
         security_group_1 = FactoryGirl.create(:security_group_amazon, :name => "group_1")
         security_group_2 = FactoryGirl.create(:security_group_amazon, :name => "group_2")
         subject.options[:security_groups] = [security_group_1.id, security_group_2.id]
-        subject.prepare_for_clone_task[:security_group_ids].should match_array([security_group_1.ems_ref, security_group_2.ems_ref])
+        expect(subject.prepare_for_clone_task[:security_group_ids]).to match_array([security_group_1.ems_ref, security_group_2.ems_ref])
       end
 
       it "with a missing security group" do
         security_group = FactoryGirl.create(:security_group_amazon, :name => "group_1")
         bad_security_group_id = security_group.id + 1
         subject.options[:security_groups] = [security_group.id, bad_security_group_id]
-        subject.prepare_for_clone_task[:security_group_ids].should == [security_group.ems_ref]
+        expect(subject.prepare_for_clone_task[:security_group_ids]).to eq [security_group.ems_ref]
       end
     end
 
     context "cloud_subnet" do
       it "without a subnet" do
-        subject.prepare_for_clone_task[:subnet].should be_nil
+        expect(subject.prepare_for_clone_task[:subnet]).to be_nil
       end
 
       it "with a subnet" do
         cloud_subnet = FactoryGirl.create(:cloud_subnet)
         subject.options[:cloud_subnet] = [cloud_subnet.id, cloud_subnet.name]
-        subject.prepare_for_clone_task[:subnet].should == cloud_subnet.ems_ref
+        expect(subject.prepare_for_clone_task[:subnet]).to eq cloud_subnet.ems_ref
       end
     end
   end

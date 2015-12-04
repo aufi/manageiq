@@ -12,13 +12,13 @@ describe ApplicationController do
       it "Vm button" do
         controller.instance_variable_set(:@_params, :id => vm.id, :button_id => button.id)
         controller.should_receive(:dialog_initialize).with do |action, options|
-          action.should == resource_action
-          options[:target_id].should == vm.id
-          options[:target_kls].should == vm.class.name
+          expect(action).to eq resource_action
+          expect(options[:target_id]).to eq vm.id
+          expect(options[:target_kls]).to eq vm.class.name
         end
 
         controller.send(:custom_buttons)
-        assigns(:right_cell_text).should include(vm.name)
+        expect(assigns(:right_cell_text)).to include(vm.name)
       end
 
       it "MiqTemplate button" do
@@ -27,13 +27,13 @@ describe ApplicationController do
         controller.instance_variable_set(:@_params, :id => template.id, :button_id => button.id)
 
         controller.should_receive(:dialog_initialize).with do |action, options|
-          action.should == resource_action
-          options[:target_id].should == template.id
-          options[:target_kls].should == template.class.name
+          expect(action).to eq resource_action
+          expect(options[:target_id]).to eq template.id
+          expect(options[:target_kls]).to eq template.class.name
         end
 
         controller.send(:custom_buttons)
-        assigns(:right_cell_text).should include(template.name)
+        expect(assigns(:right_cell_text)).to include(template.name)
       end
     end
 
@@ -48,7 +48,7 @@ describe ApplicationController do
         CustomButton.any_instance.should_receive(:invoke).with(vm)
 
         controller.send(:custom_buttons)
-        assigns(:right_cell_text).should include(vm.name)
+        expect(assigns(:right_cell_text)).to include(vm.name)
       end
 
       it "MiqTemplate" do
@@ -57,7 +57,7 @@ describe ApplicationController do
         CustomButton.any_instance.should_receive(:invoke).with(template)
 
         controller.send(:custom_buttons)
-        assigns(:right_cell_text).should include(template.name)
+        expect(assigns(:right_cell_text)).to include(template.name)
       end
     end
 
@@ -81,7 +81,7 @@ describe ApplicationController do
         controller.stub(:ab_get_node_info)
         controller.stub(:replace_right_cell)
         controller.send(:button_create_update, "add")
-        @record.should be_nil
+        expect(@record).to be_nil
       end
     end
   end
@@ -105,7 +105,7 @@ describe ApplicationController do
                                        :active_tree => :ab_tree
                                       )
       controller.send(:button_set_form_vars)
-      assigns(:edit)[:new][:target_class].should == ui_lookup(:model => "Vm")
+      expect(assigns(:edit)[:new][:target_class]).to eq ui_lookup(:model => "Vm")
 
       controller.instance_variable_set(:@sb,
                                        :trees       => {
@@ -114,7 +114,7 @@ describe ApplicationController do
                                        :active_tree => :ab_tree
                                       )
       controller.send(:button_set_form_vars)
-      assigns(:edit)[:new][:target_class].should == ui_lookup(:model => "Vm")
+      expect(assigns(:edit)[:new][:target_class]).to eq ui_lookup(:model => "Vm")
     end
   end
 end

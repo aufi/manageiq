@@ -138,7 +138,7 @@ describe VmOrTemplate do
     end
 
     it "with no drift states" do
-      @vm.reconfigured_hardware_value?(@options).should be_false
+      expect(@vm.reconfigured_hardware_value?(@options)).to be_false
     end
 
     context "with a drift state" do
@@ -150,21 +150,21 @@ describe VmOrTemplate do
         it "with the same memory value" do
           @vm.save_drift_state
 
-          @vm.reconfigured_hardware_value?(@options).should be_false
+          expect(@vm.reconfigured_hardware_value?(@options)).to be_false
         end
 
         it "with a lower memory value" do
           @vm.hardware.memory_mb = 512
           @vm.save_drift_state
 
-          @vm.reconfigured_hardware_value?(@options).should be_false
+          expect(@vm.reconfigured_hardware_value?(@options)).to be_false
         end
 
         it "with a higher memory value" do
           @vm.hardware.memory_mb = 2048
           @vm.save_drift_state
 
-          @vm.reconfigured_hardware_value?(@options).should be_true
+          expect(@vm.reconfigured_hardware_value?(@options)).to be_true
         end
       end
 
@@ -174,21 +174,21 @@ describe VmOrTemplate do
         it "with the same memory value" do
           @vm.save_drift_state
 
-          @vm.reconfigured_hardware_value?(@options).should be_false
+          expect(@vm.reconfigured_hardware_value?(@options)).to be_false
         end
 
         it "with a lower memory value" do
           @vm.hardware.memory_mb = 512
           @vm.save_drift_state
 
-          @vm.reconfigured_hardware_value?(@options).should be_true
+          expect(@vm.reconfigured_hardware_value?(@options)).to be_true
         end
 
         it "with a higher memory value" do
           @vm.hardware.memory_mb = 2048
           @vm.save_drift_state
 
-          @vm.reconfigured_hardware_value?(@options).should be_false
+          expect(@vm.reconfigured_hardware_value?(@options)).to be_false
         end
       end
     end
@@ -225,31 +225,31 @@ describe VmOrTemplate do
       it "should select SmartProxies with matching VM host affinity" do
         @svr1.vm_scan_host_affinity = [@host1]
         @svr2.vm_scan_host_affinity = [@host2]
-        @vm.miq_server_proxies.should == [@svr1]
+        expect(@vm.miq_server_proxies).to eq [@svr1]
       end
 
       it "should select SmartProxies without host affinity when the VM host has no affinity" do
         @svr1.vm_scan_host_affinity = [@host2]
         @svr2.vm_scan_host_affinity = [@host2]
-        @vm.miq_server_proxies.should == [@svr3]
+        expect(@vm.miq_server_proxies).to eq [@svr3]
       end
 
       it "should select SmartProxies with matching VM storage affinity" do
         @svr1.vm_scan_storage_affinity = [@storage1, @storage2]
         @svr2.vm_scan_storage_affinity = [@storage2]
-        @vm.miq_server_proxies.should == [@svr1]
+        expect(@vm.miq_server_proxies).to eq [@svr1]
       end
 
       it "should select SmartProxies without storage affinity when the VM storage has no affinity" do
         @svr1.vm_scan_storage_affinity = [@storage3]
         @svr2.vm_scan_storage_affinity = [@storage3]
-        @vm.miq_server_proxies.should == [@svr3]
+        expect(@vm.miq_server_proxies).to eq [@svr3]
       end
 
       it "should not select SmartProxies without matching VM storage affinity for all disks" do
         @svr1.vm_scan_storage_affinity = [@storage1]
         @svr2.vm_scan_storage_affinity = [@storage2]
-        @vm.miq_server_proxies.should == []
+        expect(@vm.miq_server_proxies).to eq []
       end
     end
 
@@ -278,14 +278,14 @@ describe VmOrTemplate do
       it "should select SmartProxies with access to the same NFS storage" do
         @storage1.store_type = 'NFS'
         Vm.should_receive(:miq_servers_for_scan).and_return([@svr1, @svr2])
-        @vm.miq_server_proxies.should == [@svr1]
+        expect(@vm.miq_server_proxies).to eq [@svr1]
       end
 
       it "should select SmartProxies for a powered-off VM" do
         Vm.should_receive(:miq_servers_for_scan).and_return([@svr1, @svr2])
         # RHEV VMs do not have an associated host when powered off
         @vm.host = nil
-        @vm.miq_server_proxies.should == [@svr1]
+        expect(@vm.miq_server_proxies).to eq [@svr1]
       end
     end
   end
@@ -355,7 +355,7 @@ describe VmOrTemplate do
 
     it "should produce profile categories without a default or customer profile" do
       categories = @vm.scan_profile_categories(@vm.scan_profile_list)
-      categories.should eq VmOrTemplate.default_scan_categories_no_profile
+      expect(categories).to eq VmOrTemplate.default_scan_categories_no_profile
     end
 
     it "should produce profile categories from the default profile" do
@@ -364,7 +364,7 @@ describe VmOrTemplate do
       ScanItemSet.stub(:find_by_name).with("default") { item_set }
 
       categories = @vm.scan_profile_categories(@vm.scan_profile_list)
-      categories.should match_array ["default", "profiles"]
+      expect(categories).to match_array ["default", "profiles"]
     end
 
     it "should produce profile categories from the customer profile" do
@@ -373,7 +373,7 @@ describe VmOrTemplate do
       ScanItemSet.stub(:find_by_name).with("test") { item_set }
 
       categories = @vm.scan_profile_categories(ScanItem.get_profile("test"))
-      categories.should match_array ["test", "profiles"]
+      expect(categories).to match_array ["test", "profiles"]
     end
   end
 

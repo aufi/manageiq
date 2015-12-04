@@ -69,7 +69,7 @@ describe OpsController do
       session[:sandboxes] = {"ops" => {:active_tree => :diagnostics_tree}}
       post :tree_select, :id => 'root', :format => :js
 
-      response.should render_template('ops/_diagnostics_zones_tab')
+      expect(response).to render_template('ops/_diagnostics_zones_tab')
       expect(response.status).to eq(200)
     end
   end
@@ -140,8 +140,8 @@ describe OpsController do
 
       post :restart_server
 
-      response.body.should include("flash_msg_div")
-      response.body.should include("CFME Appliance restart initiated successfully")
+      expect(response.body).to include("flash_msg_div")
+      expect(response.body).to include("CFME Appliance restart initiated successfully")
     end
 
     it "#delete_server returns successful message" do
@@ -160,8 +160,8 @@ describe OpsController do
       controller.send(:delete_server)
 
       flash_message = assigns(:flash_array).first
-      flash_message[:message].should include("Delete successful")
-      flash_message[:level].should be(:success)
+      expect(flash_message[:message]).to include("Delete successful")
+      expect(flash_message[:level]).to be(:success)
     end
 
     context "#logs_collect" do

@@ -21,10 +21,10 @@ describe "MiqWorker Monitor" do
         @miq_server.stub(:worker_delete)
         @worker.update_attributes(:status => MiqWorker::STATUS_STOPPED)
 
-        @miq_server.miq_workers.length.should == 2
+        expect(@miq_server.miq_workers.length).to eq 2
         ids = @miq_server.clean_worker_records
-        @miq_server.miq_workers.length.should == 1
-        ids.should == [@worker.id]
+        expect(@miq_server.miq_workers.length).to eq 1
+        expect(ids).to eq [@worker.id]
       end
 
       it "MiqServer#check_not_responding" do
@@ -37,26 +37,26 @@ describe "MiqWorker Monitor" do
         MiqWorker.any_instance.stub(:kill)
         @worker.update_attributes(:status => MiqWorker::STATUS_STOPPING)
 
-        @miq_server.miq_workers.length.should == 2
+        expect(@miq_server.miq_workers.length).to eq 2
         ids = @miq_server.check_not_responding
-        @miq_server.miq_workers.length.should == 1
-        ids.should == [@worker.id]
+        expect(@miq_server.miq_workers.length).to eq 1
+        expect(ids).to eq [@worker.id]
       end
 
       context "with no messages" do
         it "should not have any in its relationship" do
-          @worker.messages.should be_empty
+          expect(@worker.messages).to be_empty
         end
       end
 
       it "quiesce time allowance will use message timeout" do
         @worker.stub(:current_timeout).and_return(2.minutes)
-        @worker.quiesce_time_allowance.should == 2.minutes
+        expect(@worker.quiesce_time_allowance).to eq 2.minutes
       end
 
       it "quiesce time allowance will use default of 5 minutes if no message timeout" do
         @worker.stub(:current_timeout).and_return(nil)
-        @worker.quiesce_time_allowance.should == 5.minutes
+        expect(@worker.quiesce_time_allowance).to eq 5.minutes
       end
 
       context "with 1 message" do
@@ -65,8 +65,8 @@ describe "MiqWorker Monitor" do
         end
 
         it "should have one in its relationship" do
-          @worker.messages.should == [@message]
-          @worker.active_messages.should == [@message]
+          expect(@worker.messages).to eq [@message]
+          expect(@worker.active_messages).to eq [@message]
         end
       end
 
@@ -90,24 +90,24 @@ describe "MiqWorker Monitor" do
         end
 
         it "should have them in its relationship" do
-          @worker.messages.should        match_array @messages
-          @worker.active_messages.should match_array @actives
+          expect(@worker.messages).to match_array @messages
+          expect(@worker.active_messages).to match_array @actives
         end
 
         it "on worker destroy, will destroy its processed messages" do
           @worker.destroy
-          @worker.messages.where("state != ?", "ready").count.should == 0
-          @worker.active_messages.size.should == 0
+          expect(@worker.messages.where("state != ?", "ready").count).to eq 0
+          expect(@worker.active_messages.size).to eq 0
         end
 
         it "on worker destroy, will no longer associate the 'ready' message with the worker" do
           @worker.destroy
-          MiqQueue.where(:state => 'ready').count.should == 1
-          @worker.messages(true).size.should == 0
+          expect(MiqQueue.where(:state => 'ready').count).to eq 1
+          expect(@worker.messages(true).size).to eq 0
 
           m = @messages.first.reload
-          m.handler_type.should be_nil
-          m.handler_id.should be_nil
+          expect(m.handler_type).to be_nil
+          expect(m.handler_id).to be_nil
         end
 
         it "on worker destroy, will log a warning message for each of its message" do
@@ -117,18 +117,18 @@ describe "MiqWorker Monitor" do
         end
 
         it "should timeout the expired active messages" do
-          @worker.messages.should        match_array @messages
-          @worker.active_messages.should match_array @actives
+          expect(@worker.messages).to match_array @messages
+          expect(@worker.active_messages).to match_array @actives
 
           Timecop.travel 5.minutes do
             @worker.validate_active_messages
           end
 
           @worker.reload
-          (@messages - @worker.messages).length.should == 1
-          (@actives - @worker.active_messages).length.should == 1
-          @worker.active_messages.length.should == @actives.length - 1
-          @worker.active_messages.first.msg_timeout.should == 5.minutes
+          expect((@messages - @worker.messages).length).to eq 1
+          expect((@actives - @worker.active_messages).length).to eq 1
+          expect(@worker.active_messages.length).to eq @actives.length - 1
+          expect(@worker.active_messages.first.msg_timeout).to eq 5.minutes
         end
       end
     end
@@ -143,14 +143,14 @@ describe "MiqWorker Monitor" do
 
         it "should timeout the right active messages" do
           actives = MiqQueue.where(:state => 'dequeue')
-          actives.length.should == @actives.length
+          expect(actives.length).to eq @actives.length
 
           Timecop.travel 5.minutes do
             @miq_server.validate_active_messages
           end
 
           actives = MiqQueue.where(:state => 'dequeue')
-          actives.length.should == @actives.length - 1
+          expect(actives.length).to eq @actives.length - 1
         end
       end
 
@@ -168,15 +168,15 @@ describe "MiqWorker Monitor" do
           @actives << FactoryGirl.create(:miq_queue, :state => 'dequeue', :msg_timeout => 4.minutes, :handler => @worker2)
 
           actives = MiqQueue.where(:state => 'dequeue')
-          actives.length.should == @actives.length
+          expect(actives.length).to eq @actives.length
 
           Timecop.travel 5.minutes do
             @miq_server.validate_active_messages
           end
 
           actives = MiqQueue.where(:state => 'dequeue')
-          actives.length.should == @actives.length - 1
-          actives.first.handler.should == @worker2
+          expect(actives.length).to eq @actives.length - 1
+          expect(actives.first.handler).to eq @worker2
 
           @miq_server2.update_attribute(:status, 'stopped')
 
@@ -185,7 +185,7 @@ describe "MiqWorker Monitor" do
           end
 
           actives = MiqQueue.where(:state => 'dequeue')
-          actives.length.should == 0
+          expect(actives.length).to eq 0
         end
       end
 
@@ -206,9 +206,9 @@ describe "MiqWorker Monitor" do
             end
 
             it "should delete worker row after clean_worker_records" do
-              MiqWorker.count.should == 1
+              expect(MiqWorker.count).to eq 1
               MiqServer.monitor_class_names.each { |c| @miq_server.clean_worker_records(c) }
-              MiqWorker.count.should == 0
+              expect(MiqWorker.count).to eq 0
             end
 
             context "but is waiting for restart" do
@@ -217,9 +217,9 @@ describe "MiqWorker Monitor" do
               end
 
               it "should not delete worker row after clean_worker_records" do
-                MiqWorker.count.should == 1
+                expect(MiqWorker.count).to eq 1
                 MiqServer.monitor_class_names.each { |c| @miq_server.clean_worker_records(c) }
-                MiqWorker.count.should == 1
+                expect(MiqWorker.count).to eq 1
               end
             end
           end
@@ -230,9 +230,9 @@ describe "MiqWorker Monitor" do
             end
 
             it "should delete worker row after clean_worker_records" do
-              MiqWorker.count.should == 1
+              expect(MiqWorker.count).to eq 1
               MiqServer.monitor_class_names.each { |c| @miq_server.clean_worker_records(c) }
-              MiqWorker.count.should == 0
+              expect(MiqWorker.count).to eq 0
             end
           end
 
@@ -242,9 +242,9 @@ describe "MiqWorker Monitor" do
             end
 
             it "should delete worker row after clean_worker_records" do
-              MiqWorker.count.should == 1
+              expect(MiqWorker.count).to eq 1
               MiqServer.monitor_class_names.each { |c| @miq_server.clean_worker_records(c) }
-              MiqWorker.count.should == 0
+              expect(MiqWorker.count).to eq 0
             end
           end
         end
@@ -257,13 +257,13 @@ describe "MiqWorker Monitor" do
 
           it "should queue up work for the server" do
             q = MiqQueue.first
-            q.class_name.should == "MiqServer"
-            q.instance_id.should == @miq_server.id
-            q.method_name.should == 'message_for_worker'
-            q.args.should == [@worker1.id, 'reconnect_ems', "#{@ems_id}"]
-            q.queue_name.should == 'miq_server'
-            q.zone.should == @miq_server.zone.name
-            q.server_guid.should == @miq_server.guid
+            expect(q.class_name).to eq "MiqServer"
+            expect(q.instance_id).to eq @miq_server.id
+            expect(q.method_name).to eq 'message_for_worker'
+            expect(q.args).to eq [@worker1.id, 'reconnect_ems', "#{@ems_id}"]
+            expect(q.queue_name).to eq 'miq_server'
+            expect(q.zone).to eq @miq_server.zone.name
+            expect(q.server_guid).to eq @miq_server.guid
           end
         end
 
@@ -273,7 +273,7 @@ describe "MiqWorker Monitor" do
           end
 
           it "should return proper message on heartbeat via drb" do
-            @miq_server.worker_heartbeat(@worker1.pid).should == [['foo']]
+            expect(@miq_server.worker_heartbeat(@worker1.pid)).to eq [['foo']]
           end
         end
 
@@ -283,7 +283,7 @@ describe "MiqWorker Monitor" do
           end
 
           it "should return proper message on heartbeat via drb" do
-            @miq_server.worker_heartbeat(@worker1.pid).should == [['sync_config', {:config => nil}]]
+            expect(@miq_server.worker_heartbeat(@worker1.pid)).to eq [['sync_config', {:config => nil}]]
           end
         end
 
@@ -293,7 +293,7 @@ describe "MiqWorker Monitor" do
           end
 
           it "should return proper message on heartbeat via drb" do
-            @miq_server.worker_heartbeat(@worker1.pid).should == [['sync_active_roles', {:roles => nil}]]
+            expect(@miq_server.worker_heartbeat(@worker1.pid)).to eq [['sync_active_roles', {:roles => nil}]]
           end
         end
 
@@ -304,7 +304,7 @@ describe "MiqWorker Monitor" do
           end
 
           it "exit message followed by active_roles and config" do
-            @miq_server.worker_heartbeat(@worker1.pid).should == [['exit'], ['sync_active_roles', {:roles => nil}], ['sync_config', {:config => nil}]]
+            expect(@miq_server.worker_heartbeat(@worker1.pid)).to eq [['exit'], ['sync_active_roles', {:roles => nil}], ['sync_config', {:config => nil}]]
           end
         end
 
@@ -314,7 +314,7 @@ describe "MiqWorker Monitor" do
           end
 
           it "should return proper message on heartbeat via drb" do
-            @miq_server.worker_heartbeat(@worker1.pid).should == [['sync_active_roles', {:roles => nil}], ['sync_config', {:config => nil}]]
+            expect(@miq_server.worker_heartbeat(@worker1.pid)).to eq [['sync_active_roles', {:roles => nil}], ['sync_config', {:config => nil}]]
           end
         end
 
@@ -325,7 +325,7 @@ describe "MiqWorker Monitor" do
           end
 
           it "should return proper message on heartbeat via drb" do
-            @miq_server.worker_heartbeat(@worker1.pid).should == [['reconnect_ems', @ems_id.to_s]]
+            expect(@miq_server.worker_heartbeat(@worker1.pid)).to eq [['reconnect_ems', @ems_id.to_s]]
           end
 
           context "and an exit message" do
@@ -334,7 +334,7 @@ describe "MiqWorker Monitor" do
             end
 
             it "should return proper message on heartbeat via drb" do
-              @miq_server.worker_heartbeat(@worker1.pid).should == [['reconnect_ems', @ems_id.to_s], ['exit']]
+              expect(@miq_server.worker_heartbeat(@worker1.pid)).to eq [['reconnect_ems', @ems_id.to_s], ['exit']]
             end
           end
         end
@@ -351,12 +351,12 @@ describe "MiqWorker Monitor" do
 
         it "should not trigger memory threshold if worker is creating" do
           @worker1.status = MiqWorker::STATUS_CREATING
-          @miq_server.validate_worker(@worker1).should be_true
+          expect(@miq_server.validate_worker(@worker1)).to be_true
         end
 
         it "should not trigger memory threshold if worker is starting" do
           @worker1.status = MiqWorker::STATUS_STARTING
-          @miq_server.validate_worker(@worker1).should be_true
+          expect(@miq_server.validate_worker(@worker1)).to be_true
         end
 
         it "should trigger memory threshold if worker is started" do
@@ -379,9 +379,9 @@ describe "MiqWorker Monitor" do
 
         it "should return proper message on heartbeat" do
           @worker1.status = MiqWorker::STATUS_READY
-          @miq_server.worker_heartbeat(@worker1.pid).should == []
+          expect(@miq_server.worker_heartbeat(@worker1.pid)).to eq []
           @miq_server.validate_worker(@worker1) # Validation will populate message
-          @miq_server.worker_heartbeat(@worker1.pid).should == [['exit']]
+          expect(@miq_server.worker_heartbeat(@worker1.pid)).to eq [['exit']]
         end
       end
     end

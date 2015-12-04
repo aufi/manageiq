@@ -6,11 +6,11 @@ describe ManageIQ::Providers::Openstack::CloudManager do
   end
 
   it ".ems_type" do
-    described_class.ems_type.should == 'openstack'
+    expect(described_class.ems_type).to eq 'openstack'
   end
 
   it ".description" do
-    described_class.description.should == 'OpenStack'
+    expect(described_class.description).to eq 'OpenStack'
   end
 
   describe ".metrics_collector_queue_name" do
@@ -32,23 +32,23 @@ describe ManageIQ::Providers::Openstack::CloudManager do
       creds = {}
       creds[:amqp] = {:userid => "amqp_user", :password => "amqp_password"}
       @ems.update_authentication(creds, :save => false)
-      @ems.verify_credentials(:amqp).should be_true
+      expect(@ems.verify_credentials(:amqp)).to be_true
     end
 
     it "indicates that an event monitor is available" do
       OpenstackEventMonitor.stub(:available?).and_return(true)
-      @ems.event_monitor_available?.should be_true
+      expect(@ems.event_monitor_available?).to be_true
     end
 
     it "indicates that an event monitor is not available" do
       OpenstackEventMonitor.stub(:available?).and_return(false)
-      @ems.event_monitor_available?.should be_false
+      expect(@ems.event_monitor_available?).to be_false
     end
 
     it "logs an error and indicates that an event monitor is not available when there's an error checking for an event monitor" do
       OpenstackEventMonitor.stub(:available?).and_raise(StandardError)
       $log.should_receive(:error).with(/Exeption trying to find openstack event monitor/)
-      @ems.event_monitor_available?.should be_false
+      expect(@ems.event_monitor_available?).to be_false
     end
   end
 
@@ -57,7 +57,7 @@ describe ManageIQ::Providers::Openstack::CloudManager do
     @ems = FactoryGirl.build(:ems_openstack, :hostname => "host", :ipaddress => "::1")
     require 'openstack/openstack_event_monitor'
 
-    @ems.event_monitor_options.should == {:hostname => "host", :port => 1234}
+    expect(@ems.event_monitor_options).to eq {:hostname => "host", :port => 1234}
   end
 
   context "translate_exception" do

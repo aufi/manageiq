@@ -13,7 +13,7 @@ describe MiqProvision do
 
     def stub_method
       MiqAeEngine.should_receive(:resolve_automation_object).with do |uri, _, _, _|
-        uri.should eq('REQUEST')
+        expect(uri).to eq('REQUEST')
       end.and_return(workspace)
     end
 

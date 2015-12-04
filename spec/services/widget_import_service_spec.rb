@@ -111,7 +111,7 @@ describe WidgetImportService do
     shared_examples_for "WidgetImportService#import_widgets with a non existing widget" do
       it "builds a new widget" do
         widget_import_service.import_widgets(import_file_upload, widgets_to_import)
-        MiqWidget.first.should_not be_nil
+        expect(MiqWidget.first).not_to be_nil
       end
     end
 

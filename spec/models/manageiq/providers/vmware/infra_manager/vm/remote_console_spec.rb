@@ -44,27 +44,27 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole do
       @vm.remote_console_acquire_ticket_queue(:mks, "admin")
 
       q_all = MiqQueue.all
-      q_all.length.should == 1
-      q_all[0].method_name.should == "remote_console_acquire_ticket"
-      q_all[0].args.should == [:mks, nil]
+      expect(q_all.length).to eq 1
+      expect(q_all[0].method_name).to eq "remote_console_acquire_ticket"
+      expect(q_all[0].args).to eq [:mks, nil]
     end
 
     it "with :vmrc" do
       @vm.remote_console_acquire_ticket_queue(:vmrc, "admin")
 
       q_all = MiqQueue.all
-      q_all.length.should == 1
-      q_all[0].method_name.should == "remote_console_acquire_ticket"
-      q_all[0].args.should == [:vmrc, nil]
+      expect(q_all.length).to eq 1
+      expect(q_all[0].method_name).to eq "remote_console_acquire_ticket"
+      expect(q_all[0].args).to eq [:vmrc, nil]
     end
 
     it "with :vnc" do
       @vm.remote_console_acquire_ticket_queue(:vnc, "admin", 1234)
 
       q_all = MiqQueue.all
-      q_all.length.should == 1
-      q_all[0].method_name.should == "remote_console_acquire_ticket"
-      q_all[0].args.should == [:vnc, 1234]
+      expect(q_all.length).to eq 1
+      expect(q_all[0].method_name).to eq "remote_console_acquire_ticket"
+      expect(q_all[0].args).to eq [:vnc, 1234]
     end
   end
 
@@ -81,7 +81,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole do
       ticket = VCR.use_cassette(described_class.name.underscore) do
         @vm.remote_console_vmrc_acquire_ticket
       end
-      ticket.should =~ /^[0-9\-A-Z]{40}$/
+      expect(ticket).to match /^[0-9\-A-Z]{40}$/
     end
 
     it "with vm off" do
@@ -103,7 +103,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole do
     end
 
     it "normal case" do
-      @vm.validate_remote_console_vmrc_support.should be_true
+      expect(@vm.validate_remote_console_vmrc_support).to be_true
     end
 
     it "with vm with no ems" do
@@ -133,9 +133,9 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole do
     it "will set the attributes on the VC side" do
       vim_vm = double("MiqVimVm")
       vim_vm.should_receive(:setRemoteDisplayVncAttributes) do |args|
-        args[:enabled].should  be_true
-        args[:port].should == 5901
-        args[:password].should =~ /^[A-Za-z0-9+\/]{8}$/
+        expect(args[:enabled]).to be_true
+        expect(args[:port]).to eq 5901
+        expect(args[:password]).to match /^[A-Za-z0-9+\/]{8}$/
       end
       @vm.stub(:with_provider_object).and_yield(vim_vm)
 
@@ -147,11 +147,11 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole do
 
       password, host_address, host_port, proxy_address, proxy_port = @vm.remote_console_vnc_acquire_ticket
 
-      password.should =~ /^[A-Za-z0-9+\/]{8}$/
-      host_address.should == "192.168.252.4"
-      host_port.should == 5901
-      proxy_address.should be_nil
-      proxy_port.should    be_nil
+      expect(password).to match /^[A-Za-z0-9+\/]{8}$/
+      expect(host_address).to eq "192.168.252.4"
+      expect(host_port).to eq 5901
+      expect(proxy_address).to be_nil
+      expect(proxy_port).to be_nil
     end
 
     context "with a proxy miq_server" do
@@ -162,11 +162,11 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole do
 
         password, host_address, host_port, proxy_address, proxy_port = @vm.remote_console_vnc_acquire_ticket(server)
 
-        password.should =~ /^[A-Za-z0-9+\/]{8}$/
-        host_address.should == "192.168.252.4"
-        host_port.should == 5901
-        proxy_address.should be_nil
-        proxy_port.should    be_nil
+        expect(password).to match /^[A-Za-z0-9+\/]{8}$/
+        expect(host_address).to eq "192.168.252.4"
+        expect(host_port).to eq 5901
+        expect(proxy_address).to be_nil
+        expect(proxy_port).to be_nil
       end
 
       it "with a proxy configured" do
@@ -176,11 +176,11 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole do
 
         password, host_address, host_port, proxy_address, proxy_port = @vm.remote_console_vnc_acquire_ticket(server)
 
-        password.should =~ /^[A-Za-z0-9+\/]{8}$/
-        host_address.should == @host.guid
-        host_port.should == 5901
-        proxy_address.should == "1.2.3.4"
-        proxy_port.should == 5800
+        expect(password).to match /^[A-Za-z0-9+\/]{8}$/
+        expect(host_address).to eq @host.guid
+        expect(host_port).to eq 5901
+        expect(proxy_address).to eq "1.2.3.4"
+        expect(proxy_port).to eq 5800
       end
     end
 
@@ -191,7 +191,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole do
       @vm.remote_console_vnc_acquire_ticket
 
       vm_old.reload
-      vm_old.vnc_port.should be_nil
+      expect(vm_old.vnc_port).to be_nil
     end
   end
 end

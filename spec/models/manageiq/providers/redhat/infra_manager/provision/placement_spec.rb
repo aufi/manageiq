@@ -42,7 +42,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision do
 
     def check
       @task.send(:placement)
-      @task.options[:dest_cluster].should eql([@cluster.id, @cluster.name])
+      expect(@task.options[:dest_cluster]).to eql([@cluster.id, @cluster.name])
     end
   end
 end

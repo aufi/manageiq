@@ -82,8 +82,8 @@ describe OpsController do
       controller.should_receive(:render_flash)
       get :rbac_user_edit, :button => 'add'
       flash_messages = assigns(:flash_array)
-      flash_messages.first[:message].should == "Password/Verify Password do not match"
-      flash_messages.first[:level].should == :error
+      expect(flash_messages.first[:message]).to eq "Password/Verify Password do not match"
+      expect(flash_messages.first[:level]).to eq :error
     end
 
     it 'cannot add a user w/o group' do
@@ -104,8 +104,8 @@ describe OpsController do
       controller.should_receive(:render_flash)
       get :rbac_user_edit, :button => 'add'
       flash_messages = assigns(:flash_array)
-      flash_messages.first[:message].should == "A User must be assigned to a Group"
-      flash_messages.first[:level].should == :error
+      expect(flash_messages.first[:message]).to eq "A User must be assigned to a Group"
+      expect(flash_messages.first[:level]).to eq :error
     end
   end
 
@@ -142,7 +142,7 @@ describe OpsController do
       }
       controller.instance_variable_set(:@edit, edit)
       controller.send(:edit_changed?)
-      session[:changed].should eq(false)
+      expect(session[:changed]).to eq(false)
     end
 
     it "should set session[:changed] as true" do
@@ -152,7 +152,7 @@ describe OpsController do
       }
       controller.instance_variable_set(:@edit, edit)
       controller.send(:edit_changed?)
-      session[:changed].should eq(true)
+      expect(session[:changed]).to eq(true)
     end
 
     it "should set session[:changed] as false when config is same" do
@@ -164,7 +164,7 @@ describe OpsController do
       }
       controller.instance_variable_set(:@edit, edit)
       controller.send(:edit_changed?)
-      session[:changed].should eq(false)
+      expect(session[:changed]).to eq(false)
     end
 
     it "should set session[:changed] as true when config is sadifferentme" do
@@ -174,7 +174,7 @@ describe OpsController do
       }
       controller.instance_variable_set(:@edit, edit)
       controller.send(:edit_changed?)
-      session[:changed].should eq(true)
+      expect(session[:changed]).to eq(true)
     end
   end
 
@@ -254,7 +254,7 @@ describe OpsController do
       controller.should_receive(:render)
       controller.send(:explorer)
       expect(response.status).to eq(200)
-      assigns(:sb)[:active_accord].should eq(:rbac)
+      expect(assigns(:sb)[:active_accord]).to eq(:rbac)
     end
   end
 
@@ -267,7 +267,7 @@ describe OpsController do
       controller.should_receive(:render)
       controller.send(:explorer)
       expect(response.status).to eq(200)
-      assigns(:sb)[:active_accord].should eq(:analytics)
+      expect(assigns(:sb)[:active_accord]).to eq(:analytics)
     end
   end
 

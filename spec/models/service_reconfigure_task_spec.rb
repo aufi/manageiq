@@ -20,13 +20,13 @@ describe ServiceReconfigureTask do
 
   describe "#self.base_model" do
     it "should return ServiceReconfigureTask" do
-      ServiceReconfigureTask.base_model.should == ServiceReconfigureTask
+      expect(ServiceReconfigureTask.base_model).to eq ServiceReconfigureTask
     end
   end
 
   describe "#self.get_description" do
     it "returns a description based upon the source service name" do
-      ServiceReconfigureTask.get_description(request).should == "Service Reconfigure for: Test Service"
+      expect(ServiceReconfigureTask.get_description(request)).to eq "Service Reconfigure for: Test Service"
     end
   end
 
@@ -51,7 +51,7 @@ describe ServiceReconfigureTask do
   describe "#after_request_task_create" do
     it "should set the task description" do
       task.after_request_task_create
-      task.description.should == "Service Reconfigure for: Test Service"
+      expect(task.description).to eq "Service Reconfigure for: Test Service"
     end
   end
 

@@ -45,100 +45,100 @@ describe OpsController do
       context "#build_smartproxy_affinity_tree" do
         it "should build a SmartProxy Affinity tree" do
           tree = controller.send(:build_smartproxy_affinity_tree, @zone)
-          tree.should be == [
-            {
-              :key      => @svr1.id.to_s,
-              :icon     => "evm_server.png",
-              :title    => "Server: #{@svr1.name} [#{@svr1.id}]",
-              :expand   => true,
-              :children => [
-                {
-                  :key      => "#{@svr1.id}__host",
-                  :icon     => "host.png",
-                  :title    => "Host / Nodes",
-                  :children => [
-                    {
-                      :key    => "#{@svr1.id}__host_#{@host1.id}",
-                      :icon   => "host.png",
-                      :title  => @host1.name,
-                      :select => true
-                    },
-                    {
-                      :key    => "#{@svr1.id}__host_#{@host2.id}",
-                      :icon   => "host.png",
-                      :title  => @host2.name,
-                      :select => false
-                    }
-                  ]
-                },
-                {
-                  :key      => "#{@svr1.id}__storage",
-                  :icon     => "storage.png",
-                  :title    => "Datastores",
-                  :children => [
-                    {
-                      :key    => "#{@svr1.id}__storage_#{@storage1.id}",
-                      :icon   => "storage.png",
-                      :title  => @storage1.name,
-                      :select => true
-                    },
-                    {
-                      :key    => "#{@svr1.id}__storage_#{@storage2.id}",
-                      :icon   => "storage.png",
-                      :title  => @storage2.name,
-                      :select => false
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              :key      => @svr2.id.to_s,
-              :icon     => "evm_server.png",
-              :title    => "Server: #{@svr2.name} [#{@svr2.id}]",
-              :expand   => true,
-              :children => [
-                {
-                  :key      => "#{@svr2.id}__host",
-                  :icon     => "host.png",
-                  :title    => "Host / Nodes",
-                  :children => [
-                    {
-                      :key    => "#{@svr2.id}__host_#{@host1.id}",
-                      :icon   => "host.png",
-                      :title  => @host1.name,
-                      :select => false
-                    },
-                    {
-                      :key    => "#{@svr2.id}__host_#{@host2.id}",
-                      :icon   => "host.png",
-                      :title  => @host2.name,
-                      :select => true
-                    }
-                  ]
-                },
-                {
-                  :key      => "#{@svr2.id}__storage",
-                  :icon     => "storage.png",
-                  :title    => "Datastores",
-                  :children => [
-                    {
-                      :key    => "#{@svr2.id}__storage_#{@storage1.id}",
-                      :icon   => "storage.png",
-                      :title  => @storage1.name,
-                      :select => false
-                    },
-                    {
-                      :key    => "#{@svr2.id}__storage_#{@storage2.id}",
-                      :icon   => "storage.png",
-                      :title  => @storage2.name,
-                      :select => true
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
+          expect(tree).to be == [
+                      {
+                        :key      => @svr1.id.to_s,
+                        :icon     => "evm_server.png",
+                        :title    => "Server: #{@svr1.name} [#{@svr1.id}]",
+                        :expand   => true,
+                        :children => [
+                          {
+                            :key      => "#{@svr1.id}__host",
+                            :icon     => "host.png",
+                            :title    => "Host / Nodes",
+                            :children => [
+                              {
+                                :key    => "#{@svr1.id}__host_#{@host1.id}",
+                                :icon   => "host.png",
+                                :title  => @host1.name,
+                                :select => true
+                              },
+                              {
+                                :key    => "#{@svr1.id}__host_#{@host2.id}",
+                                :icon   => "host.png",
+                                :title  => @host2.name,
+                                :select => false
+                              }
+                            ]
+                          },
+                          {
+                            :key      => "#{@svr1.id}__storage",
+                            :icon     => "storage.png",
+                            :title    => "Datastores",
+                            :children => [
+                              {
+                                :key    => "#{@svr1.id}__storage_#{@storage1.id}",
+                                :icon   => "storage.png",
+                                :title  => @storage1.name,
+                                :select => true
+                              },
+                              {
+                                :key    => "#{@svr1.id}__storage_#{@storage2.id}",
+                                :icon   => "storage.png",
+                                :title  => @storage2.name,
+                                :select => false
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        :key      => @svr2.id.to_s,
+                        :icon     => "evm_server.png",
+                        :title    => "Server: #{@svr2.name} [#{@svr2.id}]",
+                        :expand   => true,
+                        :children => [
+                          {
+                            :key      => "#{@svr2.id}__host",
+                            :icon     => "host.png",
+                            :title    => "Host / Nodes",
+                            :children => [
+                              {
+                                :key    => "#{@svr2.id}__host_#{@host1.id}",
+                                :icon   => "host.png",
+                                :title  => @host1.name,
+                                :select => false
+                              },
+                              {
+                                :key    => "#{@svr2.id}__host_#{@host2.id}",
+                                :icon   => "host.png",
+                                :title  => @host2.name,
+                                :select => true
+                              }
+                            ]
+                          },
+                          {
+                            :key      => "#{@svr2.id}__storage",
+                            :icon     => "storage.png",
+                            :title    => "Datastores",
+                            :children => [
+                              {
+                                :key    => "#{@svr2.id}__storage_#{@storage1.id}",
+                                :icon   => "storage.png",
+                                :title  => @storage1.name,
+                                :select => false
+                              },
+                              {
+                                :key    => "#{@svr2.id}__storage_#{@storage2.id}",
+                                :icon   => "storage.png",
+                                :title  => @storage2.name,
+                                :select => true
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
         end
       end
 
@@ -150,63 +150,63 @@ describe OpsController do
         it "should select a host when checked" do
           controller.params = {:id => "#{@svr1.id}__host_#{@host2.id}", :check => '1'}
           controller.smartproxy_affinity_field_changed
-          @edit[:new][:servers][@svr1.id][:hosts].to_a.should include(@host2.id)
+          expect(@edit[:new][:servers][@svr1.id][:hosts].to_a).to include(@host2.id)
         end
 
         it "should deselect a host when unchecked" do
           controller.params = {:id => "#{@svr1.id}__host_#{@host1.id}", :check => '0'}
           controller.smartproxy_affinity_field_changed
-          @edit[:new][:servers][@svr1.id][:hosts].to_a.should_not include(@host1.id)
+          expect(@edit[:new][:servers][@svr1.id][:hosts].to_a).not_to include(@host1.id)
         end
 
         it "should select a datastore when checked" do
           controller.params = {:id => "#{@svr1.id}__storage_#{@storage2.id}", :check => '1'}
           controller.smartproxy_affinity_field_changed
-          @edit[:new][:servers][@svr1.id][:storages].to_a.should include(@storage2.id)
+          expect(@edit[:new][:servers][@svr1.id][:storages].to_a).to include(@storage2.id)
         end
 
         it "should deselect a datastore when unchecked" do
           controller.params = {:id => "#{@svr1.id}__storage_#{@storage1.id}", :check => '0'}
           controller.smartproxy_affinity_field_changed
-          @edit[:new][:servers][@svr1.id][:storages].to_a.should_not include(@storage1.id)
+          expect(@edit[:new][:servers][@svr1.id][:storages].to_a).not_to include(@storage1.id)
         end
 
         it "should select all child hosts when checked" do
           controller.params = {:id => "#{@svr1.id}__host", :check => '1'}
           controller.smartproxy_affinity_field_changed
-          @edit[:new][:servers][@svr1.id][:hosts].to_a.sort.should be == [@host1.id, @host2.id]
+          expect(@edit[:new][:servers][@svr1.id][:hosts].to_a.sort).to be == [@host1.id, @host2.id]
         end
 
         it "should deselect all child hosts when unchecked" do
           controller.params = {:id => "#{@svr1.id}__host", :check => '0'}
           controller.smartproxy_affinity_field_changed
-          @edit[:new][:servers][@svr1.id][:hosts].to_a.should be == []
+          expect(@edit[:new][:servers][@svr1.id][:hosts].to_a).to be == []
         end
 
         it "should select all child datastores when checked" do
           controller.params = {:id => "#{@svr1.id}__storage", :check => '1'}
           controller.smartproxy_affinity_field_changed
-          @edit[:new][:servers][@svr1.id][:storages].to_a.sort.should be == [@storage1.id, @storage2.id]
+          expect(@edit[:new][:servers][@svr1.id][:storages].to_a.sort).to be == [@storage1.id, @storage2.id]
         end
 
         it "should deselect all child datastores when unchecked" do
           controller.params = {:id => "#{@svr1.id}__storage", :check => '0'}
           controller.smartproxy_affinity_field_changed
-          @edit[:new][:servers][@svr1.id][:storages].to_a.should be == []
+          expect(@edit[:new][:servers][@svr1.id][:storages].to_a).to be == []
         end
 
         it "should select all child hosts and datastores when checked" do
           controller.params = {:id => "#{@svr1.id}", :check => '1'}
           controller.smartproxy_affinity_field_changed
-          @edit[:new][:servers][@svr1.id][:hosts].to_a.sort.should be == [@host1.id, @host2.id]
-          @edit[:new][:servers][@svr1.id][:storages].to_a.sort.should be == [@storage1.id, @storage2.id]
+          expect(@edit[:new][:servers][@svr1.id][:hosts].to_a.sort).to be == [@host1.id, @host2.id]
+          expect(@edit[:new][:servers][@svr1.id][:storages].to_a.sort).to be == [@storage1.id, @storage2.id]
         end
 
         it "should deselect all child hosts and datastores when checked" do
           controller.params = {:id => "#{@svr1.id}", :check => '0'}
           controller.smartproxy_affinity_field_changed
-          @edit[:new][:servers][@svr1.id][:hosts].to_a.should be == []
-          @edit[:new][:servers][@svr1.id][:storages].to_a.should be == []
+          expect(@edit[:new][:servers][@svr1.id][:hosts].to_a).to be == []
+          expect(@edit[:new][:servers][@svr1.id][:storages].to_a).to be == []
         end
       end
 
@@ -217,8 +217,8 @@ describe OpsController do
 
           # Commit the in-progress edit state (i.e. the initial state)
           controller.send(:smartproxy_affinity_update)
-          @svr1.vm_scan_host_affinity.should be == [@host1]
-          @svr2.vm_scan_host_affinity.should be == [@host2]
+          expect(@svr1.vm_scan_host_affinity).to be == [@host1]
+          expect(@svr2.vm_scan_host_affinity).to be == [@host2]
         end
 
         it "updates the SmartProxy storage affinities" do
@@ -227,8 +227,8 @@ describe OpsController do
 
           # Commit the in-progress edit state (i.e. the initial state)
           controller.send(:smartproxy_affinity_update)
-          @svr1.vm_scan_storage_affinity.should be == [@storage1]
-          @svr2.vm_scan_storage_affinity.should be == [@storage2]
+          expect(@svr1.vm_scan_storage_affinity).to be == [@storage1]
+          expect(@svr2.vm_scan_storage_affinity).to be == [@storage2]
         end
       end
     end
@@ -244,7 +244,7 @@ describe OpsController do
                                          :production_password => "[FILTERED]",
                                          :production_verify   => "[FILTERED]")
         controller.send(:restore_password)
-        assigns(:edit)[:new][:password].should == MiqDbConfig.current.options[:password]
+        expect(assigns(:edit)[:new][:password]).to eq MiqDbConfig.current.options[:password]
       end
     end
   end

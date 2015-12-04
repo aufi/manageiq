@@ -16,7 +16,7 @@ describe OpsController do
         session[:sandboxes] = {"ops" => {:active_tree => :rbac_tree}}
         post :tree_select, :id => 'root', :format => :js
 
-        response.should render_template('ops/_rbac_details_tab')
+        expect(response).to render_template('ops/_rbac_details_tab')
         expect(response.status).to eq(200)
       end
 
@@ -26,7 +26,7 @@ describe OpsController do
         session[:sandboxes] = {"ops" => {:active_tree => :rbac_tree}}
         post :tree_select, :id => "tn-#{controller.to_cid(tenant.id)}", :format => :js
 
-        response.should render_template('ops/_rbac_details_tab')
+        expect(response).to render_template('ops/_rbac_details_tab')
         expect(response.status).to eq(200)
       end
       it "renders quota usage table for tenant" do
@@ -38,7 +38,7 @@ describe OpsController do
         session[:sandboxes] = {"ops" => {:active_tree => :rbac_tree}}
         post :tree_select, :id => "tn-#{controller.to_cid(tenant.id)}", :format => :js
 
-        response.should render_template('ops/_rbac_details_tab')
+        expect(response).to render_template('ops/_rbac_details_tab')
         expect(response.status).to eq(200)
         expect(response.body).to include('Tenant Quota')
         expect(response.body).to include('<th>\nName\n<\/th>\n<th>\nTotal Quota\n<\/th>\n<th>\nIn Use\n' \
@@ -53,7 +53,7 @@ describe OpsController do
       it "sets @tenant record" do
         t = FactoryGirl.create(:tenant, :parent => Tenant.root_tenant, :subdomain => "foo")
         controller.send(:rbac_tenant_get_details, t.id)
-        assigns(:tenant).should eq(t)
+        expect(assigns(:tenant)).to eq(t)
       end
     end
 
@@ -74,8 +74,8 @@ describe OpsController do
         controller.send(:rbac_tenant_delete)
 
         flash_message = assigns(:flash_array).first
-        flash_message[:message].should include("Delete successful")
-        flash_message[:level].should be(:success)
+        expect(flash_message[:message]).to include("Delete successful")
+        expect(flash_message[:level]).to be(:success)
       end
     end
 
@@ -85,8 +85,8 @@ describe OpsController do
         controller.instance_variable_set(:@settings, {})
         expect(response.status).to eq(200)
         controller.send(:rbac_tenants_list)
-        assigns(:view).should_not be_nil
-        assigns(:pages).should_not be_nil
+        expect(assigns(:view)).not_to be_nil
+        expect(assigns(:pages)).not_to be_nil
       end
     end
 
@@ -110,8 +110,8 @@ describe OpsController do
         expect(response.status).to eq(200)
         controller.send(:rbac_tenant_edit)
         flash_message = assigns(:flash_array).first
-        flash_message[:message].should include("All changes have been reset")
-        flash_message[:level].should be(:warning)
+        expect(flash_message[:message]).to include("All changes have been reset")
+        expect(flash_message[:level]).to be(:warning)
       end
 
       it "cancels tenant edit" do
@@ -121,8 +121,8 @@ describe OpsController do
         expect(response.status).to eq(200)
         controller.send(:rbac_tenant_edit)
         flash_message = assigns(:flash_array).first
-        flash_message[:message].should include("Edit of Tenant \"#{@tenant.name}\" was cancelled by the user")
-        flash_message[:level].should be(:success)
+        expect(flash_message[:message]).to include("Edit of Tenant \"#{@tenant.name}\" was cancelled by the user")
+        expect(flash_message[:level]).to be(:success)
       end
 
       it "saves tenant record changes" do
@@ -137,8 +137,8 @@ describe OpsController do
         expect(response.status).to eq(200)
         controller.send(:rbac_tenant_edit)
         flash_message = assigns(:flash_array).first
-        flash_message[:message].should include("Tenant \"Foo_Bar\" was saved")
-        flash_message[:level].should be(:success)
+        expect(flash_message[:message]).to include("Tenant \"Foo_Bar\" was saved")
+        expect(flash_message[:level]).to be(:success)
       end
     end
 
@@ -167,7 +167,7 @@ describe OpsController do
         @tenant.update_attributes(:use_config_for_attributes => false)
         @tenant.reload
         controller.send(:tenant_set_record_vars, @tenant)
-        @tenant.name.should eq("Foo_Bar")
+        expect(@tenant.name).to eq("Foo_Bar")
       end
     end
 
@@ -187,9 +187,9 @@ describe OpsController do
 
       it "does not change value of parent & divisible fields for existing record" do
         controller.send(:tenant_set_record_vars, @tenant)
-        @tenant.divisible.should be_true
-        @tenant.parent.id.should eq(Tenant.root_tenant.id)
-        @tenant.name.should eq("Foo_Bar")
+        expect(@tenant.divisible).to be_true
+        expect(@tenant.parent.id).to eq(Tenant.root_tenant.id)
+        expect(@tenant.name).to eq("Foo_Bar")
       end
 
       it "sets value of parent & divisible fields for new record" do
@@ -201,9 +201,9 @@ describe OpsController do
         }
         controller.instance_variable_set(:@sb, sb_hash)
         controller.send(:tenant_set_record_vars, tenant)
-        tenant.divisible.should be_false
-        tenant.parent.id.should eq(@tenant.id)
-        tenant.name.should eq("Foo_Bar")
+        expect(tenant.divisible).to be_false
+        expect(tenant.parent.id).to eq(@tenant.id)
+        expect(tenant.name).to eq("Foo_Bar")
       end
     end
 
@@ -228,8 +228,8 @@ describe OpsController do
         expect(response.status).to eq(200)
         controller.send(:rbac_tenant_manage_quotas)
         flash_message = assigns(:flash_array).first
-        flash_message[:message].should include("All changes have been reset")
-        flash_message[:level].should be(:warning)
+        expect(flash_message[:message]).to include("All changes have been reset")
+        expect(flash_message[:level]).to be(:warning)
       end
 
       it "cancels tenant manage quotas" do
@@ -238,8 +238,8 @@ describe OpsController do
         expect(response.status).to eq(200)
         controller.send(:rbac_tenant_manage_quotas)
         flash_message = assigns(:flash_array).first
-        flash_message[:message].should include("Manage quotas for Tenant \"#{@tenant.name}\" was cancelled by the user")
-        flash_message[:level].should be(:success)
+        expect(flash_message[:message]).to include("Manage quotas for Tenant \"#{@tenant.name}\" was cancelled by the user")
+        expect(flash_message[:level]).to be(:success)
       end
 
       it "saves tenant quotas record changes" do
@@ -256,8 +256,8 @@ describe OpsController do
         expect(response.status).to eq(200)
         controller.send(:rbac_tenant_manage_quotas)
         flash_message = assigns(:flash_array).first
-        flash_message[:message].should include("Quotas for Tenant \"OneTenant\" were saved")
-        flash_message[:level].should be(:success)
+        expect(flash_message[:message]).to include("Quotas for Tenant \"OneTenant\" were saved")
+        expect(flash_message[:level]).to be(:success)
       end
     end
 
@@ -312,22 +312,22 @@ describe OpsController do
         controller.instance_variable_set(:@sb, :action => "rbac_tenant_tags_edit")
         controller.instance_variable_set(:@_params, :miq_grid_checks => @tenant.id.to_s)
         controller.send(:rbac_tenant_tags_edit)
-        assigns(:flash_array).should be_nil
-        assigns(:entries).should_not be_nil
+        expect(assigns(:flash_array)).to be_nil
+        expect(assigns(:entries)).not_to be_nil
       end
 
       it "cancels tags edit" do
         controller.instance_variable_set(:@_params, :button => "cancel", :id => @tenant.id)
         controller.send(:rbac_tenant_tags_edit)
-        assigns(:flash_array).first[:message].should include("was cancelled")
-        assigns(:edit).should be_nil
+        expect(assigns(:flash_array).first[:message]).to include("was cancelled")
+        expect(assigns(:edit)).to be_nil
       end
 
       it "save tags" do
         controller.instance_variable_set(:@_params, :button => "save", :id => @tenant.id)
         controller.send(:rbac_tenant_tags_edit)
-        assigns(:flash_array).first[:message].should include("Tag edits were successfully saved")
-        assigns(:edit).should be_nil
+        expect(assigns(:flash_array).first[:message]).to include("Tag edits were successfully saved")
+        expect(assigns(:edit)).to be_nil
       end
     end
   end

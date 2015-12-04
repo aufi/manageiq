@@ -29,9 +29,9 @@ describe MiqAeCustomizationController do
 
         # Check for Dialog Label to be part of flash message displayed
         flash_messages = assigns(:flash_array)
-        flash_messages.first[:message].should include("Default Dialog \"Test_Dialog1\" cannot be deleted")
-        controller.send(:flash_errors?).should be_true
-        flash_messages.last[:message].should include("Dialog \"Test Description 2\": Delete successful")
+        expect(flash_messages.first[:message]).to include("Default Dialog \"Test_Dialog1\" cannot be deleted")
+        expect(controller.send(:flash_errors?)).to be_true
+        expect(flash_messages.last[:message]).to include("Dialog \"Test Description 2\": Delete successful")
       end
 
       it "Default Dialog should not be deleted" do
@@ -50,9 +50,9 @@ describe MiqAeCustomizationController do
 
         # Check for Dialog Label to be part of flash message displayed
         flash_messages = assigns(:flash_array)
-        flash_messages.first[:message].should include("Default Dialog \"Test_Dialog\" cannot be deleted")
+        expect(flash_messages.first[:message]).to include("Default Dialog \"Test_Dialog\" cannot be deleted")
 
-        controller.send(:flash_errors?).should be_true
+        expect(controller.send(:flash_errors?)).to be_true
       end
     end
   end

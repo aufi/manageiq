@@ -22,6 +22,6 @@ describe AutomationTask do
   it "#execute" do
     MiqAeEngine.should_receive(:deliver).once
     @at.execute
-    @ar.reload.message.should == "#{AutomationRequest::TASK_DESCRIPTION} initiated"
+    expect(@ar.reload.message).to eq "#{AutomationRequest::TASK_DESCRIPTION} initiated"
   end
 end

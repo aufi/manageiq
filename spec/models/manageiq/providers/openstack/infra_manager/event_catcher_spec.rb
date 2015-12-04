@@ -10,12 +10,12 @@ describe ManageIQ::Providers::Openstack::InfraManager::EventCatcher do
   it "logs info about EMS that do not have Event Monitors available" do
     @ems.stub(:event_monitor_available?).and_return(false)
     $log.should_receive(:info).with(/Event Monitor unavailable for #{@ems.name}/)
-    ManageIQ::Providers::Openstack::InfraManager::EventCatcher.all_valid_ems_in_zone.should_not include @ems
+    expect(ManageIQ::Providers::Openstack::InfraManager::EventCatcher.all_valid_ems_in_zone).not_to include @ems
   end
 
   it "does not log info about unavailable Event Monitors when EMS can provide an event monitor" do
     @ems.stub(:event_monitor_available?).and_return(true)
     $log.should_not_receive(:info).with(/Event Monitor unavailable for #{@ems.name}/)
-    ManageIQ::Providers::Openstack::InfraManager::EventCatcher.all_valid_ems_in_zone.should include @ems
+    expect(ManageIQ::Providers::Openstack::InfraManager::EventCatcher.all_valid_ems_in_zone).to include @ems
   end
 end

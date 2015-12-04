@@ -14,7 +14,7 @@ describe ReportController do
         controller.instance_variable_set(:@_params, :button => "default")
         controller.should_receive(:build_report_listnav).with "reports", "menu", "default"
         controller.menu_update
-        assigns(:flash_array).first[:message].should include("default")
+        expect(assigns(:flash_array).first[:message]).to include("default")
       end
     end
   end

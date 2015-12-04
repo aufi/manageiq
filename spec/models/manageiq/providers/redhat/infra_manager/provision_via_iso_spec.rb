@@ -35,19 +35,19 @@ describe ManageIQ::Providers::Redhat::InfraManager::ProvisionViaIso do
 
         it "with default options" do
           clone_options = @vm_prov.prepare_for_clone_task
-          clone_options[:clone_type].should == :skeletal
+          expect(clone_options[:clone_type]).to eq :skeletal
         end
 
         it "with linked-clone true" do
           @vm_prov.options[:linked_clone] = true
           clone_options = @vm_prov.prepare_for_clone_task
-          clone_options[:clone_type].should == :skeletal
+          expect(clone_options[:clone_type]).to eq :skeletal
         end
 
         it "with linked-clone false" do
           @vm_prov.options[:linked_clone] = false
           clone_options = @vm_prov.prepare_for_clone_task
-          clone_options[:clone_type].should == :skeletal
+          expect(clone_options[:clone_type]).to eq :skeletal
         end
       end
 
@@ -62,7 +62,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::ProvisionViaIso do
           @vm.should_receive(:stop)
           @vm_prov.provision_completed
 
-          @vm_prov.phase.should == "poll_destination_powered_off_in_vmdb"
+          expect(@vm_prov.phase).to eq "poll_destination_powered_off_in_vmdb"
         end
 
         it "when phase is not poll_destination_powered_off_in_vmdb" do
@@ -71,7 +71,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::ProvisionViaIso do
           @vm.should_not_receive(:stop)
           @vm_prov.provision_completed
 
-          @vm_prov.phase.should == "post_provision"
+          expect(@vm_prov.phase).to eq "post_provision"
         end
       end
     end

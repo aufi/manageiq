@@ -26,9 +26,9 @@ describe ServiceController do
 
       # Check for Service Description to be part of flash message displayed
       flash_messages = assigns(:flash_array)
-      flash_messages.first[:message].should include("Service \"GemFire\": Delete successful")
+      expect(flash_messages.first[:message]).to include("Service \"GemFire\": Delete successful")
 
-      controller.send(:flash_errors?).should_not be_true
+      expect(controller.send(:flash_errors?)).not_to be_true
     end
   end
 
@@ -60,8 +60,8 @@ describe ServiceController do
       controller.send(:service_delete)
 
       flash_message = assigns(:flash_array).first
-      flash_message[:message].should include("Delete successful")
-      flash_message[:level].should be(:success)
+      expect(flash_message[:message]).to include("Delete successful")
+      expect(flash_message[:level]).to be(:success)
     end
   end
 end

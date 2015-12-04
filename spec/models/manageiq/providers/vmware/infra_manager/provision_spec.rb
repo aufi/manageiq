@@ -39,28 +39,28 @@ describe ManageIQ::Providers::Vmware::InfraManager::Provision do
         @vm_prov.destination = @vm_template
         @vm_prov.should_receive(:build_config_network_adapters)
         spec = @vm_prov.build_config_spec
-        spec.should be_kind_of(VimHash)
-        spec.xsiType.should == 'VirtualMachineConfigSpec'
-        spec["memoryMB"].should == 1024
-        spec["numCPUs"].should == 2
-        spec["annotation"].should include(@vm_prov.phase_context[:new_vm_validation_guid])
+        expect(spec).to be_kind_of(VimHash)
+        expect(spec.xsiType).to eq 'VirtualMachineConfigSpec'
+        expect(spec["memoryMB"]).to eq 1024
+        expect(spec["numCPUs"]).to eq 2
+        expect(spec["annotation"]).to include(@vm_prov.phase_context[:new_vm_validation_guid])
       end
 
       it "should return a transform spec" do
         spec = @vm_prov.build_transform_spec
-        spec.should be_nil
+        expect(spec).to be_nil
         @vm_prov.options.merge!(:disk_format => 'thin')
         spec = @vm_prov.build_transform_spec
-        spec.should be_kind_of(VimString)
-        spec.vimType.should == 'VirtualMachineRelocateTransformation'
+        expect(spec).to be_kind_of(VimString)
+        expect(spec.vimType).to eq 'VirtualMachineRelocateTransformation'
       end
 
       it "should detect when a reconfigure_hardware_on_destination call is required" do
         target_vm = FactoryGirl.create(:vm_vmware, :name => "target_vm1", :location => "abc/def.vmx", :cpu_limit => @vm_prov.options[:cpu_limit])
         @vm_prov.destination = target_vm
-        @vm_prov.reconfigure_hardware_on_destination?.should == false
+        expect(@vm_prov.reconfigure_hardware_on_destination?).to eq false
         @vm_prov.options[:cpu_limit] = 100
-        @vm_prov.reconfigure_hardware_on_destination?.should == true
+        expect(@vm_prov.reconfigure_hardware_on_destination?).to eq true
       end
 
       it "should delete unneeded network cards" do
@@ -79,7 +79,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Provision do
         host = FactoryGirl.create(:host, :ext_management_system => @ems)
         host_struct = [MiqHashStruct.new(:id => host.id, :evm_object_class => host.class.base_class.name.to_sym)]
         MiqProvisionWorkflow.any_instance.stub(:allowed_hosts).and_return(host_struct)
-        @vm_prov.eligible_resources(:hosts).should == [host]
+        expect(@vm_prov.eligible_resources(:hosts)).to eq [host]
       end
 
       it "eligible_resources with bad resource" do
@@ -88,7 +88,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Provision do
 
       it "disable customization_spec" do
         @vm_prov.should_receive(:disable_customization_spec).once
-        @vm_prov.set_customization_spec(nil).should be_true
+        expect(@vm_prov.set_customization_spec(nil)).to be_true
       end
 
       context "with destination VM" do

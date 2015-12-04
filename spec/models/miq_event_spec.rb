@@ -18,24 +18,24 @@ describe MiqEvent do
 
     it "will recognize known events" do
       FactoryGirl.create(:miq_event_definition, :name => "host_connect")
-      MiqEvent.normalize_event("host_connect").should_not == "unknown"
+      expect(MiqEvent.normalize_event("host_connect")).not_to eq "unknown"
 
       FactoryGirl.create(:miq_event_definition, :name => "evm_server_start")
-      MiqEvent.normalize_event("evm_server_start").should_not == "unknown"
+      expect(MiqEvent.normalize_event("evm_server_start")).not_to eq "unknown"
     end
 
     it "will mark unknown events" do
-      MiqEvent.normalize_event("xxx").should == "unknown"
-      MiqEvent.normalize_event("unknown").should == "unknown"
+      expect(MiqEvent.normalize_event("xxx")).to eq "unknown"
+      expect(MiqEvent.normalize_event("unknown")).to eq "unknown"
     end
 
     context ".event_name_for_target" do
       it "vm" do
-        MiqEvent.event_name_for_target(FactoryGirl.build(:vm_redhat),   "perf_complete").should == "vm_perf_complete"
+        expect(MiqEvent.event_name_for_target(FactoryGirl.build(:vm_redhat),   "perf_complete")).to eq "vm_perf_complete"
       end
 
       it "host" do
-        MiqEvent.event_name_for_target(FactoryGirl.build(:host_redhat), "perf_complete").should == "host_perf_complete"
+        expect(MiqEvent.event_name_for_target(FactoryGirl.build(:host_redhat), "perf_complete")).to eq "host_perf_complete"
       end
     end
 
@@ -98,7 +98,7 @@ describe MiqEvent do
         MiqEvent.should_receive(:raise_event_for_children).with(@cluster, event, :type => target_class)
 
         results = MiqEvent.first.process_evm_event
-        results.keys.should match_array([:policy, :alert, :children_events])
+        expect(results.keys).to match_array([:policy, :alert, :children_events])
       end
 
       it "will not raise to automate for supported policy target" do

@@ -23,43 +23,43 @@ describe HostController do
     it "when VM Right Size Recommendations is pressed" do
       controller.should_receive(:vm_right_size)
       post :button, :pressed => 'vm_right_size', :format => :js
-      controller.send(:flash_errors?).should_not be_true
+      expect(controller.send(:flash_errors?)).not_to be_true
     end
 
     it "when VM Migrate is pressed" do
       controller.should_receive(:prov_redirect).with("migrate")
       post :button, :pressed => 'vm_migrate', :format => :js
-      controller.send(:flash_errors?).should_not be_true
+      expect(controller.send(:flash_errors?)).not_to be_true
     end
 
     it "when VM Retire is pressed" do
       controller.should_receive(:retirevms).once
       post :button, :pressed => 'vm_retire', :format => :js
-      controller.send(:flash_errors?).should_not be_true
+      expect(controller.send(:flash_errors?)).not_to be_true
     end
 
     it "when VM Manage Policies is pressed" do
       controller.should_receive(:assign_policies).with(VmOrTemplate)
       post :button, :pressed => 'vm_protect', :format => :js
-      controller.send(:flash_errors?).should_not be_true
+      expect(controller.send(:flash_errors?)).not_to be_true
     end
 
     it "when MiqTemplate Manage Policies is pressed" do
       controller.should_receive(:assign_policies).with(VmOrTemplate)
       post :button, :pressed => 'miq_template_protect', :format => :js
-      controller.send(:flash_errors?).should_not be_true
+      expect(controller.send(:flash_errors?)).not_to be_true
     end
 
     it "when VM Tag is pressed" do
       controller.should_receive(:tag).with(VmOrTemplate)
       post :button, :pressed => 'vm_tag', :format => :js
-      controller.send(:flash_errors?).should_not be_true
+      expect(controller.send(:flash_errors?)).not_to be_true
     end
 
     it "when MiqTemplate Tag is pressed" do
       controller.should_receive(:tag).with(VmOrTemplate)
       post :button, :pressed => 'miq_template_tag', :format => :js
-      controller.send(:flash_errors?).should_not be_true
+      expect(controller.send(:flash_errors?)).not_to be_true
     end
 
     it "when Custom Button is pressed" do
@@ -73,13 +73,13 @@ describe HostController do
       custom_button.save
       post :button, :pressed => "custom_button", :id => host.id, :button_id => custom_button.id
       expect(response.status).to eq(200)
-      controller.send(:flash_errors?).should_not be_true
+      expect(controller.send(:flash_errors?)).not_to be_true
     end
 
     it "when Drift button is pressed" do
       controller.should_receive(:drift_analysis)
       post :button, :pressed => 'common_drift', :format => :js
-      controller.send(:flash_errors?).should_not be_true
+      expect(controller.send(:flash_errors?)).not_to be_true
     end
   end
 

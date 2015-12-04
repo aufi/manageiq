@@ -2,15 +2,15 @@ require "spec_helper"
 
 describe Vm do
   it "#corresponding_model" do
-    Vm.corresponding_model.should == MiqTemplate
-    ManageIQ::Providers::Vmware::InfraManager::Vm.corresponding_model.should == ManageIQ::Providers::Vmware::InfraManager::Template
-    ManageIQ::Providers::Redhat::InfraManager::Vm.corresponding_model.should == ManageIQ::Providers::Redhat::InfraManager::Template
+    expect(Vm.corresponding_model).to eq MiqTemplate
+    expect(ManageIQ::Providers::Vmware::InfraManager::Vm.corresponding_model).to eq ManageIQ::Providers::Vmware::InfraManager::Template
+    expect(ManageIQ::Providers::Redhat::InfraManager::Vm.corresponding_model).to eq ManageIQ::Providers::Redhat::InfraManager::Template
   end
 
   it "#corresponding_template_model" do
-    Vm.corresponding_template_model.should == MiqTemplate
-    ManageIQ::Providers::Vmware::InfraManager::Vm.corresponding_template_model.should == ManageIQ::Providers::Vmware::InfraManager::Template
-    ManageIQ::Providers::Redhat::InfraManager::Vm.corresponding_template_model.should == ManageIQ::Providers::Redhat::InfraManager::Template
+    expect(Vm.corresponding_template_model).to eq MiqTemplate
+    expect(ManageIQ::Providers::Vmware::InfraManager::Vm.corresponding_template_model).to eq ManageIQ::Providers::Vmware::InfraManager::Template
+    expect(ManageIQ::Providers::Redhat::InfraManager::Vm.corresponding_template_model).to eq ManageIQ::Providers::Redhat::InfraManager::Template
   end
 
   context "#template=" do
@@ -18,18 +18,18 @@ describe Vm do
 
     it "false" do
       @vm.update_attribute(:template, false)
-      @vm.type.should == "ManageIQ::Providers::Vmware::InfraManager::Vm"
-      @vm.template.should == false
-      @vm.state.should == "on"
+      expect(@vm.type).to eq "ManageIQ::Providers::Vmware::InfraManager::Vm"
+      expect(@vm.template).to eq false
+      expect(@vm.state).to eq "on"
       -> { @vm.reload }.should_not raise_error
       -> { ManageIQ::Providers::Vmware::InfraManager::Template.find(@vm.id) }.should raise_error ActiveRecord::RecordNotFound
     end
 
     it "true" do
       @vm.update_attribute(:template, true)
-      @vm.type.should == "ManageIQ::Providers::Vmware::InfraManager::Template"
-      @vm.template.should == true
-      @vm.state.should == "never"
+      expect(@vm.type).to eq "ManageIQ::Providers::Vmware::InfraManager::Template"
+      expect(@vm.template).to eq true
+      expect(@vm.state).to eq "never"
       -> { @vm.reload }.should raise_error ActiveRecord::RecordNotFound
       -> { ManageIQ::Providers::Vmware::InfraManager::Template.find(@vm.id) }.should_not raise_error
     end
@@ -102,12 +102,12 @@ describe Vm do
       end
 
       it "should destroy all relationships" do
-        Relationship.where(:resource_type => "Vm", :resource_id => @vm.id).count.should == 0
-        Relationship.where(:resource_type => "Vm", :resource_id => @child_vm.id).count.should == 0
+        expect(Relationship.where(:resource_type => "Vm", :resource_id => @vm.id).count).to eq 0
+        expect(Relationship.where(:resource_type => "Vm", :resource_id => @child_vm.id).count).to eq 0
 
-        @parent_vm.children.should == []
-        @child_vm.parents.should == []
-        @rp.children.should == []
+        expect(@parent_vm.children).to eq []
+        expect(@child_vm.parents).to eq []
+        expect(@rp.children).to eq []
       end
     end
   end
@@ -122,21 +122,21 @@ describe Vm do
     it "sets up standard callback for non Power Operations" do
       options = {:task => "create_snapshot", :invoke_by => :task, :ids => [@vm.id]}
       Vm.invoke_tasks_local(options)
-      MiqTask.count.should == 1
+      expect(MiqTask.count).to eq 1
       task = MiqTask.first
-      MiqQueue.count.should == 1
+      expect(MiqQueue.count).to eq 1
       msg = MiqQueue.first
-      msg.miq_callback.should == {:class_name => "MiqTask", :method_name => :queue_callback, :instance_id => task.id, :args => ["Finished"]}
+      expect(msg.miq_callback).to eq {:class_name => "MiqTask", :method_name => :queue_callback, :instance_id => task.id, :args => ["Finished"]}
     end
 
     it "sets up powerops callback for Power Operations" do
       options = {:task => "start", :invoke_by => :task, :ids => [@vm.id]}
       Vm.invoke_tasks_local(options)
-      MiqTask.count.should == 1
+      expect(MiqTask.count).to eq 1
       task = MiqTask.first
-      MiqQueue.count.should == 1
+      expect(MiqQueue.count).to eq 1
       msg = MiqQueue.first
-      msg.miq_callback.should == {:class_name => @vm.class.base_class.name, :method_name => :powerops_callback, :instance_id => @vm.id, :args => [task.id]}
+      expect(msg.miq_callback).to eq {:class_name => @vm.class.base_class.name, :method_name => :powerops_callback, :instance_id => @vm.id, :args => [task.id]}
 
       Vm.stub(:start).and_raise(MiqException::MiqVimBrokerUnavailable)
       msg.deliver
@@ -145,14 +145,14 @@ describe Vm do
     it "retirement passes in userid" do
       options = {:task => "retire_now", :invoke_by => :task, :ids => [@vm.id], :userid => "Freddy"}
       Vm.invoke_tasks_local(options)
-      MiqTask.count.should == 1
+      expect(MiqTask.count).to eq 1
       task = MiqTask.first
-      MiqQueue.count.should == 1
+      expect(MiqQueue.count).to eq 1
       msg = MiqQueue.first
 
-      msg.miq_callback.should == {:class_name => "MiqTask", :method_name => :queue_callback,
-                                  :instance_id => task.id, :args => ["Finished"]}
-      msg.args.should == ["Freddy"]
+      expect(msg.miq_callback).to eq {:class_name => "MiqTask", :method_name => :queue_callback,
+                                        :instance_id => task.id, :args => ["Finished"]}
+      expect(msg.args).to eq ["Freddy"]
     end
   end
 
@@ -195,28 +195,28 @@ describe Vm do
     vm = FactoryGirl.create(:vm_vmware)
     vm.save_drift_state
 
-    vm.drift_states.size.should == 1
-    DriftState.count.should == 1
+    expect(vm.drift_states.size).to eq 1
+    expect(DriftState.count).to eq 1
 
-    vm.drift_states.first.data.should == {
-      :class               => "ManageIQ::Providers::Vmware::InfraManager::Vm",
-      :id                  => vm.id,
-      :location            => vm.location,
-      :name                => vm.name,
-      :vendor              => "VMware",
+    expect(vm.drift_states.first.data).to eq {
+          :class               => "ManageIQ::Providers::Vmware::InfraManager::Vm",
+          :id                  => vm.id,
+          :location            => vm.location,
+          :name                => vm.name,
+          :vendor              => "VMware",
 
-      :files               => [],
-      :filesystem_drivers  => [],
-      :groups              => [],
-      :guest_applications  => [],
-      :kernel_drivers      => [],
-      :linux_initprocesses => [],
-      :patches             => [],
-      :registry_items      => [],
-      :tags                => [],
-      :users               => [],
-      :win32_services      => [],
-    }
+          :files               => [],
+          :filesystem_drivers  => [],
+          :groups              => [],
+          :guest_applications  => [],
+          :kernel_drivers      => [],
+          :linux_initprocesses => [],
+          :patches             => [],
+          :registry_items      => [],
+          :tags                => [],
+          :users               => [],
+          :win32_services      => [],
+        }
   end
 
   context ".process_tasks" do
@@ -230,20 +230,20 @@ describe Vm do
 
       @vm1.class.process_tasks(:task => "destroy", :userid => "system", :ids => [@vm1.id])
 
-      MiqQueue.count.should == 1
+      expect(MiqQueue.count).to eq 1
       @msg1 = MiqQueue.first
       status, message, result = @msg1.deliver
 
-      @msg1.state.should == "ready"
-      @msg1.class_name.should == "ManageIQ::Providers::Vmware::InfraManager::Vm"
+      expect(@msg1.state).to eq "ready"
+      expect(@msg1.class_name).to eq "ManageIQ::Providers::Vmware::InfraManager::Vm"
       @msg1.args.each do |h|
-        h[:task].should == "destroy"
-        h[:ids].should == [@vm1.id]
-        h[:userid].should == "system"
+        expect(h[:task]).to eq "destroy"
+        expect(h[:ids]).to eq [@vm1.id]
+        expect(h[:userid]).to eq "system"
       end
 
       @msg1.destroy
-      MiqQueue.count.should == 1
+      expect(MiqQueue.count).to eq 1
       @msg2 = MiqQueue.first
       status, message, result = @msg2.deliver
       MiqTask.any_instance.should_receive(:queue_callback).with("Finished", status, message, result)

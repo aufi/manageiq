@@ -22,40 +22,40 @@ describe ActsAsArModel do
   end
 
   describe "subclass, TestClass1," do
-    it(".base_class") { TestClass1.base_class.should == TestClass1 }
-    it(".base_model") { TestClass1.base_model.should == TestClass1 }
+    it(".base_class") { expect(TestClass1.base_class).to eq TestClass1 }
+    it(".base_model") { expect(TestClass1.base_model).to eq TestClass1 }
 
-    it { TestClass1.should respond_to(:columns_hash) }
-    it { TestClass1.should respond_to(:columns) }
-    it { TestClass1.should respond_to(:column_names) }
-    it { TestClass1.should respond_to(:column_names_symbols) }
+    it { expect(TestClass1).to respond_to(:columns_hash) }
+    it { expect(TestClass1).to respond_to(:columns) }
+    it { expect(TestClass1).to respond_to(:column_names) }
+    it { expect(TestClass1).to respond_to(:column_names_symbols) }
 
-    it { TestClass1.should respond_to(:virtual_columns) }
+    it { expect(TestClass1).to respond_to(:virtual_columns) }
 
-    it { TestClass1.should respond_to(:aar_columns) }
+    it { expect(TestClass1).to respond_to(:aar_columns) }
 
-    it { TestClass1.columns_hash.values[0].should be_kind_of(ActsAsArModelColumn) }
-    it { TestClass1.columns_hash.keys.should      match_array(@col_names_strs) }
-    it { TestClass1.column_names.should           match_array(@col_names_strs) }
-    it { TestClass1.column_names_symbols.should   match_array(@col_names_syms) }
+    it { expect(TestClass1.columns_hash.values[0]).to be_kind_of(ActsAsArModelColumn) }
+    it { expect(TestClass1.columns_hash.keys).to match_array(@col_names_strs) }
+    it { expect(TestClass1.column_names).to match_array(@col_names_strs) }
+    it { expect(TestClass1.column_names_symbols).to match_array(@col_names_syms) }
 
-    it { TestClass1.columns_hash["str_with_options"].options[:some_opt].should == 'opt_value' }
+    it { expect(TestClass1.columns_hash["str_with_options"].options[:some_opt]).to eq 'opt_value' }
 
     describe "instance" do
-      it { TestClass1.new.should respond_to(:attributes) }
-      it { TestClass1.new.should respond_to(:str) }
+      it { expect(TestClass1.new).to respond_to(:attributes) }
+      it { expect(TestClass1.new).to respond_to(:str) }
 
       it "should allow attribute initialization" do
         t = TestClass1.new(:str => "test_value")
-        t.str.should == "test_value"
+        expect(t.str).to eq "test_value"
       end
 
       it "should allow attribute access" do
         t = TestClass1.new
-        t.str.should be_nil
+        expect(t.str).to be_nil
 
         t.str = "test_value"
-        t.str.should == "test_value"
+        expect(t.str).to eq "test_value"
       end
     end
 
@@ -63,8 +63,8 @@ describe ActsAsArModel do
       before(:each) { class TestSubClass1 < TestClass1; end }
       after(:each)  { Object.send(:remove_const, :TestSubClass1) }
 
-      it(".base_class") { TestSubClass1.base_class.should == TestClass1 }
-      it(".base_model") { TestSubClass1.base_model.should == TestClass1 }
+      it(".base_class") { expect(TestSubClass1.base_class).to eq TestClass1 }
+      it(".base_model") { expect(TestSubClass1.base_model).to eq TestClass1 }
     end
   end
 
@@ -72,9 +72,9 @@ describe ActsAsArModel do
     before(:each) { class TestClass2 < ActsAsArModel; end }
     after(:each)  { Object.send(:remove_const, :TestClass2) }
 
-    it(".base_class") { TestClass2.base_class.should == TestClass2 }
-    it(".base_model") { TestClass2.base_model.should == TestClass2 }
+    it(".base_class") { expect(TestClass2.base_class).to eq TestClass2 }
+    it(".base_model") { expect(TestClass2.base_model).to eq TestClass2 }
 
-    it { TestClass2.columns_hash.should be_empty }
+    it { expect(TestClass2.columns_hash).to be_empty }
   end
 end

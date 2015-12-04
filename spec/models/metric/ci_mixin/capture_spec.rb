@@ -50,27 +50,27 @@ describe Metric::CiMixin::Capture do
       stats_period_end = [api_time_as_utc(@read_bytes.last), api_time_as_utc(@write_bytes.last)].min
 
       # check start date and end date
-      stats_period_start.should eq expected_stats_period_start
-      stats_period_end.should eq expected_stats_period_end
+      expect(stats_period_start).to eq expected_stats_period_start
+      expect(stats_period_end).to eq expected_stats_period_end
 
       # check that 20s block is not interrupted between start and end time for net_usage_rate_average
       stats_counter = 0
       (expected_stats_period_start + 20.seconds..expected_stats_period_end).step_value(20.seconds).each do |timestamp|
-        @metrics_by_ts[timestamp.iso8601].try(:net_usage_rate_average).should_not eq nil
+        expect(@metrics_by_ts[timestamp.iso8601].try(:net_usage_rate_average)).not_to eq nil
         stats_counter += 1
       end
 
       # check that 20s block is not interrupted between start and end time for disk_usage_rate_average
       stats_counter = 0
       (expected_stats_period_start + 20.seconds..expected_stats_period_end).step_value(20.seconds).each do |timestamp|
-        @metrics_by_ts[timestamp.iso8601].try(:disk_usage_rate_average).should_not eq nil
+        expect(@metrics_by_ts[timestamp.iso8601].try(:disk_usage_rate_average)).not_to eq nil
         stats_counter += 1
       end
 
       # check that 20s block is not interrupted between start and end time for cpu_usage_rate_average
       stats_counter = 0
       (expected_stats_period_start + 20.seconds..expected_stats_period_end).step_value(20.seconds).each do |timestamp|
-        @metrics_by_ts[timestamp.iso8601].try(:cpu_usage_rate_average).should_not eq nil
+        expect(@metrics_by_ts[timestamp.iso8601].try(:cpu_usage_rate_average)).not_to eq nil
         stats_counter += 1
       end
     end
@@ -88,27 +88,27 @@ describe Metric::CiMixin::Capture do
       stats_period_end = [api_time_as_utc(@read_bytes.last), api_time_as_utc(@write_bytes.last)].min
 
       # check start date and end date
-      stats_period_start.should eq expected_stats_period_start
-      stats_period_end.should eq expected_stats_period_end
+      expect(stats_period_start).to eq expected_stats_period_start
+      expect(stats_period_end).to eq expected_stats_period_end
 
       # check that 20s block is not interrupted between start and end time for net_usage_rate_average
       stats_counter = 0
       (expected_stats_period_start + 20.seconds..expected_stats_period_end).step_value(20.seconds).each do |timestamp|
-        @metrics_by_ts[timestamp.iso8601].try(:net_usage_rate_average).should_not eq nil
+        expect(@metrics_by_ts[timestamp.iso8601].try(:net_usage_rate_average)).not_to eq nil
         stats_counter += 1
       end
 
       # check that 20s block is not interrupted between start and end time for disk_usage_rate_average
       stats_counter = 0
       (expected_stats_period_start + 20.seconds..expected_stats_period_end).step_value(20.seconds).each do |timestamp|
-        @metrics_by_ts[timestamp.iso8601].try(:disk_usage_rate_average).should_not eq nil
+        expect(@metrics_by_ts[timestamp.iso8601].try(:disk_usage_rate_average)).not_to eq nil
         stats_counter += 1
       end
 
       # check that 20s block is not interrupted between start and end time for cpu_usage_rate_average
       stats_counter = 0
       (expected_stats_period_start + 20.seconds..expected_stats_period_end).step_value(20.seconds).each do |timestamp|
-        @metrics_by_ts[timestamp.iso8601].try(:cpu_usage_rate_average).should_not eq nil
+        expect(@metrics_by_ts[timestamp.iso8601].try(:cpu_usage_rate_average)).not_to eq nil
         stats_counter += 1
       end
     end

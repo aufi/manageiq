@@ -44,11 +44,11 @@ describe EmsRefresh do
       described_class.queue_refresh(target)
 
       q_all = MiqQueue.all
-      q_all.length.should == 1
-      q_all[0].args.should == [expected_targets.collect { |t| [t.class.name, t.id] }]
-      q_all[0].class_name.should == described_class.name
-      q_all[0].method_name.should == 'refresh'
-      q_all[0].role.should == "ems_inventory"
+      expect(q_all.length).to eq 1
+      expect(q_all[0].args).to eq [expected_targets.collect { |t| [t.class.name, t.id] }]
+      expect(q_all[0].class_name).to eq described_class.name
+      expect(q_all[0].method_name).to eq 'refresh'
+      expect(q_all[0].role).to eq "ems_inventory"
     end
   end
 
@@ -61,7 +61,7 @@ describe EmsRefresh do
         [ems2.class, ems2.id]
       ]
 
-      described_class.get_ar_objects(pairs).should match_array([ems1, ems2])
+      expect(described_class.get_ar_objects(pairs)).to match_array([ems1, ems2])
     end
   end
 

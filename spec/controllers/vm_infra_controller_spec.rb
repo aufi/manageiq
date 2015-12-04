@@ -33,7 +33,7 @@ describe VmInfraController do
   # http://localhost:3000/vm_infra/show/10000000000449
   it 'can open a VM and select it in the left tree' do
     get :show, :id => vm_vmware.id
-    response.should redirect_to(:action => 'explorer')
+    expect(response).to redirect_to(:action => 'explorer')
 
     post :explorer
     node_id = "v-#{vm_vmware.compressed_id}"

@@ -13,25 +13,25 @@ describe AsyncDeleteMixin do
 
   def self.should_define_destroy_queue_instance_method
     it "should define destroy_queue instance method" do
-      @obj.respond_to?(:destroy_queue).should be_true, "instance method destroy_queue not defined for #{@obj.class.name}"
+      expect(@obj.respond_to?(:destroy_queue)).to be_true, "instance method destroy_queue not defined for #{@obj.class.name}"
     end
   end
 
   def self.should_define_destroy_queue_class_method
     it "should define destroy_queue class method" do
-      @obj.class.respond_to?(:destroy_queue).should be_true, "class method destroy_queue not defined for #{@obj.class.name}"
+      expect(@obj.class.respond_to?(:destroy_queue)).to be_true, "class method destroy_queue not defined for #{@obj.class.name}"
     end
   end
 
   def self.should_define_delete_queue_instance_method
     it "should define delete_queue instance method" do
-      @obj.respond_to?(:delete_queue).should be_true, "instance method delete_queue not defined for #{@obj.class.name}"
+      expect(@obj.respond_to?(:delete_queue)).to be_true, "instance method delete_queue not defined for #{@obj.class.name}"
     end
   end
 
   def self.should_define_delete_queue_class_method
     it "should define delete_queue class method" do
-      @obj.class.respond_to?(:delete_queue).should be_true, "class method delete_queue not defined for #{@obj.class.name}"
+      expect(@obj.class.respond_to?(:delete_queue)).to be_true, "class method delete_queue not defined for #{@obj.class.name}"
     end
   end
 
@@ -40,13 +40,13 @@ describe AsyncDeleteMixin do
       cond = ["class_name = ? AND instance_id = ? AND method_name = ?", @obj.class.name, @obj.id, "destroy"]
 
       -> { @obj.destroy_queue }.should_not raise_error
-      MiqQueue.where(cond).count.should == 1
+      expect(MiqQueue.where(cond).count).to eq 1
       @obj.class.any_instance.should_receive(:destroy).once
 
       queue_message = MiqQueue.where(cond).first
       status, message, result = queue_message.deliver
       queue_message.delivered(status, message, result)
-      queue_message.state.should == "ok"
+      expect(queue_message.state).to eq "ok"
     end
   end
 
@@ -56,16 +56,16 @@ describe AsyncDeleteMixin do
       cond = ["class_name = ? AND instance_id in (?) AND method_name = ?", @obj.class.name, ids, "destroy"]
 
       -> { @obj.class.destroy_queue(ids) }.should_not raise_error
-      MiqQueue.where(cond).count.should == ids.length
+      expect(MiqQueue.where(cond).count).to eq ids.length
       count = @obj.class.count
 
       queue_messages = MiqQueue.where(cond)
       queue_messages.each do |queue_message|
         status, message, result = queue_message.deliver
         queue_message.delivered(status, message, result)
-        queue_message.state.should == "ok"
+        expect(queue_message.state).to eq "ok"
       end
-      @obj.class.count.should == (count - ids.length)
+      expect(@obj.class.count).to eq (count - ids.length)
     end
   end
 
@@ -74,13 +74,13 @@ describe AsyncDeleteMixin do
       cond = ["class_name = ? AND instance_id = ? AND method_name = ?", @obj.class.name, @obj.id, "delete"]
 
       -> { @obj.delete_queue }.should_not raise_error
-      MiqQueue.where(cond).count.should == 1
+      expect(MiqQueue.where(cond).count).to eq 1
       @obj.class.any_instance.should_receive(:delete).once
 
       queue_message = MiqQueue.where(cond).first
       status, message, result = queue_message.deliver
       queue_message.delivered(status, message, result)
-      queue_message.state.should == "ok"
+      expect(queue_message.state).to eq "ok"
     end
   end
 
@@ -90,16 +90,16 @@ describe AsyncDeleteMixin do
       cond = ["class_name = ? AND instance_id in (?) AND method_name = ?", @obj.class.name, ids, "delete"]
 
       -> { @obj.class.delete_queue(ids) }.should_not raise_error
-      MiqQueue.where(cond).count.should == ids.length
+      expect(MiqQueue.where(cond).count).to eq ids.length
       count = @obj.class.count
 
       queue_messages = MiqQueue.where(cond)
       queue_messages.each do |queue_message|
         status, message, result = queue_message.deliver
         queue_message.delivered(status, message, result)
-        queue_message.state.should == "ok"
+        expect(queue_message.state).to eq "ok"
       end
-      @obj.class.count.should == (count - ids.length)
+      expect(@obj.class.count).to eq (count - ids.length)
     end
   end
 

@@ -67,8 +67,8 @@ describe MiqProvisionVirtWorkflow do
         workflow.stub(:allowed_hosts).with(no_args).and_return([workflow.host_to_hash_struct(@host1)])
         vlans = workflow.allowed_vlans(:vlans => true, :dvs => false)
         lan_keys = [@lan11.name, @lan13.name, @lan12.name]
-        vlans.keys.should match_array(lan_keys)
-        vlans.values.should match_array(lan_keys)
+        expect(vlans.keys).to match_array(lan_keys)
+        expect(vlans.values).to match_array(lan_keys)
       end
     end
 
@@ -89,7 +89,7 @@ describe MiqProvisionVirtWorkflow do
                                        :ems     => workflow.ci_to_hash_struct(@ems),
                                        :host_id => @host1.id)
         dvs = workflow.allowed_dvs({}, nil)
-        dvs.should eql(@host1_dvs_hash)
+        expect(dvs).to eql(@host1_dvs_hash)
       end
 
       context "#allowed_dvs" do
@@ -107,7 +107,7 @@ describe MiqProvisionVirtWorkflow do
 
         it 'multiple hosts auto placement' do
           dvs = workflow.allowed_dvs({}, nil)
-          dvs.should eql(@combined_dvs_hash)
+          expect(dvs).to eql(@combined_dvs_hash)
         end
 
         it 'cached filtering' do
@@ -121,7 +121,7 @@ describe MiqProvisionVirtWorkflow do
                                          :ems     => workflow.ci_to_hash_struct(@ems),
                                          :host_id => @host1.id)
           dvs = workflow.allowed_dvs({}, nil)
-          dvs.should eql(@host1_dvs_hash)
+          expect(dvs).to eql(@host1_dvs_hash)
         end
       end
     end

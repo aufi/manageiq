@@ -41,20 +41,20 @@ module JobProxyDispatcherSpec
       # Don't run these tests if we only want to run dispatch for load testing
       unless DISPATCH_ONLY
         it "should have a server in default zone" do
-          @server.zone.should_not be_nil
-          @server.should_not be_nil
+          expect(@server.zone).not_to be_nil
+          expect(@server).not_to be_nil
         end
 
         it "should have #{NUM_HOSTS} hosts" do
-          NUM_HOSTS.should == @hosts.length
+          expect(NUM_HOSTS).to eq @hosts.length
         end
 
         it "should have #{NUM_VMS} vms and #{NUM_REPO_VMS} repo vms" do
-          NUM_VMS.should == @vms.length
+          expect(NUM_VMS).to eq @vms.length
         end
 
         it "should have #{NUM_REPO_VMS} repo vms" do
-          NUM_REPO_VMS.should == @repo_vms.length
+          expect(NUM_REPO_VMS).to eq @repo_vms.length
         end
 
         context "with a vm without a storage" do
@@ -97,13 +97,13 @@ module JobProxyDispatcherSpec
         unless DISPATCH_ONLY
           if @repo_proxy
             it "should have repository host set" do
-              @repo_vms.first.myhost.id.should == @repo_proxy.host_id
+              expect(@repo_vms.first.myhost.id).to eq @repo_proxy.host_id
             end
           end
 
           it "should have #{NUM_VMS + NUM_REPO_VMS} jobs" do
             total = NUM_VMS + NUM_REPO_VMS
-            @jobs.length.should == total
+            expect(@jobs.length).to eq total
           end
         end
 
@@ -117,8 +117,8 @@ module JobProxyDispatcherSpec
           @job.save!
           lambda { JobProxyDispatcher.dispatch }.should_not raise_error
           @job.reload
-          @job.state.should == "finished"
-          @job.status.should == "warn"
+          expect(@job.state).to eq "finished"
+          expect(@job.status).to eq "warn"
         end
       end
     end

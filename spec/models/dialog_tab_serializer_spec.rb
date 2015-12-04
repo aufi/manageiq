@@ -35,7 +35,7 @@ describe DialogTabSerializer do
     end
 
     it "serializes the dialog tab" do
-      dialog_tab_serializer.serialize(dialog_tab).should == expected_serialized_values
+      expect(dialog_tab_serializer.serialize(dialog_tab)).to eq expected_serialized_values
     end
   end
 end

@@ -262,16 +262,16 @@ describe "MultipleStateMachineSteps" do
     expect(ws.root.attributes['step_on_entry']).to match_array(all_states + %w(SM1_2 SM2_2 SM3_1))
     (@max_retries).times do
       status, _message, ws = deliver_ae_request_from_queue
-      status.should_not eq(MiqQueue::STATUS_ERROR)
-      ws.should_not be_nil
+      expect(status).not_to eq(MiqQueue::STATUS_ERROR)
+      expect(ws).not_to be_nil
       expect(ws.root.attributes['step_on_entry']).to match_array(%w(SM1_2 SM2_2 SM3_1))
     end
 
     status, _message, ws = deliver_ae_request_from_queue
-    status.should_not eq(MiqQueue::STATUS_ERROR)
-    ws.should_not be_nil
+    expect(status).not_to eq(MiqQueue::STATUS_ERROR)
+    expect(ws).not_to be_nil
     expect(ws.root.attributes['step_on_entry']).to match_array(%w(SM1_2))
 
-    deliver_ae_request_from_queue.should be_nil
+    expect(deliver_ae_request_from_queue).to be_nil
   end
 end

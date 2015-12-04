@@ -5,13 +5,13 @@ describe MiqApproval do
     approval = FactoryGirl.build(:miq_approval)
     user     = FactoryGirl.create(:user)
 
-    approval.approver_name.should be_nil
+    expect(approval.approver_name).to be_nil
 
     approval.approver = user
-    approval.approver_name.should == user.name
+    expect(approval.approver_name).to eq user.name
 
     approval.approver = nil
-    approval.approver_name.should be_nil
+    expect(approval.approver_name).to be_nil
   end
 
   context "#approve" do
@@ -31,11 +31,11 @@ describe MiqApproval do
       Timecop.freeze do
         miq_request.should_receive(:approval_approved).once
         approval.approve(approver, reason)
-        approval.state.should == 'approved'
-        approval.reason.should == reason
-        approval.stamper.should == approver
-        approval.stamper_name.should == approver.name
-        approval.stamped_on.should == Time.now.utc
+        expect(approval.state).to eq 'approved'
+        expect(approval.reason).to eq reason
+        expect(approval.stamper).to eq approver
+        expect(approval.stamper_name).to eq approver.name
+        expect(approval.stamped_on).to eq Time.now.utc
       end
     end
 
@@ -74,11 +74,11 @@ describe MiqApproval do
     Timecop.freeze do
       miq_request.should_receive(:approval_denied).once
       approval.deny(approver, reason)
-      approval.state.should == 'denied'
-      approval.reason.should == reason
-      approval.stamper.should == approver
-      approval.stamper_name.should == approver.name
-      approval.stamped_on.should == Time.now.utc
+      expect(approval.state).to eq 'denied'
+      expect(approval.reason).to eq reason
+      expect(approval.stamper).to eq approver
+      expect(approval.stamper_name).to eq approver.name
+      expect(approval.stamped_on).to eq Time.now.utc
     end
   end
 
@@ -89,38 +89,38 @@ describe MiqApproval do
     let(:approver) { FactoryGirl.create(:user_miq_request_approver) }
 
     it "with nil" do
-      approval.authorized?(nil).should be_false
+      expect(approval.authorized?(nil)).to be_false
     end
 
     it "with a user object without approval rights" do
-      approval.authorized?(user).should be_false
+      expect(approval.authorized?(user)).to be_false
     end
 
     it "with a user object with approval rights" do
-      approval.authorized?(approver).should be_true
+      expect(approval.authorized?(approver)).to be_true
     end
 
     it "with a userid without approval rights" do
-      approval.authorized?(user.userid).should be_false
+      expect(approval.authorized?(user.userid)).to be_false
     end
 
     it "with a userid with approval rights" do
-      approval.authorized?(approver.userid).should be_true
+      expect(approval.authorized?(approver.userid)).to be_true
     end
 
     context "with the approver property set to a specific user" do
       before { approval.approver = user }
 
       it "and passing the same user" do
-        approval.authorized?(user).should be_true
+        expect(approval.authorized?(user)).to be_true
       end
 
       it "and passing a different user with approval rights" do
-        approval.authorized?(approver).should be_true
+        expect(approval.authorized?(approver)).to be_true
       end
 
       it "and passing a different user without approval rights" do
-        approval.authorized?(user2).should be_false
+        expect(approval.authorized?(user2)).to be_false
       end
     end
   end

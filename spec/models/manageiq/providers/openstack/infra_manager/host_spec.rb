@@ -203,14 +203,14 @@ openstack-keystone:                     active
       host.refresh_openstack_services(ssu)
       # we test if SystemServices with associated HostServiceGroupOpenstacks from current Host
       # are included among all SystemServices of that host
-      host.system_services.should include(*(host.host_service_group_openstacks.flat_map(&:system_services)))
+      expect(host.system_services).to include(*(host.host_service_group_openstacks.flat_map(&:system_services)))
     end
 
     it "creates association with existing Filesystems" do
       host.refresh_openstack_services(ssu)
       # we test if Filesystems with associated HostServiceGroupOpenstacks from current Host
       # are included among all Filesystems of that host
-      host.filesystems.should include(*(host.host_service_group_openstacks.flat_map(&:filesystems)))
+      expect(host.filesystems).to include(*(host.host_service_group_openstacks.flat_map(&:filesystems)))
     end
   end
 

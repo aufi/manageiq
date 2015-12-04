@@ -37,7 +37,7 @@ describe DialogYamlSerializer do
     end
 
     it "serializes the dialog" do
-      YAML.load(dialog_yaml_serializer.serialize(dialogs)).should == expected_data
+      expect(YAML.load(dialog_yaml_serializer.serialize(dialogs))).to eq expected_data
     end
   end
 end

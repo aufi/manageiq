@@ -30,35 +30,35 @@ describe MiqAeDatastore::XmlExport do
 
     it "sorts the miq ae classes and returns the correct xml" do
       miq_ae_class2.should_receive(:to_export_xml) do |options|
-        options[:builder].target!.should eq <<-XML
+        expect(options[:builder].target!).to eq <<-XML
 <?xml version="1.0" encoding="UTF-8"?>
 <MiqAeDatastore version="1.0">
         XML
-        options[:skip_instruct].should be_true
-        options[:indent].should eq(2)
+        expect(options[:skip_instruct]).to be_true
+        expect(options[:indent]).to eq(2)
         options[:builder].class2
       end
 
       miq_ae_class1.should_receive(:to_export_xml) do |options|
-        options[:builder].target!.should eq <<-XML
+        expect(options[:builder].target!).to eq <<-XML
 <?xml version="1.0" encoding="UTF-8"?>
 <MiqAeDatastore version="1.0">
   <class2/>
         XML
-        options[:skip_instruct].should be_true
-        options[:indent].should eq(2)
+        expect(options[:skip_instruct]).to be_true
+        expect(options[:indent]).to eq(2)
         options[:builder].class1
       end
 
       custom_button.should_receive(:to_export_xml) do |options|
-        options[:builder].target!.should eq <<-XML
+        expect(options[:builder].target!).to eq <<-XML
 <?xml version="1.0" encoding="UTF-8"?>
 <MiqAeDatastore version="1.0">
   <class2/>
   <class1/>
         XML
-        options[:skip_instruct].should be_true
-        options[:indent].should eq(2)
+        expect(options[:skip_instruct]).to be_true
+        expect(options[:indent]).to eq(2)
         options[:builder].custom_button
       end
 

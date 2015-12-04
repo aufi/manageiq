@@ -19,7 +19,7 @@ module MiqAeServiceMethodsSpec
         method   = "$evm.root['#{@ae_result_key}'] = nil.blank?"
         @ae_method.update_attributes(:data => method)
         ae_object = invoke_ae.root(@ae_result_key)
-        ae_object.should be_true
+        expect(ae_object).to be_true
       end
     end
 
@@ -37,7 +37,7 @@ module MiqAeServiceMethodsSpec
       MiqAeMethodService::MiqAeServiceMethods.with_constants :SYNCHRONOUS => true do
         GenericMailer.should_receive(:deliver).with(:automation_notification, options).once
         ae_object = invoke_ae.root(@ae_result_key)
-        ae_object.should be_true
+        expect(ae_object).to be_true
       end
 
       method   = "$evm.root['#{@ae_result_key}'] = $evm.execute(:send_email, #{options[:to].inspect}, #{options[:from].inspect}, #{options[:subject].inspect}, #{options[:body].inspect}, #{options[:content_type].inspect})"
@@ -50,7 +50,7 @@ module MiqAeServiceMethodsSpec
           :role        => "notifier",
           :zone        => nil).once
         ae_object = invoke_ae.root(@ae_result_key)
-        ae_object.should be_true
+        expect(ae_object).to be_true
       end
     end
 
@@ -64,7 +64,7 @@ module MiqAeServiceMethodsSpec
       MiqAeMethodService::MiqAeServiceMethods.with_constants :SYNCHRONOUS => true do
         MiqSnmp.should_receive(:trap_v1).with(inputs).once
         ae_object = invoke_ae.root(@ae_result_key)
-        ae_object.should be_true
+        expect(ae_object).to be_true
       end
 
       MiqAeMethodService::MiqAeServiceMethods.with_constants :SYNCHRONOUS => false do
@@ -75,7 +75,7 @@ module MiqAeServiceMethodsSpec
           :role        => "notifier",
           :zone        => nil).once
         ae_object = invoke_ae.root(@ae_result_key)
-        ae_object.should be_true
+        expect(ae_object).to be_true
       end
     end
 
@@ -89,7 +89,7 @@ module MiqAeServiceMethodsSpec
       MiqAeMethodService::MiqAeServiceMethods.with_constants :SYNCHRONOUS => true do
         MiqSnmp.should_receive(:trap_v2).with(inputs).once
         ae_object = invoke_ae.root(@ae_result_key)
-        ae_object.should be_true
+        expect(ae_object).to be_true
       end
 
       MiqAeMethodService::MiqAeServiceMethods.with_constants :SYNCHRONOUS => false do
@@ -100,7 +100,7 @@ module MiqAeServiceMethodsSpec
           :role        => "notifier",
           :zone        => nil).once
         ae_object = invoke_ae.root(@ae_result_key)
-        ae_object.should be_true
+        expect(ae_object).to be_true
       end
     end
 
@@ -108,14 +108,14 @@ module MiqAeServiceMethodsSpec
       method   = "$evm.root['#{@ae_result_key}'] = $evm.execute(:vm_templates)"
       @ae_method.update_attributes(:data => method)
 
-      invoke_ae.root(@ae_result_key).should be_empty
+      expect(invoke_ae.root(@ae_result_key)).to be_empty
 
       v1 = FactoryGirl.create(:vm_vmware, :ems_id => 42, :vendor => 'vmware')
       t1 = FactoryGirl.create(:template_vmware, :ems_id => 42)
       ae_object = invoke_ae.root(@ae_result_key)
-      ae_object.should be_kind_of(Array)
-      ae_object.length.should == 1
-      ae_object.first.id.should == t1.id
+      expect(ae_object).to be_kind_of(Array)
+      expect(ae_object.length).to eq 1
+      expect(ae_object.first.id).to eq t1.id
     end
 
     it "#category_exists?" do
@@ -123,10 +123,10 @@ module MiqAeServiceMethodsSpec
       method   = "$evm.root['#{@ae_result_key}'] = $evm.execute(:category_exists?, #{category.inspect})"
       @ae_method.update_attributes(:data => method)
 
-      invoke_ae.root(@ae_result_key).should be_false
+      expect(invoke_ae.root(@ae_result_key)).to be_false
 
       FactoryGirl.create(:classification, :name => category)
-      invoke_ae.root(@ae_result_key).should be_true
+      expect(invoke_ae.root(@ae_result_key)).to be_true
     end
   end
 end

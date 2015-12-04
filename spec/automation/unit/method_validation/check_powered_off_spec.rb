@@ -10,13 +10,13 @@ describe "check_powered_off Method Validation" do
   it "returns 'ok' for a vm in powered_off state" do
     @vm.update_attribute(:raw_power_state, "poweredOff")
 
-    ws.root['vm'].power_state.should be == "off"
-    ws.root['ae_result'].should be == "ok"
+    expect(ws.root['vm'].power_state).to be == "off"
+    expect(ws.root['ae_result']).to be == "ok"
   end
 
   it "errors for a template" do
     @vm.update_attribute(:template, true)
-    @vm.state.should be == "never"
+    expect(@vm.state).to be == "never"
 
     -> { ws }.should raise_error(MiqAeException::ServiceNotFound)
   end
@@ -24,7 +24,7 @@ describe "check_powered_off Method Validation" do
   it "retries for a vm in powered_on state" do
     @vm.update_attribute(:raw_power_state, "poweredOn")
 
-    ws.root['ae_result'].should be == "retry"
-    ws.root['vm'].power_state.should be == "on"
+    expect(ws.root['ae_result']).to be == "retry"
+    expect(ws.root['vm'].power_state).to be == "on"
   end
 end

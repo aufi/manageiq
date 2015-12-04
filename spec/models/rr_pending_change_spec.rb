@@ -2,11 +2,11 @@ require "spec_helper"
 
 describe RrPendingChange do
   it ".table_name" do
-    described_class.table_name.should == "rr#{MiqRegion.my_region_number}_pending_changes"
+    expect(described_class.table_name).to eq "rr#{MiqRegion.my_region_number}_pending_changes"
   end
 
   it ".table_exists?" do
-    described_class.table_exists?.should be_false
+    expect(described_class.table_exists?).to be_false
   end
 
   it ".last_id" do
@@ -16,13 +16,13 @@ describe RrPendingChange do
   context ".for_region_number" do
     it ".table_name" do
       described_class.for_region_number(1000) do
-        described_class.table_name.should == "rr1000_pending_changes"
+        expect(described_class.table_name).to eq "rr1000_pending_changes"
       end
     end
 
     it ".table_exists?" do
       described_class.for_region_number(1000) do
-        described_class.table_exists?.should be_false
+        expect(described_class.table_exists?).to be_false
       end
     end
 

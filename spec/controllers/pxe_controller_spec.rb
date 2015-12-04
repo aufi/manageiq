@@ -33,7 +33,7 @@ describe PxeController do
       controller.stub(:get_node_info)
       controller.stub(:replace_right_cell)
       controller.send(:pxe_server_refresh)
-      assigns(:flash_array).first[:message].should include("Refresh Relationships successfully initiated")
+      expect(assigns(:flash_array).first[:message]).to include("Refresh Relationships successfully initiated")
     end
   end
 
@@ -49,7 +49,7 @@ describe PxeController do
                                        :log_password     => "[FILTERED]",
                                        :log_verify       => "[FILTERED]")
       controller.send(:restore_password)
-      assigns(:edit)[:new][:log_password].should == ps.authentication_password(:default)
+      expect(assigns(:edit)[:new][:log_password]).to eq ps.authentication_password(:default)
     end
   end
 end

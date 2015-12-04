@@ -29,7 +29,7 @@ describe "MiqAlert Evaluation Internal" do
 
       it "should result to true" do
         -> { @result = @alert.evaluate(@vm) }.should_not raise_error
-        @result.should be_true
+        expect(@result).to be_true
       end
     end
 
@@ -59,7 +59,7 @@ describe "MiqAlert Evaluation Internal" do
 
       it "should result to true" do
         -> { @result = @alert.evaluate(@vm) }.should_not raise_error
-        @result.should be_true
+        expect(@result).to be_true
       end
     end
 
@@ -80,7 +80,7 @@ describe "MiqAlert Evaluation Internal" do
 
       it "should result to false" do
         -> { @result = @alert.evaluate(@vm) }.should_not raise_error
-        @result.should be_false
+        expect(@result).to be_false
       end
     end
 
@@ -101,7 +101,7 @@ describe "MiqAlert Evaluation Internal" do
 
       it "should result to false" do
         -> { @result = @alert.evaluate(@vm) }.should_not raise_error
-        @result.should be_false
+        expect(@result).to be_false
       end
     end
 
@@ -128,7 +128,7 @@ describe "MiqAlert Evaluation Internal" do
 
       it "should result to false" do
         -> { @result = @alert.evaluate(@vm) }.should_not raise_error
-        @result.should be_false
+        expect(@result).to be_false
       end
     end
 
@@ -150,7 +150,7 @@ describe "MiqAlert Evaluation Internal" do
 
       it "should result to true" do
         -> { @result = @alert.evaluate(@vm) }.should_not raise_error
-        @result.should be_true
+        expect(@result).to be_true
       end
     end
   end
@@ -181,7 +181,7 @@ describe "MiqAlert Evaluation Internal" do
 
       it "should result to false" do
         -> { @result = @alert.evaluate(@host) }.should_not raise_error
-        @result.should be_false
+        expect(@result).to be_false
       end
     end
   end
@@ -202,7 +202,7 @@ describe "MiqAlert Evaluation Internal" do
 
       it "should result to true" do
         -> { @result = @alert.evaluate(@server) }.should_not raise_error
-        @result.should be_true
+        expect(@result).to be_true
       end
     end
   end

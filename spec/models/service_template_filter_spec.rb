@@ -27,25 +27,25 @@ describe "Service Filter" do
     it "all service templates" do
       @allowed_service_templates = %w(top middle vm_service)
       @request.create_request_tasks
-      @request.miq_request_tasks.count.should eql(5)
+      expect(@request.miq_request_tasks.count).to eql(5)
     end
 
     it "filter out the atomic service" do
       @allowed_service_templates = %w(top middle)
       @request.create_request_tasks
-      @request.miq_request_tasks.count.should eql(2)
+      expect(@request.miq_request_tasks.count).to eql(2)
     end
 
     it "filter out all services" do
       @allowed_service_templates = []
       @request.create_request_tasks
-      @request.miq_request_tasks.count.should eql(1)
+      expect(@request.miq_request_tasks.count).to eql(1)
     end
 
     it "filter out middle service" do
       @allowed_service_templates = %w(top)
       @request.create_request_tasks
-      @request.miq_request_tasks.count.should eql(1)
+      expect(@request.miq_request_tasks.count).to eql(1)
     end
   end
 

@@ -15,7 +15,7 @@ describe MiqRequestTask do
 
         task.signal(:some_state)
 
-        task.status.should == "Error"
+        expect(task.status).to eq "Error"
       end
     end
   end

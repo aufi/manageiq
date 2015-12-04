@@ -34,7 +34,7 @@ describe DialogGroupSerializer do
     end
 
     it "serializes the dialog_group" do
-      dialog_group_serializer.serialize(dialog_group).should == expected_serialized_values
+      expect(dialog_group_serializer.serialize(dialog_group)).to eq expected_serialized_values
     end
   end
 end

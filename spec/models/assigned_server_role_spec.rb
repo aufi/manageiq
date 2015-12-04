@@ -28,51 +28,51 @@ describe AssignedServerRole do
       end
 
       it "should return Server Role name" do
-        @assigned_server_role.name.should == "smartproxy"
+        expect(@assigned_server_role.name).to eq "smartproxy"
       end
 
       it "should toggle Active indicator" do
         @assigned_server_role.deactivate
-        @assigned_server_role.active.should be_false
+        expect(@assigned_server_role.active).to be_false
         @assigned_server_role.activate
-        @assigned_server_role.active.should be_true
+        expect(@assigned_server_role.active).to be_true
       end
 
       it "should reset priority" do
         @assigned_server_role.reset
-        @assigned_server_role.active.should be_false
-        @assigned_server_role.priority.should == 2
+        expect(@assigned_server_role.active).to be_false
+        expect(@assigned_server_role.priority).to eq 2
       end
 
       it "should check if -master- role is supported" do
-        @assigned_server_role.master_supported?.should be_true
+        expect(@assigned_server_role.master_supported?).to be_true
       end
 
       it "should check if Miq Server is set as -master-" do
-        @assigned_server_role.is_master?.should be_false
+        expect(@assigned_server_role.is_master?).to be_false
 
         @assigned_server_role.priority = 1
-        @assigned_server_role.is_master?.should be_false
+        expect(@assigned_server_role.is_master?).to be_false
       end
 
       it "should set Miq Server as -master-" do
         @assigned_server_role.set_master
-        @assigned_server_role.priority.should == 1
+        expect(@assigned_server_role.priority).to eq 1
       end
 
       it "should remove Miq Server as -master-" do
         @assigned_server_role.remove_master
-        @assigned_server_role.priority.should == 2
+        expect(@assigned_server_role.priority).to eq 2
       end
 
       it "should activate Assigned Server Role" do
         @assigned_server_role.active = false
-        @assigned_server_role.activate.should be_true
+        expect(@assigned_server_role.activate).to be_true
       end
 
       it "should deactivate Assigned Server Role" do
         @assigned_server_role.active = true
-        @assigned_server_role.activate.should be_false
+        expect(@assigned_server_role.activate).to be_false
       end
     end
   end
@@ -259,34 +259,34 @@ describe AssignedServerRole do
 
     it "should set priority for Server Role scope" do
       @assigned_server_role_11_zu.set_priority(AssignedServerRole::HIGH_PRIORITY)
-      @assigned_server_role_11_zu.priority.should == AssignedServerRole::HIGH_PRIORITY
+      expect(@assigned_server_role_11_zu.priority).to eq AssignedServerRole::HIGH_PRIORITY
 
       @assigned_server_role_11_zl.set_priority(AssignedServerRole::HIGH_PRIORITY)
-      @assigned_server_role_11_zl.priority.should == AssignedServerRole::HIGH_PRIORITY
+      expect(@assigned_server_role_11_zl.priority).to eq AssignedServerRole::HIGH_PRIORITY
     end
 
     it "should activate Server Role for a Region" do
       @assigned_server_role_11_rl.active = false
       @assigned_server_role_11_rl.activate_in_region
-      @assigned_server_role_11_rl.active.should be_true
+      expect(@assigned_server_role_11_rl.active).to be_true
     end
 
     it "should deactivate Server Role for a Region" do
       @assigned_server_role_11_rl.active = true
       @assigned_server_role_11_rl.deactivate_in_region
-      @assigned_server_role_11_rl.active.should be_false
+      expect(@assigned_server_role_11_rl.active).to be_false
     end
 
     it "should activate Server Role for a Zone" do
       @assigned_server_role_11_zl.active = false
       @assigned_server_role_11_zl.activate_in_zone
-      @assigned_server_role_11_zl.active.should be_true
+      expect(@assigned_server_role_11_zl.active).to be_true
     end
 
     it "should deactivate Server Role for a Zone" do
       @assigned_server_role_11_zl.active = true
       @assigned_server_role_11_zl.deactivate_in_zone
-      @assigned_server_role_11_zl.active.should be_false
+      expect(@assigned_server_role_11_zl.active).to be_false
     end
   end
 end

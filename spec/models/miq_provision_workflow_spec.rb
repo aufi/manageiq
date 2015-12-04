@@ -43,7 +43,7 @@ describe MiqProvisionWorkflow do
           FactoryGirl.create(:classification_cost_center_with_tags)
           request = ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws(
             "1.0", admin, "template", "target", false, "cc|001|environment|test", "")
-          request.should be_a_kind_of(MiqRequest)
+          expect(request).to be_a_kind_of(MiqRequest)
 
           expect(request.options[:vm_tags]).to eq([Classification.find_by_name("cc/001").id])
         end
@@ -53,7 +53,7 @@ describe MiqProvisionWorkflow do
           request = ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow.from_ws(
             "1.1", admin, {'name' => 'template'}, {'vm_name' => 'spec_test'}, nil,
             {'cc' => '001', 'environment' => 'test'}, nil, nil, nil)
-          request.should be_a_kind_of(MiqRequest)
+          expect(request).to be_a_kind_of(MiqRequest)
 
           expect(request.options[:vm_tags]).to eq([Classification.find_by_name("cc/001").id])
         end
@@ -65,8 +65,8 @@ describe MiqProvisionWorkflow do
             {'owner_email' => 'admin'}, {'owner_first_name' => 'test'},
             {'owner_last_name' => 'test'}, nil, nil, nil, nil)
 
-          MiqPassword.encrypted?(request.options[:root_password]).should be_true
-          MiqPassword.decrypt(request.options[:root_password]).should == password_input
+          expect(MiqPassword.encrypted?(request.options[:root_password])).to be_true
+          expect(MiqPassword.decrypt(request.options[:root_password])).to eq password_input
         end
 
         it "should set values when extra '|' are passed in for multiple values" do
@@ -112,7 +112,7 @@ describe MiqProvisionWorkflow do
 
   context ".encrypted_options_fields" do
     MiqProvisionWorkflow.descendants.each do |sub_klass|
-      it("with class #{sub_klass}") { sub_klass.encrypted_options_fields.should include(:root_password) }
+      it("with class #{sub_klass}") { expect(sub_klass.encrypted_options_fields).to include(:root_password) }
     end
   end
 

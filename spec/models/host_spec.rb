@@ -35,29 +35,29 @@ describe Host do
     host = FactoryGirl.create(:host_vmware)
     host.save_drift_state
 
-    host.drift_states.size.should == 1
-    DriftState.count.should == 1
+    expect(host.drift_states.size).to eq 1
+    expect(DriftState.count).to eq 1
 
-    host.drift_states.first.data.should == {
-      :class              => "ManageIQ::Providers::Vmware::InfraManager::Host",
-      :id                 => host.id,
-      :name               => host.name,
-      :vmm_vendor         => "VMware",
-      :v_total_vms        => 0,
+    expect(host.drift_states.first.data).to eq {
+          :class              => "ManageIQ::Providers::Vmware::InfraManager::Host",
+          :id                 => host.id,
+          :name               => host.name,
+          :vmm_vendor         => "VMware",
+          :v_total_vms        => 0,
 
-      :advanced_settings             => [],
-      :filesystems                   => [],
-      :filesystems_custom_attributes => [],
-      :groups                        => [],
-      :guest_applications            => [],
-      :lans                          => [],
-      :patches                       => [],
-      :switches                      => [],
-      :system_services               => [],
-      :tags                          => [],
-      :users                         => [],
-      :vms                           => [],
-    }
+          :advanced_settings             => [],
+          :filesystems                   => [],
+          :filesystems_custom_attributes => [],
+          :groups                        => [],
+          :guest_applications            => [],
+          :lans                          => [],
+          :patches                       => [],
+          :switches                      => [],
+          :system_services               => [],
+          :tags                          => [],
+          :users                         => [],
+          :vms                           => [],
+        }
   end
 
   it "emits cluster policy event when the cluster changes" do
@@ -91,27 +91,27 @@ describe Host do
     it "refreshable_status already reporting error" do
       reportable_status = {:show => true, :enabled => false, :message => "Proxy not active"}
       @host.stub(:refreshable_status => reportable_status)
-      @host.scannable_status.should == reportable_status
+      expect(@host.scannable_status).to eq reportable_status
     end
 
     it "ipmi address and creds" do
       @host.update_attribute(:ipmi_address, "127.0.0.1")
       @host.update_authentication({:ipmi => {:userid => "a", :password => "a"}})
-      @host.scannable_status.should == {:show => true, :enabled => true, :message => ""}
+      expect(@host.scannable_status).to eq {:show => true, :enabled => true, :message => ""}
     end
 
     it "ipmi address but no creds" do
       @host.update_attribute(:ipmi_address, "127.0.0.1")
-      @host.scannable_status.should == {:show => true, :enabled => false, :message => "Provide credentials for IPMI"}
+      expect(@host.scannable_status).to eq {:show => true, :enabled => false, :message => "Provide credentials for IPMI"}
     end
 
     it "creds but no ipmi address" do
       @host.update_authentication({:ipmi => {:userid => "a", :password => "a"}})
-      @host.scannable_status.should == {:show => true, :enabled => false, :message => "Provide an IPMI Address"}
+      expect(@host.scannable_status).to eq {:show => true, :enabled => false, :message => "Provide an IPMI Address"}
     end
 
     it "no creds or ipmi address" do
-      @host.scannable_status.should == {:show => true, :enabled => false, :message => "Provide an IPMI Address"}
+      expect(@host.scannable_status).to eq {:show => true, :enabled => false, :message => "Provide an IPMI Address"}
     end
   end
 
@@ -136,8 +136,8 @@ describe Host do
       MiqServer.stub(:my_server).and_return(zone.miq_servers.first)
       Host.check_for_vms_to_scan
       jobs = Job.where(:target_class => 'VmOrTemplate')
-      jobs.length.should == 2
-      jobs.collect(&:target_id).should match_array vms.collect(&:id)
+      expect(jobs.length).to eq 2
+      expect(jobs.collect(&:target_id)).to match_array vms.collect(&:id)
     end
   end
 
@@ -180,9 +180,9 @@ describe Host do
     context "with shutdown invalid" do
       it "#validate_shutdown" do
         msg = @host.validate_shutdown
-        msg.should be_kind_of(Hash)
-        msg[:available].should be_false
-        msg[:message].should   be_kind_of(String)
+        expect(msg).to be_kind_of(Hash)
+        expect(msg[:available]).to be_false
+        expect(msg[:message]).to be_kind_of(String)
       end
 
       it "#shutdown" do
@@ -193,9 +193,9 @@ describe Host do
     context "with reboot invalid" do
       it "#validate_reboot" do
         msg = @host.validate_reboot
-        msg.should be_kind_of(Hash)
-        msg[:available].should be_false
-        msg[:message].should   be_kind_of(String)
+        expect(msg).to be_kind_of(Hash)
+        expect(msg[:available]).to be_false
+        expect(msg[:message]).to be_kind_of(String)
       end
 
       it "#reboot" do
@@ -206,9 +206,9 @@ describe Host do
     context "with standby invalid" do
       it "#validate_standby" do
         msg = @host.validate_standby
-        msg.should be_kind_of(Hash)
-        msg[:available].should be_false
-        msg[:message].should   be_kind_of(String)
+        expect(msg).to be_kind_of(Hash)
+        expect(msg[:available]).to be_false
+        expect(msg[:message]).to be_kind_of(String)
       end
 
       it "#standby" do
@@ -219,9 +219,9 @@ describe Host do
     context "with enter_maint_mode invalid" do
       it "#validate_enter_maint_mode" do
         msg = @host.validate_enter_maint_mode
-        msg.should be_kind_of(Hash)
-        msg[:available].should be_false
-        msg[:message].should   be_kind_of(String)
+        expect(msg).to be_kind_of(Hash)
+        expect(msg[:available]).to be_false
+        expect(msg[:message]).to be_kind_of(String)
       end
 
       it "#enter_maint_mode" do
@@ -232,9 +232,9 @@ describe Host do
     context "with exit_maint_mode invalid" do
       it "#validate_exit_maint_mode" do
         msg = @host.validate_exit_maint_mode
-        msg.should be_kind_of(Hash)
-        msg[:available].should be_false
-        msg[:message].should   be_kind_of(String)
+        expect(msg).to be_kind_of(Hash)
+        expect(msg[:available]).to be_false
+        expect(msg[:message]).to be_kind_of(String)
       end
 
       it "#exit_maint_mode" do
@@ -250,14 +250,14 @@ describe Host do
 
     it "#current_memory_usage" do
       mem_usage = @host.current_memory_usage
-      mem_usage.should be_an(Integer)
+      expect(mem_usage).to be_an(Integer)
 
       -> { @host.current_memory_usage }.should_not raise_error
     end
 
     it "#current_cpu_usage" do
       cpu_usage = @host.current_cpu_usage
-      cpu_usage.should be_an(Integer)
+      expect(cpu_usage).to be_an(Integer)
 
       -> { @host.current_cpu_usage }.should_not raise_error
     end
@@ -372,13 +372,13 @@ describe Host do
       it "save" do
         @host.update_authentication(@data, @options)
         @host.save
-        @host.authentications.count.should eq(1)
+        expect(@host.authentications.count).to eq(1)
       end
 
       it "validate" do
         @host.stub(:connect_ssh)
         assert_default_credentials_validated
-        @host.authentications.count.should eq(0)
+        expect(@host.authentications.count).to eq(0)
       end
     end
 
@@ -386,19 +386,19 @@ describe Host do
       it "save default, then save remote" do
         @host.update_authentication(@data, @options)
         @host.save
-        @host.authentications.count.should eq(1)
+        expect(@host.authentications.count).to eq(1)
 
         @data[:remote] = {:userid => "root", :password => @password}
         @host.update_authentication(@data, @options)
         @host.save
-        @host.authentications.count.should eq(2)
+        expect(@host.authentications.count).to eq(2)
       end
 
       it "save both together" do
         @data[:remote] = {:userid => "root", :password => @password}
         @host.update_authentication(@data, @options)
         @host.save
-        @host.authentications.count.should eq(2)
+        expect(@host.authentications.count).to eq(2)
       end
 
       it "validate remote with both credentials" do
@@ -448,11 +448,11 @@ describe Host do
     end
 
     it "#enabled_udp_outbound_ports" do
-      @host.enabled_udp_outbound_ports.should match_array([1002])
+      expect(@host.enabled_udp_outbound_ports).to match_array([1002])
     end
 
     it "#enabled_inbound_ports" do
-      @host.enabled_inbound_ports.should match_array([1003, 1001])
+      expect(@host.enabled_inbound_ports).to match_array([1003, 1001])
     end
   end
 
@@ -467,19 +467,19 @@ describe Host do
       FactoryGirl.create(:host_redhat, :ems_id => @ems2.id)
 
       result = Host.node_types
-      result.should eq(:mixed_hosts)
+      expect(result).to eq(:mixed_hosts)
     end
 
     it "returns :openstack when there are only openstack hosts in db" do
       FactoryGirl.create(:host_redhat, :ems_id => @ems2.id)
       result = Host.node_types
-      result.should eq(:openstack)
+      expect(result).to eq(:openstack)
     end
 
     it "returns :non_openstack when there are non-openstack hosts in db" do
       FactoryGirl.create(:host_vmware_esx, :ems_id => @ems1.id)
       result = Host.node_types
-      result.should eq(:non_openstack)
+      expect(result).to eq(:non_openstack)
     end
   end
 
@@ -489,26 +489,26 @@ describe Host do
       host = FactoryGirl.create(:host_redhat, :ems_id => ems.id)
 
       result = host.openstack_host?
-      result.should be_true
+      expect(result).to be_true
     end
 
     it "returns false for non-openstack host" do
       ems = FactoryGirl.create(:ems_vmware)
       host = FactoryGirl.create(:host_vmware_esx, :ems_id => ems.id)
       result = host.openstack_host?
-      result.should be_false
+      expect(result).to be_false
     end
   end
 
   def assert_default_credentials_validated
     @host.stub(:verify_credentials_with_ws)
     @host.update_authentication(@data, @options)
-    @host.verify_credentials(:default).should be_true
+    expect(@host.verify_credentials(:default)).to be_true
   end
 
   def assert_remote_credentials_validated
     @host.stub(:connect_ssh)
     @host.update_authentication(@data, @options)
-    @host.verify_credentials(:remote).should be_true
+    expect(@host.verify_credentials(:remote)).to be_true
   end
 end

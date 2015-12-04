@@ -14,7 +14,7 @@ describe MiqAeClassController do
                                        :active_tree => :ae_tree)
       controller.instance_variable_set(:@edit, {:new => new})
       controller.send(:set_record_vars, cls)
-      cls.namespace_id.should == ns_id
+      expect(cls.namespace_id).to eq ns_id
     end
   end
 
@@ -26,12 +26,12 @@ describe MiqAeClassController do
       id = "aec-#{cls.id}"
       fq_name = cls.fqname
       controller.send(:set_right_cell_text, id, cls)
-      assigns(:sb)[:namespace_path].should == fq_name.gsub!(/\//, " / ")
+      expect(assigns(:sb)[:namespace_path]).to eq fq_name.gsub!(/\//, " / ")
 
       id = "root"
       fq_name = ""
       controller.send(:set_right_cell_text, id)
-      assigns(:sb)[:namespace_path].should == fq_name
+      expect(assigns(:sb)[:namespace_path]).to eq fq_name
     end
   end
 
@@ -43,7 +43,7 @@ describe MiqAeClassController do
       controller.stub(:replace_right_cell)
       controller.send(:domain_lock)
       ns.reload
-      ns.system.should == true
+      expect(ns.system).to eq true
     end
   end
 
@@ -55,7 +55,7 @@ describe MiqAeClassController do
       controller.stub(:replace_right_cell)
       controller.send(:domain_unlock)
       ns.reload
-      ns.system.should == false
+      expect(ns.system).to eq false
     end
   end
 
@@ -80,7 +80,7 @@ describe MiqAeClassController do
       controller.send(:domains_priority_edit)
       domain_order = []
       MiqAeDomain.order('priority ASC').collect { |d| domain_order.push(d.name) unless d.priority == 0 }
-      domain_order.should eq(edit[:new][:domain_order])
+      expect(domain_order).to eq(edit[:new][:domain_order])
     end
   end
 
@@ -110,9 +110,9 @@ describe MiqAeClassController do
       session[:edit] = edit
       controller.stub(:replace_right_cell)
       controller.send(:copy_objects)
-      controller.send(:flash_errors?).should_not be_true
-      assigns(:flash_array).first[:message].should include("Copy selected Automate Class was saved")
-      MiqAeClass.find_by_name_and_namespace_id(cls1.name, ns2.id).should_not be_nil
+      expect(controller.send(:flash_errors?)).not_to be_true
+      expect(assigns(:flash_array).first[:message]).to include("Copy selected Automate Class was saved")
+      expect(MiqAeClass.find_by_name_and_namespace_id(cls1.name, ns2.id)).not_to be_nil
     end
 
     it "copy class under same namespace returns error when class exists" do
@@ -138,8 +138,8 @@ describe MiqAeClassController do
       controller.stub(:replace_right_cell)
       controller.should_receive(:render)
       controller.send(:copy_objects)
-      controller.send(:flash_errors?).should be_true
-      assigns(:flash_array).first[:message].should include("Error during 'Automate Class copy':")
+      expect(controller.send(:flash_errors?)).to be_true
+      expect(assigns(:flash_array).first[:message]).to include("Error during 'Automate Class copy':")
     end
 
     it "overwrite class under same namespace when class exists" do
@@ -167,8 +167,8 @@ describe MiqAeClassController do
       session[:edit] = edit
       controller.stub(:replace_right_cell)
       controller.send(:copy_objects)
-      controller.send(:flash_errors?).should be_false
-      assigns(:flash_array).first[:message].should include("Copy selected Automate Class was saved")
+      expect(controller.send(:flash_errors?)).to be_false
+      expect(assigns(:flash_array).first[:message]).to include("Copy selected Automate Class was saved")
     end
 
     it "copies a class with new name under same domain" do
@@ -195,9 +195,9 @@ describe MiqAeClassController do
       session[:edit] = edit
       controller.stub(:replace_right_cell)
       controller.send(:copy_objects)
-      controller.send(:flash_errors?).should be_false
-      assigns(:record).name.should eq('foo')
-      assigns(:flash_array).first[:message].should include("Copy selected Automate Class was saved")
+      expect(controller.send(:flash_errors?)).to be_false
+      expect(assigns(:record).name).to eq('foo')
+      expect(assigns(:flash_array).first[:message]).to include("Copy selected Automate Class was saved")
     end
   end
 
@@ -273,7 +273,7 @@ describe MiqAeClassController do
                                            :active_tree => :ae_tree,
                                            :trees       => {:ae_tree => {:active_node => "aei-some_id"}})
           controller.send(:get_instance_node_info, id)
-          assigns(:sb)[:trees][:ae_tree][:active_node].should eq("root")
+          expect(assigns(:sb)[:trees][:ae_tree][:active_node]).to eq("root")
         end
       end
 
@@ -290,9 +290,9 @@ describe MiqAeClassController do
                                            :active_tree => :ae_tree,
                                            :trees       => {:ae_tree => {:active_node => id.join("-")}})
           controller.send(:get_instance_node_info, id)
-          assigns(:record).name.should eq(miq_ae_instance.name)
-          assigns(:domain_overrides).count.should eq(2)
-          assigns(:right_cell_text).should include("Automate Instance [#{miq_ae_instance.display_name}")
+          expect(assigns(:record).name).to eq(miq_ae_instance.name)
+          expect(assigns(:domain_overrides).count).to eq(2)
+          expect(assigns(:right_cell_text)).to include("Automate Instance [#{miq_ae_instance.display_name}")
         end
       end
     end
@@ -305,7 +305,7 @@ describe MiqAeClassController do
                                            :active_tree => :ae_tree,
                                            :trees       => {:ae_tree => {:active_node => "aec-some_id"}})
           controller.send(:get_instance_node_info, id)
-          assigns(:sb)[:trees][:ae_tree][:active_node].should eq("root")
+          expect(assigns(:sb)[:trees][:ae_tree][:active_node]).to eq("root")
         end
       end
 
@@ -321,9 +321,9 @@ describe MiqAeClassController do
                                            :active_tree => :ae_tree,
                                            :trees       => {:ae_tree => {:active_node => id.join("-")}})
           controller.send(:get_class_node_info, id)
-          assigns(:record).name.should eq(miq_ae_class.name)
-          assigns(:domain_overrides).count.should eq(2)
-          assigns(:right_cell_text).should include(miq_ae_class.display_name)
+          expect(assigns(:record).name).to eq(miq_ae_class.name)
+          expect(assigns(:domain_overrides).count).to eq(2)
+          expect(assigns(:right_cell_text)).to include(miq_ae_class.display_name)
         end
       end
     end
@@ -336,7 +336,7 @@ describe MiqAeClassController do
                                            :active_tree => :ae_tree,
                                            :trees       => {:ae_tree => {:active_node => "aem-some_id"}})
           controller.send(:get_instance_node_info, id)
-          assigns(:sb)[:trees][:ae_tree][:active_node].should eq("root")
+          expect(assigns(:sb)[:trees][:ae_tree][:active_node]).to eq("root")
         end
       end
 
@@ -353,9 +353,9 @@ describe MiqAeClassController do
                                            :active_tree => :ae_tree,
                                            :trees       => {:ae_tree => {:active_node => id.join("-")}})
           controller.send(:get_method_node_info, id)
-          assigns(:record).name.should eq(miq_ae_method.name)
-          assigns(:domain_overrides).count.should eq(2)
-          assigns(:right_cell_text).should include("Automate Method [#{miq_ae_method.display_name}")
+          expect(assigns(:record).name).to eq(miq_ae_method.name)
+          expect(assigns(:domain_overrides).count).to eq(2)
+          expect(assigns(:right_cell_text)).to include("Automate Method [#{miq_ae_method.display_name}")
         end
       end
     end
@@ -373,10 +373,10 @@ describe MiqAeClassController do
       controller.stub(:replace_right_cell)
       controller.send(:delete_domain)
       flash_messages = assigns(:flash_array)
-      flash_messages.first[:message].should include("cannot be deleted")
-      flash_messages.first[:level].should == :error
-      flash_messages.last[:message].should include("Delete successful")
-      flash_messages.last[:level].should == :success
+      expect(flash_messages.first[:message]).to include("cannot be deleted")
+      expect(flash_messages.first[:level]).to eq :error
+      expect(flash_messages.last[:message]).to include("Delete successful")
+      expect(flash_messages.last[:level]).to eq :success
     end
   end
 
@@ -393,9 +393,9 @@ describe MiqAeClassController do
     end
 
     after(:each) do
-      controller.send(:flash_errors?).should be_true
-      assigns(:flash_array).first[:message].should include("Name has already been taken")
-      assigns(:edit).should_not be_nil
+      expect(controller.send(:flash_errors?)).to be_true
+      expect(assigns(:flash_array).first[:message]).to include("Name has already been taken")
+      expect(assigns(:edit)).not_to be_nil
       expect(response.status).to eq(200)
     end
 
@@ -463,7 +463,7 @@ describe MiqAeClassController do
       controller.instance_variable_set(:@sb, {})
       ns = FactoryGirl.create(:miq_ae_namespace)
       controller.send(:copy_objects_edit_screen, MiqAeNamespace, [ns.id], "miq_ae_namespace_copy")
-      assigns(:edit)[:domains].count.should eq(1)
+      expect(assigns(:edit)[:domains].count).to eq(1)
     end
   end
 end

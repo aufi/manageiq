@@ -17,7 +17,7 @@ describe LdapServer do
     it "when LdapDomain#connect returns connection handle" do
       handle = double("handle")
       LdapDomain.any_instance.stub(:connect).with(@ldap_server).and_return(handle)
-      @ldap_server.verify_credentials.should == handle
+      expect(@ldap_server.verify_credentials).to eq handle
     end
 
     it "when LdapDomain#connect returns an error" do
