@@ -136,6 +136,10 @@ module OpenstackHandle
       @extra_options[:domain_id]
     end
 
+    def region
+      @extra_options[:region]
+    end
+
     def browser_url
       "http://#{address}/dashboard"
     end
@@ -161,6 +165,7 @@ module OpenstackHandle
       end
       
       opts[:openstack_domain_id] = domain
+      opts[:openstack_region]    = region
 
       svc_cache = (@connection_cache[service] ||= {})
       svc_cache[tenant] ||= begin
